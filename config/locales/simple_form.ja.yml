@@ -1,0 +1,29 @@
+ja:
+  simple_form:
+    "yes": "はい"
+    "no": "いいえ"
+    required:
+      text: "必須"
+      mark: "*"
+    error_notification:
+      default_message: "入力内容にエラーがあります。以下を確認してください:"
+    labels:
+      defaults:
+        first_name: "名"
+        last_name: "姓"
+        department: "部署"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード確認"
+    placeholders:
+      defaults:
+        first_name: "太郎"
+        last_name: "山田"
+        department: "営業部"
+        email: "example@example.com"
+        password: "パスワードを入力"
+        password_confirmation: "パスワードを再入力"
+    hints:
+      defaults:
+        email: "登録済みのメールアドレスを入力してください"
+        password: "8文字以上で入力してください"
