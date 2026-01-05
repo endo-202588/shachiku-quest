@@ -1,0 +1,16 @@
+.container.mx-auto.px-4.py-8
+  .text-center.mb-8
+    h1.text-4xl.font-bold.text-indigo-900.mb-2 🏰 本日の勇者たち 🏰
+
+  .grid.gap-6.md:grid-cols-2.lg:grid-cols-3
+    - @users.each do |user|
+      .bg-white.rounded-lg.shadow-lg.p-6.border-2.border-indigo-200.hover:border-indigo-400.transition
+        .flex.items-center.justify-between.mb-4
+          .flex.items-center
+            .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center.mr-3
+              span.text-2xl 🧙‍♂️
+            div
+              h3.text-lg.font-bold.text-gray-900
+                = user.full_name
+              p.text-sm.text-gray-500
+                = user.display_department
