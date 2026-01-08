@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all.decorate
+    @users = User.includes(:statuses).all.decorate
   end
 
   def new

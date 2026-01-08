@@ -6,8 +6,15 @@ class UserSessionsController < ApplicationController
 
   def create
     @user = login(params[:email], params[:password])
+
     if @user
-      redirect_to users_path, success: 'おかえりなさい！冒険の扉が開かれました!'
+      if @user.today_status.present?
+        # ステータスがあればユーザー一覧へ
+        redirect_to users_path
+      else
+        # ステータスがなければステータス入力画面へ
+        redirect_to new_status_path
+      end
     else
       flash.now[:danger] = '魔法の鍵が合いません...メールアドレスかパスワードが間違っています'
       render :new, status: :unprocessable_entity

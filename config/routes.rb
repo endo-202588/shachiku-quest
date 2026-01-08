@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "user_sessions/new"
-  get "user_sessions/create"
-  get "user_sessions/destroy"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -16,4 +13,7 @@ Rails.application.routes.draw do
   get 'login', to: 'user_sessions#new'
   post 'login', to: 'user_sessions#create'
   delete 'logout', to: 'user_sessions#destroy'
+
+  # ステータス関連
+  resources :statuses, only: [:new, :create, :edit, :update, :destroy]
 end
