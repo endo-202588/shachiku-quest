@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  status: one
+  user: one
+  old_status_type: 1
+  new_status_type: 1
+  changed_at: 2026-01-07 17:22:34
+
+two:
+  status: two
+  user: two
+  old_status_type: 1
+  new_status_type: 1
+  changed_at: 2026-01-07 17:22:34

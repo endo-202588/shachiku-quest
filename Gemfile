@@ -29,6 +29,7 @@ gem 'simple_form'
 # Others
 gem 'draper'
 gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem 'discard', '~> 1.2'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

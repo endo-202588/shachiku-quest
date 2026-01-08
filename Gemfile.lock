@@ -108,6 +108,8 @@ GEM
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    discard (1.4.0)
+      activerecord (>= 4.2, < 9.0)
     dotenv (3.2.0)
     dotenv-rails (3.2.0)
       dotenv (= 3.2.0)
@@ -306,7 +308,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    simple_form (5.4.0)
+    simple_form (5.4.1)
       actionpack (>= 7.0)
       activemodel (>= 7.0)
     slim (5.2.1)
@@ -340,7 +342,7 @@ GEM
       tailwindcss-ruby (~> 4.0)
     tailwindcss-ruby (4.1.18-arm64-darwin)
     temple (0.10.4)
-    thor (1.4.0)
+    thor (1.5.0)
     tilt (2.6.1)
     timeout (0.6.0)
     tsort (0.2.0)
@@ -378,6 +380,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  discard (~> 1.2)
   dotenv-rails
   draper
   importmap-rails
