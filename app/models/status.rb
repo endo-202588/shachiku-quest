@@ -12,7 +12,9 @@ class Status < ApplicationRecord
   }
 
   validates :status_type, presence: true
-  validates :status_date, presence: true, uniqueness: { scope: :user_id }
+  validates :status_date,
+    presence: true,
+    uniqueness: { scope: :user_id, conditions: -> { kept } }
 
   # ステータスの日本語表示（推奨）
   def status_label

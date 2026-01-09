@@ -1,0 +1,11 @@
+.container
+  - if flash[:success]
+    .alert.alert-success
+      = flash[:success]
+
+  h1 📝 今日のタスクを登録
+  
+  = render 'form', task: @task
+
+  .mt-3
+    = link_to "← スキップして一覧へ", users_path, class: "text-muted"
