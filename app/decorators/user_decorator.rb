@@ -23,18 +23,7 @@ class UserDecorator < Draper::Decorator
   # 絵文字付きステータス表示
   def status_with_emoji
     return "📝 未登録" if today_status.blank?
-
-    emoji = case today_status.status_type
-            when "peaceful" then "😊"
-            when "tired" then "😓"
-            when "busy" then "🏃"
-            when "very_busy" then "🔥"
-            when "overloaded" then "💀"
-            when "day_off" then "🏖️"
-            else "❓"
-            end
-
-    "#{emoji} #{today_status.status_label}"
+    I18n.t("enums.status.status_type.#{today_status.status_type}")
   end
 
   # HTMLバッジ付きステータス表示（Tailwind CSS版）
@@ -104,5 +93,65 @@ class UserDecorator < Draper::Decorator
     data: { turbo_method: :delete, turbo_confirm: "本当にリセットしますか?" },
     class: "inline-block mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
     )
+  end
+
+    # HP数字表示（ドラクエ風）
+  def hp_text_html
+    return h.content_tag(:span, "HP: ???/???", class: "text-sm text-gray-500") if today_status.blank?
+
+    hp = today_status.hp
+    max_hp = today_status.max_hp
+
+    # HPの割合で色を変える
+    text_color = if hp >= 70
+                   "text-green-600"
+                 elsif hp >= 40
+                   "text-yellow-600"
+                 else
+                   "text-red-600"
+                 end
+
+    h.content_tag(:div, class: "flex items-center gap-2") do
+      h.concat h.content_tag(:span, "❤️", class: "text-lg")
+      h.concat h.content_tag(:span, "HP: #{hp}/#{max_hp}", class: "text-sm font-bold #{text_color}")
+    end
+  end
+
+  # HPバー表示（プログレスバー）
+  def hp_bar_html
+    return "" if today_status.blank?
+
+    hp = today_status.hp
+    max_hp = today_status.max_hp
+    percentage = today_status.hp_percentage
+
+    # HPの割合で色を変える
+    bar_color = if percentage >= 70
+                  "bg-green-500"
+                elsif percentage >= 40
+                  "bg-yellow-500"
+                else
+                  "bg-red-500"
+                end
+
+    <<~HTML.html_safe
+      <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mt-2">
+        <div class="#{bar_color} h-3 transition-all duration-300" 
+             style="width: #{percentage}%">
+        </div>
+      </div>
+    HTML
+  end
+
+  # HP表示（数字 + プログレスバー）
+  def hp_display_html
+    return "" if today_status.blank?
+
+    <<~HTML.html_safe
+      <div class="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        #{hp_text_html}
+        #{hp_bar_html}
+      </div>
+    HTML
   end
 end

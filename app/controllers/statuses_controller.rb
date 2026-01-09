@@ -73,15 +73,6 @@ class StatusesController < ApplicationController
     @status = current_user.statuses.build(status_params)
 
     if @status.save
-      # 履歴を記録
-      @status.status_histories.create!(
-        old_status_type: nil,
-        new_status_type: @status.status_type,
-        changed_at: Time.current,
-        user: current_user,
-        comment: "新規作成"
-      )
-
       # リダイレクト先を決定
       redirect_path, message = determine_redirect_after_save(@status, 'を登録しました')
       redirect_to redirect_path, success: message
@@ -100,34 +91,14 @@ class StatusesController < ApplicationController
 
   def edit
     @target_date = @status.status_date
-
-    # 履歴を新しい順に取得(最新5件のみ表示)
-    @status_histories = @status.status_histories.order(created_at: :desc).limit(5)
   end
 
   def update
-    # ========== 更新前の状態を保存 ========== #
-    previous_state = @status.status_type
-
     if @status.update(status_params)
-      # ========== 履歴を記録(更新時) ========== #
-      # ステータスが変更された場合のみ履歴を記録
-      if previous_state != @status.status_type
-        @status.status_histories.create!(
-          old_status_type: previous_state,
-          new_status_type: @status.status_type,
-          changed_at: Time.current,
-          user: current_user,
-          comment: nil
-        )
-      end
-
-      # ========== 更新時は常にusers_pathへリダイレクト ========== #
       date_text = @status.status_date.strftime('%Y年%m月%d日')
       redirect_to users_path, success: "#{date_text}のステータスを更新しました"
     else
       @target_date = @status.status_date
-      @status_histories = @status.status_histories.order(created_at: :desc).limit(5)
       flash.now[:danger] = 'ステータスの更新に失敗しました'
       render :edit, status: :unprocessable_entity
     end
