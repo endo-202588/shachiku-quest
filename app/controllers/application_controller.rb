@@ -12,9 +12,6 @@ class ApplicationController < ActionController::Base
 
   def check_today_status
     return unless logged_in?
-    return if controller_name == 'statuses'
-
-    # 軽量なexists?を使ってチェック
     return if current_user.has_today_status?
 
     redirect_to new_status_path(date: Date.current), alert: "本日のステータスを登録してください"

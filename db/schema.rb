@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_09_062837) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_09_081223) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "help_requests", force: :cascade do |t|
+    t.bigint "task_id", null: false
+    t.bigint "helper_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["helper_id"], name: "index_help_requests_on_helper_id"
+    t.index ["status"], name: "index_help_requests_on_status"
+    t.index ["task_id", "helper_id"], name: "index_help_requests_on_task_id_and_helper_id", unique: true
+    t.index ["task_id"], name: "index_help_requests_on_task_id"
+  end
 
   create_table "statuses", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -23,7 +35,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_062837) do
     t.datetime "updated_at", null: false
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_statuses_on_discarded_at"
-    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
+    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date_kept", unique: true, where: "(discarded_at IS NULL)"
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 
@@ -54,6 +66,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_09_062837) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "help_requests", "tasks"
+  add_foreign_key "help_requests", "users", column: "helper_id"
   add_foreign_key "statuses", "users"
   add_foreign_key "tasks", "users"
 end

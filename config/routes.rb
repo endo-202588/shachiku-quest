@@ -20,7 +20,10 @@ Rails.application.routes.draw do
     collection do
       get :new_schedule
       post :create_schedule
+      get :complete
     end
     resources :status_histories, only: [:index]
   end
+
+  resources :tasks
 end
