@@ -1,0 +1,83 @@
+.min-h-screen.bg-gradient-to-br.from-purple-100.to-blue-100.flex.items-center.justify-center.p-4
+  .max-w-4xl.w-full.space-y-6
+    / ========== ステータス登録フォーム ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      h1.text-3xl.font-bold.text-center.mb-6.text-purple-600
+        | 📅 ステータスを登録
+
+      = form_with model: @status, url: statuses_path, local: true, class: "space-y-6" do |f|
+        / エラーメッセージ
+        - if @status.errors.any?
+          .bg-red-50.border.border-red-200.rounded-lg.p-4
+            h3.text-red-800.font-bold.mb-2 エラーが発生しました
+            ul.list-disc.list-inside.text-red-600
+              - @status.errors.full_messages.each do |message|
+                li = message
+
+        / 日付選択
+        div
+          = f.label :status_date, "📆 日付を選択", class: "block text-sm font-bold text-gray-700 mb-2"
+          = f.date_field :status_date, value: @target_date, id: "status_date_field", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+
+          / 日付に応じたメッセージ表示
+          .mt-2.text-sm#date-message
+            / JavaScriptで動的に表示
+
+        / ステータス選択
+        div
+          = f.label :status_type, "⚔️ 今日の状態", class: "block text-sm font-bold text-gray-700 mb-2"
+          .space-y-2
+            - Status.status_types.keys.each do |status_key|
+              label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-purple-50.transition class=("bg-purple-50 border-purple-300" if @status.status_type == status_key)
+                = f.radio_button :status_type, status_key, class: "mr-3"
+                span.text-lg
+                  = Status.human_attribute_name("status_type.#{status_key}")
+
+        / メモ
+        div
+          = f.label :memo, "📝 メモ（任意）", class: "block text-sm font-bold text-gray-700 mb-2"
+          = f.text_area :memo, rows: 3, placeholder: "今日の気分や状況を自由に書いてください...", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+
+        / 送信ボタン
+        div
+          = f.submit "ステータスを登録", class: "w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-200 cursor-pointer"
+
+      / キャンセルリンク(ここに移動!)
+      .text-center.mt-4
+        = link_to "← 戻る", users_path, class: "text-gray-600 hover:text-gray-800"
+
+    / ========== 補足情報セクション(オプション) ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      h2.text-2xl.font-bold.text-gray-800.mb-4
+        | 💡 ステータス登録のヒント
+      .text-gray-700.space-y-2
+        p ・日々のステータスを記録することで、体調の変化を把握できます
+        p ・過去のデータは自動的に保存されます
+        p ・メモ欄には自由に気分や状況を書き込めます
+
+javascript:
+  document.addEventListener('DOMContentLoaded', function() {
+    const dateField = document.getElementById('status_date_field');
+    const messageDiv = document.getElementById('date-message');
+
+    function updateMessage() {
+      const selectedDate = new Date(dateField.value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate.getTime() === today.getTime()) {
+        messageDiv.innerHTML = '<div class="text-green-600 font-bold">✅ 本日のステータスを登録します</div>';
+      } else if (selectedDate > today) {
+        messageDiv.innerHTML = '<div class="text-blue-600 font-bold">📅 未来のステータスを事前登録します</div>';
+      } else {
+        messageDiv.innerHTML = '<div class="text-gray-600 font-bold">📝 過去のステータスを登録します</div>';
+      }
+    }
+
+    // 初期表示
+    updateMessage();
+
+    // 日付変更時
+    dateField.addEventListener('change', updateMessage);
+  });

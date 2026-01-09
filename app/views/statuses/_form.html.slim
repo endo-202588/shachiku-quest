@@ -1,0 +1,27 @@
+= simple_form_for status, url: (status.persisted? ? status_path(status) : statuses_path), html: { method: (status.persisted? ? :patch : :post), class: "space-y-6 w-full" } do |f|
+  / エラーメッセージは simple_form が自動表示 /
+
+  / 日付をhiddenフィールドで送信 /
+  = f.hidden_field :status_date, value: status.status_date
+
+  / ステータス選択（ラジオボタン） /
+  div
+    = f.label :status_type, status_date_label(status), class: "block text-sm font-bold text-gray-700 mb-2"
+    .space-y-2
+      - Status.status_types.keys.each do |status_key|
+        label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-purple-50.transition class=("bg-purple-50 border-purple-300" if status.status_type == status_key)
+          = f.radio_button :status_type, status_key, class: "mr-3"
+          span.text-lg
+            = Status.human_attribute_name("status_type.#{status_key}")
+
+  / メモ /
+  div
+    = f.label :memo, "📝 メモ（任意）", class: "block text-sm font-bold text-gray-700 mb-2"
+    = f.text_area :memo, rows: 3, placeholder: "今日の気分や状況を自由に書いてください...", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+
+  / 送信ボタン（条件分岐） /
+  div
+    - if status.persisted?
+      = f.submit "ステータスを更新", class: "w-full bg-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-700 transition duration-200 cursor-pointer"
+    - else
+      = f.submit "ステータスを登録", class: "w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-200 cursor-pointer"

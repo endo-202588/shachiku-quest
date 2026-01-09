@@ -5,22 +5,75 @@ class StatusesController < ApplicationController
   def new
     @target_date = parse_date_param || Date.today
 
-    # kept を追加して削除されていないレコードのみ取得
-    existing_status = current_user.statuses.kept.find_by(status_date: @target_date)
+    # 既存のステータスがあればそれを使い、なければ新規作成
+    @status = current_user.statuses.kept.find_or_initialize_by(status_date: @target_date)
 
-    if existing_status
-      redirect_to edit_status_path(existing_status, date: @target_date)
+    # 既存のステータスがある場合はフラッシュメッセージを表示
+    if @status.persisted?
+      flash.now[:notice] = "#{@target_date.strftime('%Y年%m月%d日')}のステータスは既に登録されています。内容を確認・編集できます。"
+    end
+  end
+
+  # def new_schedule
+  #   @target_date = parse_date_param || Date.tomorrow
+
+  #   # 当日は選択できないようにする
+  #   if @target_date == Date.today
+  #     redirect_to new_status_path, alert: '本日のステータスは通常の登録画面から行ってください'
+  #     return
+  #   end
+
+  #   # 既存のステータスがあれば編集画面へ
+  #   existing_status = current_user.statuses.kept.find_by(status_date: @target_date)
+
+  #   if existing_status
+  #     redirect_to edit_status_path(existing_status, date: @target_date)
+  #     return
+  #   end
+
+  #   @status = current_user.statuses.build(status_date: @target_date)
+  #   render :new_schedule
+  # end
+
+  def new_schedule
+    # 日付選択画面を表示するだけ
+  end
+
+  def create_schedule
+    Rails.logger.debug "====== デバッグ情報(create_schedule) ======"
+    Rails.logger.debug "params: #{params.inspect}"
+
+    selected_date = params[:status_date]
+
+    Rails.logger.debug "selected_date: #{selected_date.inspect}"
+    Rails.logger.debug "============================================="
+
+    if selected_date.blank?
+      redirect_to new_schedule_statuses_path, alert: '日付を選択してください'
       return
     end
 
-    @status = current_user.statuses.build(status_date: @target_date)
+    @status = current_user.statuses.find_or_initialize_by(status_date: selected_date)
+
+    Rails.logger.debug "@status.persisted?: #{@status.persisted?}"
+    Rails.logger.debug "@status.attributes: #{@status.attributes.inspect}"
+
+    respond_to do |format|
+      if @status.persisted?
+        format.html { redirect_to edit_status_path(@status) }
+        format.turbo_stream { redirect_to edit_status_path(@status) }
+      else
+        format.html { render :new }
+        format.turbo_stream { render :new }
+      end
+    end
   end
 
   def create
     @status = current_user.statuses.build(status_params)
 
     if @status.save
-      # ========== 履歴を記録(新規作成時) ========== #
+      # 履歴を記録
       @status.status_histories.create!(
         old_status_type: nil,
         new_status_type: @status.status_type,
@@ -29,13 +82,19 @@ class StatusesController < ApplicationController
         comment: "新規作成"
       )
 
-      # determine_redirect_after_saveメソッドを使用
+      # リダイレクト先を決定
       redirect_path, message = determine_redirect_after_save(@status, 'を登録しました')
       redirect_to redirect_path, success: message
     else
       @target_date = @status.status_date
       flash.now[:danger] = 'ステータスの登録に失敗しました'
-      render :new, status: :unprocessable_entity
+    
+      # 当日以外のステータス登録の場合は new_schedule をレンダリング
+      if @status.status_date != Date.today
+        render :new_schedule, status: :unprocessable_entity
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 

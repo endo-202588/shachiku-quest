@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "status_histories/index"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -15,5 +16,11 @@ Rails.application.routes.draw do
   delete 'logout', to: 'user_sessions#destroy'
 
   # ステータス関連
-  resources :statuses, only: [:new, :create, :edit, :update, :destroy]
+  resources :statuses, only: [:new, :create, :edit, :update, :destroy] do
+    collection do
+      get :new_schedule
+      post :create_schedule
+    end
+    resources :status_histories, only: [:index]
+  end
 end
