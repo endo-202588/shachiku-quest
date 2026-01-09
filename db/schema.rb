@@ -10,22 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_07_153142) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_09_022949) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "status_histories", force: :cascade do |t|
-    t.bigint "status_id", null: false
-    t.bigint "user_id", null: false
-    t.integer "old_status_type"
-    t.integer "new_status_type"
-    t.datetime "changed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "comment"
-    t.index ["status_id"], name: "index_status_histories_on_status_id"
-    t.index ["user_id"], name: "index_status_histories_on_user_id"
-  end
 
   create_table "statuses", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -55,7 +42,5 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_07_153142) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "status_histories", "statuses"
-  add_foreign_key "status_histories", "users"
   add_foreign_key "statuses", "users"
 end

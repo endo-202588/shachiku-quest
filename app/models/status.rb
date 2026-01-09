@@ -1,10 +1,6 @@
 class Status < ApplicationRecord
   belongs_to :user
-  has_many :status_histories, dependent: :destroy
   include Discard::Model
-
-  # ステータスが変更された時に履歴を記録
-  after_update :record_history, if: :saved_change_to_status_type?
 
   enum status_type: {
     peaceful: 0,
@@ -28,19 +24,18 @@ class Status < ApplicationRecord
     !day_off?
   end
 
-  # 編集回数を取得
-  def edit_count
-    status_histories.count
+  # HPを返すメソッド
+  def hp
+    I18n.t("enums.status.hp.#{status_type}")
   end
-
-  private
-
-  def record_history
-    status_histories.create!(
-      user: user,
-      old_status_type: status_type_previously_was,
-      new_status_type: status_type,
-      changed_at: Time.current
-    )
+  
+  # 最大HPを返すメソッド
+  def max_hp
+    100
+  end
+  
+  # HP割合を返すメソッド（プログレスバー用）
+  def hp_percentage
+    (hp.to_f / max_hp * 100).round
   end
 end

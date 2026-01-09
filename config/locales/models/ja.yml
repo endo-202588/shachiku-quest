@@ -2,7 +2,7 @@ ja:
   activerecord:
     models:
       user: ユーザー
-      status: ステータス  # ← statusモデルの定義が抜けています
+      status: ステータス # ← statusモデルの定義が抜けています
       status_history: ステータス変更履歴
     attributes:
       user:
@@ -29,23 +29,15 @@ ja:
     status:
       status_type:
         peaceful: 🟢 平和
-        tired: 🟡 疲れ気味（0.5h）
-        busy: 🟠 やばいかも（1h）
-        very_busy: 🔴 きてます（1.5h）
-        overloaded: ⚫ 昇天（2h〜）
+        tired: 🟡 疲れ気味
+        busy: 🟠 やばいかも
+        very_busy: 🔴 きてます
+        overloaded: ⚫ 昇天
         day_off: 🏖️ 休暇中
-    status_history:
-      old_status_type:
-        peaceful: 🟢 平和
-        tired: 🟡 疲れ気味（0.5h）
-        busy: 🟠 やばいかも（1h）
-        very_busy: 🔴 きてます（1.5h）
-        overloaded: ⚫ 昇天（2h〜）
-        day_off: 🏖️ 休暇中
-      new_status_type:
-        peaceful: 🟢 平和
-        tired: 🟡 疲れ気味（0.5h）
-        busy: 🟠 やばいかも（1h）
-        very_busy: 🔴 きてます（1.5h）
-        overloaded: ⚫ 昇天（2h〜）
-        day_off: 🏖️ 休暇中
+      hp:
+        peaceful: 100
+        tired: 70
+        busy: 50
+        very_busy: 30
+        overloaded: 10
+        day_off: 100

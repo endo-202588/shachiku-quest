@@ -11,21 +11,24 @@
               span.text-2xl 🧙‍♂️
             div
               h3.text-lg.font-bold.text-gray-900
-                = user.decorate.full_name
+                = user.full_name
               p.text-sm.text-gray-500
-                = user.decorate.display_department
+                = user.display_department
 
         / ステータス表示
         .mt-4.pt-4.border-t.border-gray-200
           .flex.items-center.justify-between
             span.text-sm.font-medium.text-gray-600 今日のステータス:
-            = user.decorate.status_badge_html
+            = user.status_badge_html
+
+          / ★ HP表示を追加（数字 + プログレスバー）
+          = user.hp_display_html
 
           / メモを表示（デコレーターのメソッドを使用）
-          = user.decorate.status_memo_html
+          = user.status_memo_html
 
           / 編集ボタンとリセットボタン(自分のステータスのみ)
           - if current_user == user
             .flex.gap-2.mt-3
-              = user.decorate.status_edit_button_html
-              = user.decorate.status_reset_button_html
+              = user.status_edit_button_html
+              = user.status_reset_button_html
