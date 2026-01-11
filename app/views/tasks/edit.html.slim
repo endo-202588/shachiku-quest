@@ -1,0 +1,13 @@
+.container.max-w-2xl.mx-auto.px-4.py-8
+  - if flash[:success]
+    .alert.alert-success.mb-6.p-4.bg-green-50.text-green-800.border.border-green-200.rounded-lg
+      = flash[:success]
+
+  .bg-white.rounded-lg.shadow-md.p-6
+    h1.text-2xl.font-bold.text-gray-800.mb-6 ✏️ タスクを編集
+
+    = render 'form', task: @task
+
+    .mt-6.text-center
+      = link_to "← 詳細に戻る", task_path(@task), class: "text-gray-500 hover:text-gray-700 transition mr-4"
+      = link_to "一覧へ", tasks_path, class: "text-gray-500 hover:text-gray-700 transition"

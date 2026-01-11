@@ -1,6 +1,5 @@
 class Status < ApplicationRecord
   belongs_to :user
-  include Discard::Model
 
   enum status_type: {
     peaceful: 0,
@@ -14,7 +13,7 @@ class Status < ApplicationRecord
   validates :status_type, presence: true
   validates :status_date,
     presence: true,
-    uniqueness: { scope: :user_id, conditions: -> { kept } }
+    uniqueness: { scope: :user_id }
 
   # ステータスの日本語表示（推奨）
   def status_label
@@ -30,12 +29,12 @@ class Status < ApplicationRecord
   def hp
     I18n.t("enums.status.hp.#{status_type}")
   end
-  
+
   # 最大HPを返すメソッド
   def max_hp
     100
   end
-  
+
   # HP割合を返すメソッド（プログレスバー用）
   def hp_percentage
     (hp.to_f / max_hp * 100).round

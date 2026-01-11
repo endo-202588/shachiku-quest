@@ -9,13 +9,13 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = Task.new  # ← これが必要!
+    @task = current_user.tasks.build(status: :todo, required_time: :half_hour)
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)
     if @task.save
-      redirect_to @task, notice: 'タスクの新規登録に成功しました'
+      redirect_to users_path, notice: 'タスクの新規登録に成功しました'
     else
       render :new
     end
@@ -44,6 +44,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :due_date)
+    params.require(:task).permit(:title, :description, :status, :required_time)
   end
 end
