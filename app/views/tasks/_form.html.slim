@@ -1,21 +1,48 @@
-= form_with(model: task) do |form|
+= form_with(model: task, html: { class: "space-y-6" }) do |form|
+  / エラーメッセージ /
   - if task.errors.any?
-    div style="color: red"
-      h2
-        = pluralize(task.errors.count, "error")
-        |  prohibited this task from being saved:
+    .bg-red-50.border.border-red-200.rounded-lg.p-4.mb-6
+      h2.text-red-800.font-bold.mb-2
+        = pluralize(task.errors.count, "個のエラー")
+        | がありました
 
-      ul
+      ul.list-disc.list-inside.text-red-700.space-y-1
         - task.errors.each do |error|
           li = error.full_message
 
+  / タイトル /
   div
-    = form.label :title, 'タイトル', style: "display: block"
-    = form.text_field :title
+    = form.label :title, '📌 タイトル', class: "block text-sm font-bold text-gray-700 mb-2"
+    = form.text_field :title, placeholder: "例：プレゼン資料作成", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
 
+  / 内容 /
   div
-    = form.label :description, '内容', style: "display: block"
-    = form.text_area :description
+    = form.label :description, '📝 内容（詳細）', class: "block text-sm font-bold text-gray-700 mb-2"
+    = form.text_area :description, rows: 5, placeholder: "タスクの詳細を書いてください...", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
 
+  / ステータス選択（ラジオボタン） /
   div
-    = form.submit '登録'
+    = form.label :status, '📊 ステータス', class: "block text-sm font-bold text-gray-700 mb-2"
+    .space-y-2
+      - Task.statuses.keys.each do |status_key|
+        label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-purple-50.transition class=("bg-purple-50 border-purple-300" if task.status == status_key)
+          = form.radio_button :status, status_key, class: "mr-3"
+          span.text-base
+            = Task.human_attribute_name("status.#{status_key}")
+
+  / 必要時間選択（ラジオボタン） /
+  div
+    = form.label :required_time, '⏰ 必要時間', class: "block text-sm font-bold text-gray-700 mb-2"
+    .space-y-2
+      - Task.required_times.keys.each do |time_key|
+        label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-blue-50.transition class=("bg-blue-50 border-blue-300" if task.required_time == time_key)
+          = form.radio_button :required_time, time_key, class: "mr-3"
+          span.text-base
+            = Task.human_attribute_name("required_time.#{time_key}")
+
+  / 送信ボタン /
+  div
+    - if task.persisted?
+      = form.submit 'タスクを更新', class: "w-full bg-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-700 transition duration-200 cursor-pointer"
+    - else
+      = form.submit 'タスクを登録', class: "w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-200 cursor-pointer"

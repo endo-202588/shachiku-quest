@@ -8,7 +8,7 @@ class StatusesController < ApplicationController
     @target_date = parse_iso_date(params[:date]) || Date.current
 
     # 既存のステータスがあればそれを使い、なければ新規作成
-    @status = current_user.statuses.kept.find_or_initialize_by(status_date: @target_date)
+    @status = current_user.statuses.find_or_initialize_by(status_date: @target_date)
 
     # 既存のステータスがある場合はフラッシュメッセージを表示
     if @status.persisted?
@@ -29,7 +29,7 @@ class StatusesController < ApplicationController
     end
 
     @target_date = selected_date
-    @status = current_user.statuses.kept.find_or_initialize_by(status_date: @target_date)
+    @status = current_user.statuses.find_or_initialize_by(status_date: @target_date)
 
     if @status.persisted?
       # 既存のステータスがある場合は編集画面へ
@@ -49,7 +49,7 @@ class StatusesController < ApplicationController
     else
       @target_date = @status.status_date
       flash.now[:danger] = 'ステータスの登録に失敗しました'
-  
+
       if @status.status_date != Date.today
         render :new_schedule, status: :unprocessable_entity
       else
@@ -78,23 +78,17 @@ class StatusesController < ApplicationController
   end
 
   def destroy
-    # すでに削除済みの場合はエラー
-    if @status.discarded?
-      redirect_to users_path, alert: "このステータスは既に削除されています"
-      return
-    end
-
-    if @status.discard
-      redirect_to users_path, notice: "ステータスをリセットしました"
+    if @status.destroy
+      redirect_to users_path, notice: "ステータスをリセットしました", status: :see_other
     else
-      redirect_to users_path, alert: "ステータスのリセットに失敗しました"
+      redirect_to users_path, alert: "ステータスのリセットに失敗しました", status: :see_other
     end
   end
 
   private
 
   def set_status
-    @status = current_user.statuses.kept.find(params[:id])
+    @status = current_user.statuses.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to users_path, alert: "ステータスが見つかりませんでした"
     return

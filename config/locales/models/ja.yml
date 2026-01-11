@@ -17,14 +17,6 @@ ja:
         status_date: 日付
         memo: メモ
         user: ユーザー
-      status_history:
-        status: ステータス
-        user: ユーザー
-        old_status_type: 変更前のステータス
-        new_status_type: 変更後のステータス
-        changed_at: 変更日時
-        created_at: 作成日時
-        updated_at: 更新日時
   enums:
     status:
       status_type:
@@ -41,3 +33,14 @@ ja:
         very_busy: 30
         overloaded: 10
         day_off: 100
+      task:
+        status:
+          todo: 未着手
+          in_progress: 進行中
+          help_requested: ヘルプ依頼中
+          help_matched: ヘルプマッチング済み
+          completed: 完了
+        required_time:
+          half_hour: 30分
+          one_hour: 1時間
+          two_hours: 2時間

@@ -15,11 +15,11 @@ class User < ApplicationRecord
   # 本日のステータスを取得(ビュー用 - includes済みの場合に効率的)
   def today_status
     # includes済みのstatusesからメモリ上で検索
-    statuses.kept.to_a.find { |status| status.status_date == Date.current }
+    statuses.to_a.find { |status| status.status_date == Date.current }
   end
 
   # 本日のステータスが存在するかチェック(コントローラー用 - 軽量)
   def has_today_status?
-    statuses.kept.exists?(status_date: Date.current)
+    statuses.exists?(status_date: Date.current)
   end
 end
