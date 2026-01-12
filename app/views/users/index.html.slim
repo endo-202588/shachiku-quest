@@ -16,19 +16,8 @@
                 = user.display_department
 
         / ステータス表示
-        .mt-4.pt-4.border-t.border-gray-200
-          .flex.items-center.justify-between
-            span.text-sm.font-medium.text-gray-600 今日のステータス:
-            = user.status_badge_html
+        = user.status_section_html(current_user)
 
-          / ★ HP表示を追加（数字 + プログレスバー）
-          = user.hp_display_html
+        = user.in_progress_tasks_section(current_user)
 
-          / メモを表示（デコレーターのメソッドを使用）
-          = user.status_memo_html
-
-          / 編集ボタンとリセットボタン(自分のステータスのみ)
-          - if current_user == user
-            .flex.gap-2.mt-3
-              = user.status_edit_button_html
-              = user.status_reset_button_html
+        = user.tasks_index_link

@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   belongs_to :user
 
-  enum status: {
+  enum :status, {
     todo: 0,
     in_progress: 1,
     help_requested: 2,
@@ -9,10 +9,11 @@ class Task < ApplicationRecord
     completed: 4
   }
 
-  enum required_time: {
+  enum :required_time, {
     half_hour: 0,
     one_hour: 1,
-    two_hours: 2
+    two_hours: 2,
+    long_time: 3
   }
 
   validates :title, presence: true

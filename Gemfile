@@ -28,6 +28,7 @@ gem 'simple_form'
 
 # Others
 gem 'draper'
+gem 'enum_help', '0.0.19'
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem 'discard', '~> 1.2'
 

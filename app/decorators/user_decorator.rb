@@ -1,6 +1,20 @@
 class UserDecorator < Draper::Decorator
   delegate_all
 
+  # ステータスの色定義
+  STATUS_COLORS = {
+    'peaceful' => 'bg-green-100 text-green-800',
+    'tired' => 'bg-yellow-100 text-yellow-800',
+    'busy' => 'bg-orange-100 text-orange-800',
+    'very_busy' => 'bg-red-100 text-red-800',
+    'overloaded' => 'bg-purple-100 text-purple-800',
+    'day_off' => 'bg-blue-100 text-blue-800'
+  }.freeze
+
+  # =====================================
+  # ユーザー基本情報
+  # =====================================
+
   def full_name
     "#{object.last_name} #{object.first_name}"
   end
@@ -9,7 +23,9 @@ class UserDecorator < Draper::Decorator
     object.department.presence || "未設定"
   end
 
-  # ✅ ステータス表示用メソッドをデコレーターに追加
+  # =====================================
+  # ステータス表示
+  # =====================================
 
   # シンプルなステータス表示
   def status_display
@@ -23,7 +39,7 @@ class UserDecorator < Draper::Decorator
   # 絵文字付きステータス表示
   def status_with_emoji
     return "📝 未登録" if today_status.blank?
-    I18n.t("enums.status.status_type.#{today_status.status_type}")
+    I18n.t("activerecord.enums.status.status_type.#{today_status.status_type}")
   end
 
   # HTMLバッジ付きステータス表示（Tailwind CSS版）
@@ -31,22 +47,8 @@ class UserDecorator < Draper::Decorator
     if today_status.blank?
       h.content_tag(:span, "📝 未登録", class: "px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700")
     else
-      color_class = case today_status.status_type
-                    when "peaceful"
-                      "bg-green-100 text-green-800"
-                    when "tired"
-                      "bg-yellow-100 text-yellow-800"
-                    when "busy"
-                      "bg-orange-100 text-orange-800"
-                    when "very_busy"
-                      "bg-red-100 text-red-800"
-                    when "overloaded"
-                      "bg-purple-100 text-purple-800"
-                    when "day_off"
-                      "bg-blue-100 text-blue-800"
-                    else
-                      "bg-gray-100 text-gray-800"
-                    end
+      # 定数から色を取得(デフォルト値も設定)
+      color_class = STATUS_COLORS[today_status.status_type] || "bg-gray-100 text-gray-800"
 
       h.content_tag(:span, status_with_emoji, class: "px-3 py-1 text-sm rounded-full #{color_class}")
     end
@@ -74,13 +76,25 @@ class UserDecorator < Draper::Decorator
     end
   end
 
+  # ★ ステータスセクション全体を生成
+  def status_section_html(current_user)
+    h.content_tag(:div, class: "mt-4 pt-4 border-t border-gray-200") do
+      h.safe_join([
+        status_label_and_badge_html,
+        hp_display_html,
+        status_memo_html,
+        status_action_buttons_html(current_user)
+      ])
+    end
+  end
+
   def status_edit_button_html
     return unless today_status
 
     h.link_to(
-    "✏️ 編集",
-    h.edit_status_path(today_status),
-    class: "inline-block mt-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
+      "✏️ 編集",
+      h.edit_status_path(today_status),
+      class: "inline-block mt-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
     )
   end
 
@@ -95,7 +109,11 @@ class UserDecorator < Draper::Decorator
     )
   end
 
-    # HP数字表示（ドラクエ風）
+  # =====================================
+  # HP表示
+  # =====================================
+
+  # HP数字表示（ドラクエ風）
   def hp_text_html
     return h.content_tag(:span, "HP: ???/???", class: "text-sm text-gray-500") if today_status.blank?
 
@@ -136,7 +154,7 @@ class UserDecorator < Draper::Decorator
 
     <<~HTML.html_safe
       <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mt-2">
-        <div class="#{bar_color} h-3 transition-all duration-300" 
+        <div class="#{bar_color} h-3 transition-all duration-300"
              style="width: #{percentage}%">
         </div>
       </div>
@@ -153,5 +171,82 @@ class UserDecorator < Draper::Decorator
         #{hp_bar_html}
       </div>
     HTML
+  end
+
+  # =====================================
+  # タスク表示
+  # =====================================
+
+  # 進行中のタスク数のバッジ表示
+  def in_progress_tasks_badge
+    return nil if in_progress_tasks.empty?
+
+    h.content_tag :span, "#{in_progress_tasks.count}件",
+      class: 'text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full'
+  end
+
+  # 進行中のタスクセクション全体
+  def in_progress_tasks_section(current_user)
+    return nil if in_progress_tasks.empty?
+
+    h.content_tag :div, class: 'mt-4 pt-4 border-t border-gray-200' do
+      h.concat in_progress_tasks_header
+      h.concat in_progress_tasks_list(current_user)
+    end
+  end
+
+  # タスク一覧リンク(自分のカードの場合のみ表示)
+  def tasks_index_link
+    return nil unless h.current_user == object
+
+    h.content_tag :div, class: 'mt-3' do
+      h.link_to '📋 タスク一覧を見る', h.tasks_path,
+        class: 'bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
+    end
+  end
+
+  private
+
+  # -------------------------------------
+  # ステータス表示 - private
+  # -------------------------------------
+
+  # ステータスラベルとバッジ
+  def status_label_and_badge_html
+    h.content_tag(:div, class: "flex items-center justify-between") do
+      h.concat(h.content_tag(:span, "今日のステータス:", class: "text-sm font-medium text-gray-600"))
+      h.concat(status_badge_html)
+    end
+  end
+
+  # 編集・リセットボタン(自分のステータスのみ)
+  def status_action_buttons_html(current_user)
+    return "" unless current_user == object
+
+    h.content_tag(:div, class: "flex gap-2 mt-3") do
+      h.concat(status_edit_button_html)
+      h.concat(status_reset_button_html)
+    end
+  end
+
+  # -------------------------------------
+  # タスク表示 - private
+  # -------------------------------------
+
+  # タスクセクションのヘッダー
+  def in_progress_tasks_header
+    h.content_tag :div, class: 'flex items-center justify-between mb-2' do
+      h.concat h.content_tag(:span, '📋 進行中のタスク:', class: 'text-sm font-medium text-gray-600')
+      h.concat in_progress_tasks_badge
+    end
+  end
+
+  # タスクリスト
+  def in_progress_tasks_list(current_user)
+    h.content_tag :ol, class: 'list-decimal list-inside space-y-1 text-sm text-gray-700' do
+      in_progress_tasks.each do |task|
+        h.concat task.decorate.list_item_with_actions(current_user, object)
+      end
+    end
   end
 end
