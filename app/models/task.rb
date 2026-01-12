@@ -16,6 +16,8 @@ class Task < ApplicationRecord
     long_time: 3
   }
 
+  scope :by_status, ->(status) { where(status: status) if status.present? }
+
   validates :title, presence: true
   validates :status, presence: true
   validates :required_time, presence: true
