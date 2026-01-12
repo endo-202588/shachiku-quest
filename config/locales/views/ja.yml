@@ -4,3 +4,40 @@ ja:
       create: "登録"
       submit: "保存"
       update: "更新"
+    label:
+      email: メールアドレス
+      password: パスワード
+  defaults:
+    login: ログイン
+    register: 登録
+    logout: ログアウト
+  header:
+    login: ログイン
+    logout: ログアウト
+    board: 掲示板
+    board_index: 掲示板一覧
+    create_board: 掲示板作成
+    bookmark_index: ブックマーク一覧
+    profile: プロフィール
+  user_sessions:
+    new:
+      title: ログイン
+      login: ログイン
+      to_register_page: 登録ページへ
+      password_forget: パスワードをお忘れの方はこちら
+  users:
+    new:
+      title: ユーザー登録
+      to_login_page: ログインページへ
+  tasks:
+    index:
+      title: タスク一覧
+      new_task: 新規タスク作成
+    show:
+      title: タスク詳細
+      edit: 編集
+      delete: 削除
+    new:
+      title: タスク作成
+    edit:
+      title: タスク編集

@@ -1,48 +1,33 @@
-= form_with(model: task, html: { class: "space-y-6" }) do |form|
-  / エラーメッセージ /
-  - if task.errors.any?
-    .bg-red-50.border.border-red-200.rounded-lg.p-4.mb-6
-      h2.text-red-800.font-bold.mb-2
-        = pluralize(task.errors.count, "個のエラー")
-        | がありました
+= simple_form_for task, html: { class: "space-y-4" } do |f|
+  / タイトル
+  .form-group
+    = f.input :title, label: "タスク名", input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", placeholder: "例: 資料作成" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:title].any?
+      .text-red-500.text-sm.mt-1
+        = task.errors[:title].first
 
-      ul.list-disc.list-inside.text-red-700.space-y-1
-        - task.errors.each do |error|
-          li = error.full_message
+  / ステータス
+  .form-group
+    = f.input :status, label: "ステータス", as: :select, collection: status_options_for_select, include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:status].any?
+      .text-red-500.text-sm.mt-1
+        = task.errors[:status].first
 
-  / タイトル /
-  div
-    = form.label :title, '📌 タイトル', class: "block text-sm font-bold text-gray-700 mb-2"
-    = form.text_field :title, placeholder: "例：プレゼン資料作成", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+  / 所要時間
+  .form-group
+    = f.input :required_time, label: "所要時間", as: :select, collection: required_time_options_for_select, include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:required_time].any?
+      .text-red-500.text-sm.mt-1
+        = task.errors[:required_time].first
 
-  / 内容 /
-  div
-    = form.label :description, '📝 内容（詳細）', class: "block text-sm font-bold text-gray-700 mb-2"
-    = form.text_area :description, rows: 5, placeholder: "タスクの詳細を書いてください...", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+  / 説明
+  .form-group
+    = f.input :description, label: "説明(任意)", as: :text, input_html: { rows: 4, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", placeholder: "タスクの詳細を入力してください" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:description].any?
+      .text-red-500.text-sm.mt-1
+        = task.errors[:description].first
 
-  / ステータス選択（ラジオボタン） /
-  div
-    = form.label :status, '📊 ステータス', class: "block text-sm font-bold text-gray-700 mb-2"
-    .space-y-2
-      - Task.statuses.keys.each do |status_key|
-        label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-purple-50.transition class=("bg-purple-50 border-purple-300" if task.status == status_key)
-          = form.radio_button :status, status_key, class: "mr-3"
-          span.text-base
-            = Task.human_attribute_name("status.#{status_key}")
-
-  / 必要時間選択（ラジオボタン） /
-  div
-    = form.label :required_time, '⏰ 必要時間', class: "block text-sm font-bold text-gray-700 mb-2"
-    .space-y-2
-      - Task.required_times.keys.each do |time_key|
-        label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-blue-50.transition class=("bg-blue-50 border-blue-300" if task.required_time == time_key)
-          = form.radio_button :required_time, time_key, class: "mr-3"
-          span.text-base
-            = Task.human_attribute_name("required_time.#{time_key}")
-
-  / 送信ボタン /
-  div
-    - if task.persisted?
-      = form.submit 'タスクを更新', class: "w-full bg-orange-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-700 transition duration-200 cursor-pointer"
-    - else
-      = form.submit 'タスクを登録', class: "w-full bg-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-200 cursor-pointer"
+  / ボタン
+  .flex.gap-3.mt-6
+    = f.button :submit, submit_text, class: "flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition cursor-pointer"
+    = link_to "キャンセル", users_path, class: "flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md text-center transition"

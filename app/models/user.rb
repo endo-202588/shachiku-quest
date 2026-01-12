@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :statuses, dependent: :destroy
   has_many :tasks, dependent: :destroy
+  has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }

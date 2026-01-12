@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   skip_before_action :require_login, only: %i[new create]
-  
+
   def index
-    @users = User.includes(:statuses).all.decorate
+    @users = User.includes(:statuses, :in_progress_tasks).all.decorate
   end
 
   def new

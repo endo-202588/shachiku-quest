@@ -1,0 +1,34 @@
+.container.mx-auto.px-4.py-8
+  .flex.justify-between.items-center.mb-8
+    h1.text-4xl.font-bold.text-indigo-900 📋 タスク一覧
+    = link_to '戻る', users_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'
+
+  / ステータスごとにタブで切り替える方法
+  .mb-6
+    .flex.gap-2.border-b
+      = link_to 'すべて', tasks_path, class: 'px-4 py-2 border-b-2 border-indigo-500'
+      = link_to '進行中', tasks_path(status: 'in_progress'), class: 'px-4 py-2'
+      = link_to '完了', tasks_path(status: 'completed'), class: 'px-4 py-2'
+
+  / タスク一覧
+  .space-y-4
+    - @tasks.each do |task|
+      .bg-white.rounded-lg.shadow-lg.p-6.border-2.border-indigo-200
+        .flex.justify-between.items-start
+          div
+            h3.text-lg.font-bold.text-gray-900.mb-2
+              = task.title
+
+            / ステータスバッジ
+            .mb-2
+              = task.status_badge_html
+
+            / メモがあれば表示
+            - if task.description.present?
+              p.text-sm.text-gray-600.mb-2
+                = task.description
+
+          / 操作ボタン
+          .flex.gap-2
+            = link_to '編集', edit_task_path(task), class: 'bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm'
+            = button_to '削除', task_path(task), method: :delete, data: { confirm: '本当に削除しますか?' }, class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded text-sm'

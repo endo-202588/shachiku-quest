@@ -2,8 +2,8 @@ ja:
   activerecord:
     models:
       user: ユーザー
-      status: ステータス # ← statusモデルの定義が抜けています
-      status_history: ステータス変更履歴
+      status: ステータス
+      task: タスク
     attributes:
       user:
         first_name: 名
@@ -12,27 +12,26 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
+      task:
+        title: タイトル
+        description: 説明
+        status: ステータス
+        required_time: 所要時間
+        user: ユーザー
       status:
         status_type: ステータス
         status_date: 日付
         memo: メモ
         user: ユーザー
-  enums:
-    status:
-      status_type:
-        peaceful: 🟢 平和
-        tired: 🟡 疲れ気味
-        busy: 🟠 やばいかも
-        very_busy: 🔴 きてます
-        overloaded: ⚫ 昇天
-        day_off: 🏖️ 休暇中
-      hp:
-        peaceful: 100
-        tired: 70
-        busy: 50
-        very_busy: 30
-        overloaded: 10
-        day_off: 100
+    enums:
+      status:
+        status_type:
+          peaceful: 🟢 平和
+          tired: 🟡 疲れ気味
+          busy: 🟠 やばいかも
+          very_busy: 🔴 きてます
+          overloaded: ⚫ 昇天
+          day_off: 🏖️ 休暇中
       task:
         status:
           todo: 未着手
@@ -44,3 +43,4 @@ ja:
           half_hour: 30分
           one_hour: 1時間
           two_hours: 2時間
+          long_time: 2時間以上
