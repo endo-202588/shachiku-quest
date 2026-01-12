@@ -6,9 +6,20 @@
   / ステータスごとにタブで切り替える方法
   .mb-6
     .flex.gap-2.border-b
-      = link_to 'すべて', tasks_path, class: 'px-4 py-2 border-b-2 border-indigo-500'
-      = link_to '進行中', tasks_path(status: 'in_progress'), class: 'px-4 py-2'
-      = link_to '完了', tasks_path(status: 'completed'), class: 'px-4 py-2'
+      = link_to tasks_path, class: tab_link_class(nil) do
+        | すべて
+        span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
+          = task_count_by_status(nil)
+
+      = link_to tasks_path(status: 'in_progress'), class: tab_link_class('in_progress') do
+        | 進行中
+        span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
+          = task_count_by_status('in_progress')
+
+      = link_to tasks_path(status: 'completed'), class: tab_link_class('completed') do
+        | 完了
+        span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
+          = task_count_by_status('completed')
 
   / タスク一覧
   .space-y-4
