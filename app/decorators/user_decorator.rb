@@ -24,6 +24,24 @@ class UserDecorator < Draper::Decorator
   end
 
   # =====================================
+  # Help!バッジ（カード右上用）
+  # =====================================
+
+  # Help!バッジの表示判定と生成
+  def help_badge_html
+    # N+1回避: includes済みのhelp_requested_tasksを使用
+    return nil if help_requested_tasks.empty?
+
+    count = help_requested_tasks.size
+    h.content_tag(
+      :span,
+      "🆘 Help! (#{count})",
+      class: "px-3 py-1 text-xs rounded-full bg-red-600 text-white font-bold shadow-lg animate-pulse",
+      title: "ヘルプが必要なタスク: #{count}件"
+    )
+  end
+
+  # =====================================
   # ステータス表示
   # =====================================
 
@@ -181,7 +199,7 @@ class UserDecorator < Draper::Decorator
   def in_progress_tasks_badge
     return nil if in_progress_tasks.empty?
 
-    h.content_tag :span, "#{in_progress_tasks.count}件",
+    h.content_tag :span, "#{in_progress_tasks.size}件",
       class: 'text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full'
   end
 

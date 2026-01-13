@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :statuses, dependent: :destroy
   has_many :tasks, dependent: :destroy
   has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
+  has_many :help_requested_tasks, -> { where(status: 'help_requested') }, class_name: 'Task'
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
@@ -15,7 +16,8 @@ class User < ApplicationRecord
 
   # 本日のステータスを取得(ビュー用 - includes済みの場合に効率的)
   def today_status
-    # includes済みのstatusesからメモリ上で検索
+    # N+1回避: includes済みのstatusesからメモリ上で検索
+    # ビューで複数回呼ばれてもSQLは発行されない
     statuses.to_a.find { |status| status.status_date == Date.current }
   end
 
