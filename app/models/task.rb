@@ -1,5 +1,6 @@
 class Task < ApplicationRecord
   belongs_to :user
+  has_one :help_request
 
   enum :status, {
     todo: 0,
@@ -9,16 +10,19 @@ class Task < ApplicationRecord
     completed: 4
   }
 
-  enum :required_time, {
-    half_hour: 0,
-    one_hour: 1,
-    two_hours: 2,
-    long_time: 3
-  }
-
   scope :by_status, ->(status) { where(status: status) if status.present? }
 
   validates :title, presence: true
   validates :status, presence: true
-  validates :required_time, presence: true
+
+  # help_requestedになる際にhelp_requestレコードの作成を確認
+  validate :help_request_exists_when_help_requested
+
+  private
+
+  def help_request_exists_when_help_requested
+    if help_requested? && help_request.blank?
+      errors.add(:base, "ヘルプ要請にはhelp_requestが必要です")
+    end
+  end
 end

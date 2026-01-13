@@ -13,13 +13,6 @@
       .text-red-500.text-sm.mt-1
         = task.errors[:status].first
 
-  / 所要時間
-  .form-group
-    = f.input :required_time, label: "所要時間", as: :select, collection: required_time_options_for_select, include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
-    - if task.errors[:required_time].any?
-      .text-red-500.text-sm.mt-1
-        = task.errors[:required_time].first
-
   / 説明
   .form-group
     = f.input :description, label: "説明(任意)", as: :text, input_html: { rows: 4, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", placeholder: "タスクの詳細を入力してください" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false

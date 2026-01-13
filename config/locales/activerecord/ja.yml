@@ -44,3 +44,9 @@ ja:
           one_hour: 1時間
           two_hours: 2時間
           long_time: 2時間以上
+      HelpRequest:
+        required_time:
+          half_hour: 30分
+          one_hour: 1時間
+          two_hours: 2時間
+          long_time: 2時間以上
