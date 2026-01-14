@@ -39,15 +39,6 @@ class TasksController < ApplicationController
   def update
     @task.assign_attributes(task_params)
 
-    # ========== デバッグ用 ==========
-    Rails.logger.debug "========== パラメータ確認 =========="
-    Rails.logger.debug "task_type: #{@task.task_type}"
-    Rails.logger.debug "help_request params: #{params[:help_request]}"
-    Rails.logger.debug "required_time: #{params[:help_request]&.[](:required_time)}"
-    Rails.logger.debug "required_time.blank?: #{params[:help_request]&.[](:required_time).blank?}"
-    Rails.logger.debug "================================="
-    # ================================
-
     # ヘルプ要請で「選択してください」(空文字)が送信された場合のチェック
     if @task.help_request? && params[:help_request]&.[](:required_time).blank?
       @task.errors.add(:base, '必要な時間を選択してください')
