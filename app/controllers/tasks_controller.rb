@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   def index
     @tasks = current_user.tasks
-                       .by_status(params[:status])
+                       .by_task_type(params[:task_type])
                        .order(created_at: :desc)
                        .decorate
   end
@@ -12,7 +12,7 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = current_user.tasks.build(status: :todo)
+    @task = current_user.tasks.build(task_type: :normal)
   end
 
   def create
@@ -37,36 +37,51 @@ class TasksController < ApplicationController
   end
 
   def update
-    # help_requestedに変更する場合
-    if task_params[:status] == 'help_requested'
-      ActiveRecord::Base.transaction do
-        # help_requestがまだ存在しない場合は作成
-        unless @task.help_request.present?
+    @task.assign_attributes(task_params)
+
+    # ========== デバッグ用 ==========
+    Rails.logger.debug "========== パラメータ確認 =========="
+    Rails.logger.debug "task_type: #{@task.task_type}"
+    Rails.logger.debug "help_request params: #{params[:help_request]}"
+    Rails.logger.debug "required_time: #{params[:help_request]&.[](:required_time)}"
+    Rails.logger.debug "required_time.blank?: #{params[:help_request]&.[](:required_time).blank?}"
+    Rails.logger.debug "================================="
+    # ================================
+
+    # ヘルプ要請で「選択してください」(空文字)が送信された場合のチェック
+    if @task.help_request? && params[:help_request]&.[](:required_time).blank?
+      @task.errors.add(:base, '必要な時間を選択してください')
+      flash.now[:alert] = '必要な時間を選択してください'
+      render :edit, status: :unprocessable_entity
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      # help_requestタイプの場合
+      if @task.help_request?
+        if @task.help_request.present?
+          # 既存のhelp_requestを更新
+          @task.help_request.assign_attributes(
+            required_time: params[:help_request][:required_time],
+            status: @task.help_request.status || :open
+          )
+        else
+          # 新規作成
           @task.build_help_request(
-            required_time: params[:required_time] || :half_hour,  # デフォルト値
+            required_time: params[:help_request][:required_time],
             status: :open
           )
         end
-
-        # タスクを更新
-        if @task.update(task_params)
-          redirect_to tasks_path, notice: 'タスクを更新し、ヘルプ要請を作成しました'
-        else
-          flash.now[:alert] = 'タスクの更新に失敗しました'
-          render :edit, status: :unprocessable_entity
-        end
       end
-    else
-      # 通常の更新
-      if @task.update(task_params)
-        redirect_to tasks_path, notice: 'タスクの更新に成功しました'
+
+      if @task.save
+        redirect_to tasks_path, notice: 'タスクを更新しました'
       else
         flash.now[:alert] = 'タスクの更新に失敗しました'
         render :edit, status: :unprocessable_entity
       end
     end
   rescue ActiveRecord::RecordInvalid => e
-    # エラーが発生した場合
     flash.now[:alert] = "更新に失敗しました: #{e.message}"
     render :edit, status: :unprocessable_entity
   end
@@ -84,11 +99,11 @@ class TasksController < ApplicationController
 
     tasks_attributes.each do |task_attr|
       task_data = prepare_single_task(task_attr)
-    
+
       if task_data[:valid]
-        valid_tasks << task_data[:task]
+        valid_tasks << task_data
       else
-        invalid_tasks << task_data[:task]
+        invalid_tasks << task_data
       end
     end
 
@@ -96,27 +111,28 @@ class TasksController < ApplicationController
   end
 
   def prepare_single_task(task_attr)
-    permitted_attr = task_attr.permit(:title, :status, :description, :required_time)
+    permitted_attr = task_attr.permit(:title, :task_type, :description, :required_time)
 
     task = current_user.tasks.build(
       title: permitted_attr[:title],
-      status: permitted_attr[:status],
+      task_type: permitted_attr[:task_type],
       description: permitted_attr[:description]
     )
 
-    # enumの自動生成メソッドを使用
-    if task.help_requested?
+    required_time = nil
+
+    # ヘルプ要請タスクの場合
+    if task.help_request?
       unless valid_required_time?(permitted_attr[:required_time])
         task.errors.add(:required_time, 'はヘルプ要請時に必須です。有効な時間を選択してください。')
-        return { task: task, valid: false }
+        return { task: task, valid: false, required_time: nil }
       end
 
       # HelpRequestのenumを使用して整数値に変換
-      required_time_value = HelpRequest.required_times[permitted_attr[:required_time].to_s]
-      task.instance_variable_set(:@required_time, required_time_value)
+      required_time = HelpRequest.required_times[permitted_attr[:required_time].to_s]
     end
 
-    { task: task, valid: task.valid? }
+    { task: task, valid: task.valid?, required_time: required_time }
   end
 
   def valid_required_time?(required_time)
@@ -128,31 +144,30 @@ class TasksController < ApplicationController
 
   def save_all_tasks(valid_tasks)
     ActiveRecord::Base.transaction do
-      valid_tasks.each do |task|
+      valid_tasks.each do |task_data|
+        task = task_data[:task]
         task.save!
-        create_help_request_if_needed(task)
+
+        # help_requestが必要な場合は作成
+        if task.help_request? && task_data[:required_time].present?
+          task.create_help_request!(
+            required_time: task_data[:required_time],
+            status: :open
+          )
+        end
       end
     end
 
-    redirect_to users_path, notice: "#{valid_tasks.size}件のタスクを登録しました"
+    redirect_to tasks_path, notice: "#{valid_tasks.size}件のタスクを登録しました"
   rescue ActiveRecord::RecordInvalid => e
-    handle_save_error(e, valid_tasks)
+    handle_save_error(e, valid_tasks.map { |td| td[:task] })
   rescue => e
-    handle_unexpected_error(e, valid_tasks)
-  end
-
-  def create_help_request_if_needed(task)
-    return unless task.help_requested?
-
-    required_time = task.instance_variable_get(:@required_time)
-    task.create_help_request!(
-      required_time: required_time,
-      status: :open
-    )
+    handle_unexpected_error(e, valid_tasks.map { |td| td[:task] })
   end
 
   def handle_validation_errors(valid_tasks, invalid_tasks)
-    @tasks = valid_tasks + invalid_tasks
+    # valid_tasksからtaskオブジェクトを取り出す
+    @tasks = valid_tasks.map { |td| td[:task] } + invalid_tasks
     flash.now[:alert] = 'タスクの登録に失敗しました。入力内容を確認してください。'
     render :new, status: :unprocessable_entity
   end
@@ -175,6 +190,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :status)
+    params.require(:task).permit(:title, :description, :task_type)
   end
 end

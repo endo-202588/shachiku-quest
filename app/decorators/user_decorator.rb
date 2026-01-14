@@ -119,11 +119,13 @@ class UserDecorator < Draper::Decorator
   def status_reset_button_html
     return unless today_status
 
-    h.link_to(
+      h.button_to(
     "🔄 リセット",
-    h.status_path(today_status),
-    data: { turbo_method: :delete, turbo_confirm: "本当にリセットしますか?" },
-    class: "inline-block mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
+      h.status_path(today_status),
+      method: :delete,  # ← 追加
+      data: { turbo_method: :delete, turbo_confirm: "本当にリセットしますか?" },
+      class: "inline-block mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition",
+      form: { class: "inline-block" }  # ← 追加(フォームのスタイルを整える)
     )
   end
 
@@ -196,20 +198,20 @@ class UserDecorator < Draper::Decorator
   # =====================================
 
   # 進行中のタスク数のバッジ表示
-  def in_progress_tasks_badge
-    return nil if in_progress_tasks.empty?
+  def normal_tasks_badge
+    return nil if normal_tasks.empty?
 
-    h.content_tag :span, "#{in_progress_tasks.size}件",
+    h.content_tag :span, "#{normal_tasks.size}件",
       class: 'text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full'
   end
 
   # 進行中のタスクセクション全体
-  def in_progress_tasks_section(current_user)
-    return nil if in_progress_tasks.empty?
+  def normal_tasks_section(current_user)
+    return nil if normal_tasks.empty?
 
     h.content_tag :div, class: 'mt-4 pt-4 border-t border-gray-200' do
-      h.concat in_progress_tasks_header
-      h.concat in_progress_tasks_list(current_user)
+      h.concat normal_tasks_header
+      h.concat normal_tasks_list(current_user)
     end
   end
 
@@ -252,17 +254,17 @@ class UserDecorator < Draper::Decorator
   # -------------------------------------
 
   # タスクセクションのヘッダー
-  def in_progress_tasks_header
+  def normal_tasks_header
     h.content_tag :div, class: 'flex items-center justify-between mb-2' do
-      h.concat h.content_tag(:span, '📋 進行中のタスク:', class: 'text-sm font-medium text-gray-600')
-      h.concat in_progress_tasks_badge
+      h.concat h.content_tag(:span, '📋 本日のタスク:', class: 'text-sm font-medium text-gray-600')
+      h.concat normal_tasks_badge
     end
   end
 
   # タスクリスト
-  def in_progress_tasks_list(current_user)
+  def normal_tasks_list(current_user)
     h.content_tag :ol, class: 'list-decimal list-inside space-y-1 text-sm text-gray-700' do
-      in_progress_tasks.each do |task|
+      normal_tasks.each do |task|
         h.concat task.decorate.list_item_with_actions(current_user, object)
       end
     end

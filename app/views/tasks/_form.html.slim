@@ -1,4 +1,4 @@
-= simple_form_for task, html: { class: "space-y-4" } do |f|
+= simple_form_for task, html: { class: "space-y-4", data: { controller: "task-form" } } do |f|
   / タイトル
   .form-group
     = f.input :title, label: "タスク名", input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", placeholder: "例: 資料作成" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
@@ -6,12 +6,25 @@
       .text-red-500.text-sm.mt-1
         = task.errors[:title].first
 
-  / ステータス
+  / タスクの種類
   .form-group
-    = f.input :status, label: "ステータス", as: :select, collection: status_options_for_select, include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
-    - if task.errors[:status].any?
+    = f.input :task_type, label: "タスクの種類", as: :select, collection: [['通常', 'normal'], ['ヘルプ要請', 'help_request']], include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", data: { action: "change->task-form#toggleRequiredTime", task_form_target: "taskTypeSelect" } }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:task_type].any?
       .text-red-500.text-sm.mt-1
-        = task.errors[:status].first
+        = task.errors[:task_type].first
+
+  / 必要な時間(help_requestの場合のみ表示)
+  .form-group data-task-form-target="requiredTimeField" class=(task.help_request? ? "" : "hidden")
+    label.block.text-sm.font-medium.text-gray-700.mb-1 必要な時間
+    = select_tag "help_request[required_time]", \
+      options_for_select(HelpRequest.required_times.keys.map { |k| [I18n.t("activerecord.enums.help_request.required_time.#{k}"), k] }, task.help_request&.required_time), \
+      include_blank: '選択してください', \
+      required: true, \
+      class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm select w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", \
+      data: { task_form_target: "requiredTimeInput" }
+    - if task.errors[:base].any? && task.errors[:base].first.include?('時間')
+      .text-red-500.text-sm.mt-1
+        = task.errors[:base].first
 
   / 説明
   .form-group
@@ -23,4 +36,4 @@
   / ボタン
   .flex.gap-3.mt-6
     = f.button :submit, submit_text, class: "flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition cursor-pointer"
-    = link_to "キャンセル", users_path, class: "flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md text-center transition"
+    = link_to "キャンセル", users_path

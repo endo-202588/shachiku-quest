@@ -9,17 +9,12 @@
       = link_to tasks_path, class: tab_link_class(nil) do
         | すべて
         span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
-          = task_count_by_status(nil)
+          = task_count_by_task_type(nil)
 
-      = link_to tasks_path(status: 'in_progress'), class: tab_link_class('in_progress') do
-        | 進行中
+      = link_to tasks_path(task_type: 'help_request'), class: tab_link_class('help_request') do
+        | ヘルプ要請中
         span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
-          = task_count_by_status('in_progress')
-
-      = link_to tasks_path(status: 'completed'), class: tab_link_class('completed') do
-        | 完了
-        span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
-          = task_count_by_status('completed')
+          = task_count_by_task_type('help_request')
 
   / タスク一覧
   .space-y-4
@@ -32,7 +27,7 @@
 
             / ステータスバッジ
             .mb-2
-              = task.status_badge_html
+              = task.task_type_badge_html
 
             / メモがあれば表示
             - if task.description.present?

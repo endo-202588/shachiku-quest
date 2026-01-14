@@ -6,23 +6,20 @@ class TaskDecorator < Draper::Decorator
   # =====================================
 
   # ステータスの色定義
-  STATUS_COLORS = {
-    'todo' => 'bg-gray-100 text-gray-800',
-    'in_progress' => 'bg-blue-100 text-blue-800',
-    'help_requested' => 'bg-yellow-100 text-yellow-800',
-    'help_matched' => 'bg-green-100 text-green-800',
-    'completed' => 'bg-purple-100 text-purple-800'
+  TASK_TYPE_COLORS = {
+    'normal' => 'bg-blue-100 text-blue-800',           # 自分で行うタスク
+    'help_request' => 'bg-yellow-100 text-yellow-800' # ヘルプ要請タスク
   }.freeze
 
   # ステータスバッジ
-  def status_badge_html
-    color_class = STATUS_COLORS[object.status] || "bg-gray-100 text-gray-800"
-    h.content_tag(:span, status_text, class: "px-3 py-1 text-sm rounded-full #{color_class}")
+  def task_type_badge_html
+    color_class = TASK_TYPE_COLORS[object.task_type] || "bg-gray-100 text-gray-800"
+    h.content_tag(:span, task_type_text, class: "px-3 py-1 text-sm rounded-full #{color_class}")
   end
 
   # ステータスのテキスト
-  def status_text
-    I18n.t("activerecord.enums.task.status.#{status}")
+  def task_type_text
+    I18n.t("activerecord.enums.task.task_type.#{task_type}")
   end
 
   # =====================================
@@ -74,13 +71,21 @@ class TaskDecorator < Draper::Decorator
     end
   end
 
+  # =====================================
+  # ヘルプ要請関連
+  # =====================================
+
   # 必要時間のテキスト
   def required_time_text
-    I18n.t("activerecord.attributes.task.required_times.#{required_time}")
+    return nil unless help_request?
+    return nil unless object.help_request&.required_time
+    I18n.t("activerecord.enums.help_request.required_time.#{object.help_request.required_time}")
   end
 
   # 必要時間のアイコン付きテキスト
   def required_time_with_icon
+    return nil unless help_request?
+    return nil unless object.help_request&.required_time
     h.content_tag :span, class: 'flex items-center gap-1' do
       h.concat h.content_tag(:span, '⏰')
       h.concat required_time_text
