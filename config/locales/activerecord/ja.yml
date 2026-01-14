@@ -16,8 +16,9 @@ ja:
         title: タイトル
         description: 説明
         status: ステータス
-        required_time: 所要時間
         user: ユーザー
+      help_request:
+        required_time: 所要時間
       status:
         status_type: ステータス
         status_date: 日付
@@ -33,18 +34,10 @@ ja:
           overloaded: ⚫ 昇天
           day_off: 🏖️ 休暇中
       task:
-        status:
-          todo: 未着手
-          in_progress: 進行中
-          help_requested: ヘルプ依頼中
-          help_matched: ヘルプマッチング済み
-          completed: 完了
-        required_time:
-          half_hour: 30分
-          one_hour: 1時間
-          two_hours: 2時間
-          long_time: 2時間以上
-      HelpRequest:
+        task_type:
+          normal: 通常業務
+          help_request: ヘルプ要請
+      help_request:
         required_time:
           half_hour: 30分
           one_hour: 1時間

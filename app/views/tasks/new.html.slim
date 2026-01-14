@@ -1,4 +1,4 @@
-.container.max-w-2xl.mx-auto.px-4.py-8
+.container.max-w-2xl.mx-auto.px-4.py-8 data-controller="task-fields" data-task-fields-max-tasks-value="10"
   - if flash[:notice]
     .alert.alert-success.mb-6.p-4.bg-green-50.text-green-800.border.border-green-200.rounded-lg
       = flash[:notice]
@@ -12,11 +12,11 @@
       .bg-purple-50.rounded-lg.p-4.mb-6
         .flex.items-center.justify-between.mb-4
           h2.text-lg.font-bold.text-gray-800 📋 タスク一覧
-          button.bg-purple-600.text-white.px-4.py-2.rounded-lg.hover:bg-purple-700.transition.text-sm.font-bold type="button" id="add-task-btn"
+          button.bg-purple-600.text-white.px-4.py-2.rounded-lg.hover:bg-purple-700.transition.text-sm.font-bold type="button" data-action="click->task-fields#add"
             | ➕ タスクを追加
 
         / タスクリストのコンテナ
-        #tasks-container.space-y-4
+        #tasks-container.space-y-4 data-task-fields-target="container"
           / 最初のタスクフィールド
           .task-field.border.border-gray-300.rounded-lg.p-4.bg-white
             .space-y-3
@@ -26,27 +26,16 @@
 
               .flex.flex-col
                 label.text-sm.font-medium.text-gray-700.mb-1 ステータス
-                select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][status]" required=true
-                  option value="todo" 未着手
-                  option value="in_progress" 着手中
+                select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][task_type]" required=true
+                  option value="normal" 通常
                   option value="help_requested" ヘルプ要請
-                  option value="help_matched" ヘルプ依頼完了
-                  option value="completed" 完了
 
               .flex.flex-col
-                label.text-sm.font-medium.text-gray-700.mb-1 必要時間
-                select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]" required=true
-                  option value="half_hour" 30分
-                  option value="one_hour" 1時間
-                  option value="two_hours" 2時間
-                  option value="long_time" 2時間以上
-
-              .flex.flex-col
-                label.text-sm.font-medium.text-gray-700.mb-1 内容（任意）
-                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力（任意）"
+                label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
+                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
 
               .text-right
-                button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition.remove-task-btn type="button" ❌ 削除
+                button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ❌ 削除
 
       / 送信ボタン
       .text-center
@@ -54,3 +43,32 @@
 
     .mt-6.text-center
       = link_to "← 一覧へ戻る", tasks_path, class: "text-gray-500 hover:text-gray-700 transition"
+
+  / テンプレート(非表示)
+  template data-task-fields-target="template"
+    .task-field.border.border-gray-300.rounded-lg.p-4.bg-white
+      .space-y-3
+        .flex.flex-col
+          label.text-sm.font-medium.text-gray-700.mb-1 タイトル
+          input.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent type="text" name="tasks[][title]" placeholder="例: 資料作成" required=true
+
+        .flex.flex-col
+          label.text-sm.font-medium.text-gray-700.mb-1 ステータス
+          select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][task_type]" required=true
+            option value="normal" 通常
+            option value="help_requested" ヘルプ要請
+
+        .flex.flex-col
+          label.text-sm.font-medium.text-gray-700.mb-1 必要時間
+          select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]" required=true
+            option value="half_hour" 30分
+            option value="one_hour" 1時間
+            option value="two_hours" 2時間
+            option value="long_time" 2時間以上
+
+        .flex.flex-col
+          label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
+          textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
+
+        .text-right
+          button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ❌ 削除
