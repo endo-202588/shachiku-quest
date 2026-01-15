@@ -24,5 +24,9 @@ Rails.application.routes.draw do
     resources :status_histories, only: %i[index]
   end
 
-  resources :tasks, only: %i[index new create edit update destroy]
+  resources :tasks, only: %i[index new create edit update destroy] do
+    collection do
+      get :help_requests
+    end
+  end
 end

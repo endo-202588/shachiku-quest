@@ -198,20 +198,20 @@ class UserDecorator < Draper::Decorator
   # =====================================
 
   # 進行中のタスク数のバッジ表示
-  def normal_tasks_badge
-    return nil if normal_tasks.empty?
+  def in_progress_tasks_badge
+    return nil if in_progress_tasks.empty?
 
-    h.content_tag :span, "#{normal_tasks.size}件",
+    h.content_tag :span, "#{in_progress_tasks.size}件",
       class: 'text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full'
   end
 
   # 進行中のタスクセクション全体
-  def normal_tasks_section(current_user)
-    return nil if normal_tasks.empty?
+  def in_progress_tasks_section(current_user)
+    return nil if in_progress_tasks.empty?
 
     h.content_tag :div, class: 'mt-4 pt-4 border-t border-gray-200' do
-      h.concat normal_tasks_header
-      h.concat normal_tasks_list(current_user)
+      h.concat in_progress_tasks_header
+      h.concat in_progress_tasks_list(current_user)
     end
   end
 
@@ -254,17 +254,17 @@ class UserDecorator < Draper::Decorator
   # -------------------------------------
 
   # タスクセクションのヘッダー
-  def normal_tasks_header
+  def in_progress_tasks_header
     h.content_tag :div, class: 'flex items-center justify-between mb-2' do
       h.concat h.content_tag(:span, '📋 本日のタスク:', class: 'text-sm font-medium text-gray-600')
-      h.concat normal_tasks_badge
+      h.concat in_progress_tasks_badge
     end
   end
 
   # タスクリスト
-  def normal_tasks_list(current_user)
+  def in_progress_tasks_list(current_user)
     h.content_tag :ol, class: 'list-decimal list-inside space-y-1 text-sm text-gray-700' do
-      normal_tasks.each do |task|
+      in_progress_tasks.each do |task|
         h.concat task.decorate.list_item_with_actions(current_user, object)
       end
     end

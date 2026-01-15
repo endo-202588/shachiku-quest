@@ -13,16 +13,32 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
+    <%# ログイン済みの場合のみヘッダーを表示 %>
+    <% if logged_in? %>
+      <%= render 'shared/header' %>
+    <% end %>
     <%= render 'shared/flash_messages' %>
 
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>
+    <%# シャチークの酒場への固定リンク（ログイン時のみ） %>
+    <% if logged_in? %>
+      <%= link_to help_requests_tasks_path, class: 'tavern-door-fixed' do %>
+        <div class="tavern-door">
+          <div class="door-icon">🚪</div>
+          <div class="door-text">シャチークの酒場</div>
+        </div>
+      <% end %>
+    <% end %>
   </body>
 </html>

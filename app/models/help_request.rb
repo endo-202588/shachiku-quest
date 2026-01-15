@@ -11,8 +11,9 @@ class HelpRequest < ApplicationRecord
   enum :required_time, {
     half_hour: 0,
     one_hour: 1,
-    two_hours: 2,
-    long_time: 3
+    one_and_half_hours: 2,
+    two_hours: 3,
+    long_time: 4
   }
 
   validates :required_time, presence: true
