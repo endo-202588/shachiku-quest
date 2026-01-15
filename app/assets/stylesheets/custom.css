@@ -1,0 +1,7 @@
+.pixel-box {
+  background: #fff;
+  position: relative;
+
+  /* ドット枠っぽい二重フチ */
+  box-shadow: 0 0 0 4px #000, 4px 4px 0 4px #555;
+}
