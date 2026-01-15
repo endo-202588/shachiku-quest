@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../stylesheets/tavern.css";
 
 /* フォーム要素の基本スタイルを追加 */
 @layer base {
@@ -48,3 +49,17 @@
 body {
   font-family: 'DotGothic16', sans-serif;
 }
+
+.pixel-box {
+  background: #fff;
+  position: relative;
+
+  /* ドット枠っぽい二重フチ */
+  box-shadow:
+    0 0 0 4px #000,
+    4px 4px 0 4px #555;
+}
+
+
+
+
