@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
   def index
     @tasks = current_user.tasks
-                       .by_task_type(params[:task_type])
+                       .by_status(params[:status])
                        .order(created_at: :desc)
                        .decorate
   end
@@ -12,7 +12,7 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = current_user.tasks.build(task_type: :normal)
+    @task = current_user.tasks.build(status: :in_progress)
   end
 
   def create
@@ -30,6 +30,10 @@ class TasksController < ApplicationController
     else
       handle_validation_errors(result[:valid_tasks], result[:invalid_tasks])
     end
+  end
+
+  def help_requests
+    @tasks = Task.help_request.includes(:user).decorate
   end
 
   def edit
@@ -102,11 +106,11 @@ class TasksController < ApplicationController
   end
 
   def prepare_single_task(task_attr)
-    permitted_attr = task_attr.permit(:title, :task_type, :description, :required_time)
+    permitted_attr = task_attr.permit(:title, :status, :description, :required_time)
 
     task = current_user.tasks.build(
       title: permitted_attr[:title],
-      task_type: permitted_attr[:task_type],
+      status: permitted_attr[:status],
       description: permitted_attr[:description]
     )
 
@@ -181,6 +185,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :task_type)
+    params.require(:task).permit(:title, :description, :status)
   end
 end

@@ -3,20 +3,21 @@ class Task < ApplicationRecord
   has_one :help_request, dependent: :destroy
   accepts_nested_attributes_for :help_request
 
-  enum task_type: {
-    normal: 0,
-    help_request: 1
+  enum status: {
+    in_progress: 0,
+    help_request: 1,
+    complete: 2
   }
 
-  scope :by_task_type, ->(task_type) { where(task_type: task_type) if task_type.present? }
+  scope :by_status, ->(status) { where(status: status) if status.present? }
 
   validates :title, presence: true
-  validates :task_type, presence: true
+  validates :status, presence: true
 
   # ヘルプ要請タスクの場合、help_requestが必要
-  validate :help_request_presence, if: -> { task_type == 'help_request' }
+  validate :help_request_presence, if: -> { status == 'help_request' }
   # ヘルプ要請タスクの場合、required_timeが選択されている必要がある
-  validate :required_time_presence, if: -> { task_type == 'help_request' }
+  validate :required_time_presence, if: -> { status == 'help_request' }
 
   private
 

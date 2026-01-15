@@ -6,20 +6,20 @@ class TaskDecorator < Draper::Decorator
   # =====================================
 
   # ステータスの色定義
-  TASK_TYPE_COLORS = {
-    'normal' => 'bg-blue-100 text-blue-800',           # 自分で行うタスク
+  STATUS_COLORS = {
+    'in_progress' => 'bg-blue-100 text-blue-800',           # 自分で行うタスク
     'help_request' => 'bg-yellow-100 text-yellow-800' # ヘルプ要請タスク
   }.freeze
 
   # ステータスバッジ
-  def task_type_badge_html
-    color_class = TASK_TYPE_COLORS[object.task_type] || "bg-gray-100 text-gray-800"
-    h.content_tag(:span, task_type_text, class: "px-3 py-1 text-sm rounded-full #{color_class}")
+  def status_badge_html
+    color_class = STATUS_COLORS[object.status] || "bg-gray-100 text-gray-800"
+    h.content_tag(:span, status_text, class: "px-3 py-1 text-sm rounded-full #{color_class}")
   end
 
   # ステータスのテキスト
-  def task_type_text
-    I18n.t("activerecord.enums.task.task_type.#{task_type}")
+  def status_text
+    I18n.t("activerecord.enums.task.status.#{status}")
   end
 
   # =====================================
