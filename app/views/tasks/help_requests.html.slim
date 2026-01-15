@@ -1,0 +1,25 @@
+.container.mx-auto.px-4.py-8
+  h1.text-3xl.font-bold.mb-6 🏰 シャチークの酒場
+  p.text-gray-600.mb-8 ヘルプが必要なタスクの一覧です
+
+  - if @tasks.present?
+    .grid.gap-4
+      - @tasks.each do |task|
+        .bg-white.rounded-lg.shadow.p-6.border.border-gray-200
+          .flex.justify-between.items-start.mb-4
+            div
+              h3.text-xl.font-bold.mb-2 = task.title
+              p.text-sm.text-gray-600
+                | 依頼者: #{task.user.last_name} #{task.user.first_name}
+            .text-right
+              = task.status_badge_html
+          
+          - if task.description.present?
+            p.text-gray-700.mb-4 = task.description
+          
+          - if task.help_request&.required_time
+            .mt-4.text-sm.text-gray-500
+              = task.required_time_with_icon
+  - else
+    .bg-gray-50.rounded-lg.p-8.text-center
+      p.text-gray-500 現在ヘルプが必要なタスクはありません

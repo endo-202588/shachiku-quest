@@ -8,10 +8,10 @@
 
   / タスクの種類
   .form-group
-    = f.input :task_type, label: "タスクの種類", as: :select, collection: [['通常', 'normal'], ['ヘルプ要請', 'help_request']], include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", data: { action: "change->task-form#toggleRequiredTime", task_form_target: "taskTypeSelect" } }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
-    - if task.errors[:task_type].any?
+    = f.input :status, label: "タスクの種類", as: :select, collection: [['進行中', 'in_progress'], ['ヘルプ要請', 'help_request'], ['完了', 'complete']], include_blank: false, input_html: { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500", data: { action: "change->task-form#toggleRequiredTime", task_form_target: "taskTypeSelect" } }, label_html: { class: "block text-sm font-medium text-gray-700 mb-1" }, error: false
+    - if task.errors[:status].any?
       .text-red-500.text-sm.mt-1
-        = task.errors[:task_type].first
+        = task.errors[:status].first
 
   / 必要な時間(help_requestの場合のみ表示)
   .form-group data-task-form-target="requiredTimeField" class=(task.help_request? ? "" : "hidden")

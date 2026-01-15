@@ -44,3 +44,7 @@
     border: 0;
   }
 }
+
+body {
+  font-family: 'DotGothic16', sans-serif;
+}
