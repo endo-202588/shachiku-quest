@@ -1,7 +1,11 @@
 .container.mx-auto.px-4.py-8
   .flex.justify-between.items-center.mb-8
     h1.text-4xl.font-bold.text-indigo-900 📋 タスク一覧
-    = link_to '戻る', users_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'
+    .flex.gap-2
+      = link_to new_task_path, class: 'bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded flex items-center gap-1' do
+        span.text-xl ➕
+        | 新規タスク
+      = link_to '戻る', users_path, class: 'bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'
 
   / ステータスごとにタブで切り替える方法
   .mb-6
@@ -9,12 +13,17 @@
       = link_to tasks_path, class: tab_link_class(nil) do
         | すべて
         span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
-          = task_count_by_task_type(nil)
+          = task_count_by_status(nil)
 
-      = link_to tasks_path(task_type: 'help_request'), class: tab_link_class('help_request') do
+      = link_to tasks_path(status: 'help_request'), class: tab_link_class('help_request') do
         | ヘルプ要請中
         span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
-          = task_count_by_task_type('help_request')
+          = task_count_by_status('help_request')
+
+      = link_to tasks_path(status: 'complete'), class: tab_link_class('complete') do
+        | 完了
+        span.ml-1.text-xs.bg-gray-200.px-2.py-1.rounded-full
+          = task_count_by_status('complete')
 
   / タスク一覧
   .space-y-4
@@ -27,7 +36,7 @@
 
             / ステータスバッジ
             .mb-2
-              = task.task_type_badge_html
+              = task.status_badge_html
 
             / メモがあれば表示
             - if task.description.present?

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.2.2"
+ruby "3.2.10"
 
 # Core
 gem "rails", "~> 7.2.3"
@@ -29,11 +29,10 @@ gem 'simple_form'
 # Others
 gem 'draper'
 gem 'enum_help', '0.0.19'
-gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem 'discard', '~> 1.2'
+gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
 group :development, :test do
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem "debug", platforms: %i[ mri mingw mswin x64_mingw ], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
   gem "dotenv-rails"
