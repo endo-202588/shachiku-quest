@@ -1,7 +1,23 @@
 .pixel-box {
-  background: #fff;
+  background: #fffacd;
   position: relative;
 
   /* ドット枠っぽい二重フチ */
-  box-shadow: 0 0 0 4px #000, 4px 4px 0 4px #555;
+  box-shadow: 0 0 0 4px #84a2d4, 4px 4px 0 4px #698aab;
+}
+
+/* ドット絵風の枠のスタイル */
+.pixel-border {
+  position: relative;
+  box-shadow: 
+    0 -8px 0 0 #000000,
+    8px -8px 0 0 #000000,
+    8px 0 0 0 #000000,
+    8px 8px 0 0 #000000,
+    0 8px 0 0 #000000,
+    -8px 8px 0 0 #000000,
+    -8px 0 0 0 #000000,
+    -8px -8px 0 0 #000000 !important;
+  
+  border: none !important;
 }
