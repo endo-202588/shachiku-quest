@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_15_020142) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_18_084220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "help_magics", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "available_time", default: 0, null: false
+    t.date "available_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "available_date"], name: "index_help_magics_on_user_id_and_available_date"
+    t.index ["user_id"], name: "index_help_magics_on_user_id"
+  end
 
   create_table "help_requests", force: :cascade do |t|
     t.bigint "task_id", null: false
@@ -34,7 +44,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_15_020142) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 
@@ -63,6 +72,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_15_020142) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "help_magics", "users"
   add_foreign_key "help_requests", "tasks"
   add_foreign_key "help_requests", "users", column: "helper_id"
   add_foreign_key "statuses", "users"

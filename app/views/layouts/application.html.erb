@@ -34,8 +34,10 @@
     <% if logged_in? %>
       <%= link_to help_requests_tasks_path, class: 'tavern-door-fixed' do %>
         <div class="tavern-door">
-          <div class="door-icon">🚪</div>
-          <div class="door-text">シャチークの酒場</div>
+          <div class="yunomi-icon">
+            <%= image_tag "ocha_ryokucha_yunomi_white_chataku_brown.png" , alt: "湯呑み" , class: "door-img" %>
+          </div>
+          <div class="door-text">シャチークの給湯室</div>
         </div>
       <% end %>
     <% end %>

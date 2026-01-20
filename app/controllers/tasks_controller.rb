@@ -9,6 +9,8 @@ class TasksController < ApplicationController
   end
 
   def show
+    @task = @task.decorate
+    @help_request = @task.help_request&.decorate
   end
 
   def new
@@ -33,7 +35,13 @@ class TasksController < ApplicationController
   end
 
   def help_requests
-    @tasks = Task.help_request.includes(:user).decorate
+    @tasks = Task.help_request.includes(:user, :help_request).order(created_at: :desc).decorate
+    @helpers = User.includes(:help_magic)
+                  .joins(:help_magic)
+                  .where('help_magics.available_date >= ?', Date.today)
+                  .distinct
+                  .order(:last_name, :first_name)
+                  .decorate
   end
 
   def edit
@@ -79,6 +87,56 @@ class TasksController < ApplicationController
   rescue ActiveRecord::RecordInvalid => e
     flash.now[:alert] = "更新に失敗しました: #{e.message}"
     render :edit, status: :unprocessable_entity
+  end
+
+  def add_helper
+    @task = Task.find(params[:id])
+    @helper = User.find(params[:helper_id]).decorate
+
+    # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
+    unless helper_available?(@helper)
+      redirect_to select_task_user_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
+      return
+    end
+
+    # 時間がマッチするかチェック
+    unless time_matchable?(@task, @helper)
+      redirect_to select_task_user_path(@helper), alert: "#{@helper.full_name}さんの対応可能時間とタスクの必要時間が一致しません"
+      return
+    end
+
+    # 既存のmatchableチェック
+    unless @task.decorate.matchable?
+      redirect_to select_task_user_path(@helper), alert: 'このタスクは既に仲間がいるか、ヘルプ要請されていません'
+      return
+    end
+
+    # 仲間にする処理
+    help_request = @task.help_request || @task.build_help_request
+
+    help_request.assign_attributes(
+      helper: @helper,
+      status: :matched
+    )
+
+    if help_request.save
+      redirect_to @task, notice: "#{@helper.decorate.full_name}さんが仲間になりました!"
+    else
+      redirect_to select_task_helper_path(@helper), alert: 'ヘルパーの追加に失敗しました'
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to help_requests_tasks_path, alert: 'ヘルパーまたはタスクが見つかりません'
+  end
+
+  def select_task
+    @helper = User.includes(:help_magic).find(params[:id]).decorate
+    @helper_available_time = @helper.help_magic&.available_time
+
+    # 全てのヘルプ要請タスクを取得
+    @matching_tasks = Task.help_request
+                          .includes(:user, :help_request)
+                          .order(created_at: :desc)
+                          # decorateは削除 ✅
   end
 
   def destroy
@@ -182,6 +240,22 @@ class TasksController < ApplicationController
 
   def set_task
     @task = current_user.tasks.find(params[:id])
+  end
+
+  def helper_available?(helper)
+    # helperが既にmatchedステータスのhelp_requestに紐づいていないかチェック
+    !HelpRequest.exists?(helper: helper, status: :matched)
+  end
+
+  def time_matchable?(task, helper)
+    helper_available_time = helper.help_magic&.available_time
+    task_required_time = task.help_request&.required_time
+
+    # どちらかがnilの場合はマッチしないと判定
+    return false if helper_available_time.nil? || task_required_time.nil?
+
+    # 時間が一致するかチェック
+    helper_available_time == task_required_time
   end
 
   def task_params

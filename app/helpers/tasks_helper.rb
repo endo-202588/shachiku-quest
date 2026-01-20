@@ -1,11 +1,7 @@
 module TasksHelper
   def status_options_for_select
-    Task.statuses.keys.map { |key| [I18n.t("activerecord.enums.task.status.#{key}"), key] }
+    Task.statuses_i18n.invert
   end
-
-  # def required_time_options_for_select
-  #   Task.required_times.keys.map { |key| [I18n.t("activerecord.enums.task.required_time.#{key}"), key] }
-  # end
 
   def tab_link_class(status)
     base_class = "px-4 py-2 transition-colors duration-200"

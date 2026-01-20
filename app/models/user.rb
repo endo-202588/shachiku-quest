@@ -5,6 +5,11 @@ class User < ApplicationRecord
   has_many :tasks, dependent: :destroy
   has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
   has_many :help_requested_tasks, -> { where(status: 'help_request') }, class_name: 'Task'
+  has_one :help_magic, dependent: :destroy
+  has_many :received_help_requests,
+         class_name: 'HelpRequest',
+         foreign_key: 'helper_id',
+         dependent: :nullify
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
@@ -24,5 +29,10 @@ class User < ApplicationRecord
   # 本日のステータスが存在するかチェック(コントローラー用 - 軽量)
   def has_today_status?
     statuses.exists?(status_date: Date.current)
+  end
+
+  # ヘルパーとして登録されているかチェック
+  def helper?
+    help_magics.where('available_date >= ?', Date.today).exists?
   end
 end
