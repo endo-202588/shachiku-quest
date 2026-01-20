@@ -44,6 +44,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_18_084220) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 

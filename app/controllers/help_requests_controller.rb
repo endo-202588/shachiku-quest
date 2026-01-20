@@ -1,6 +1,5 @@
 class HelpRequestsController < ApplicationController
   before_action :set_help_request, only: [:update_status]
-  before_action :set_task, only: [:new, :create]
 
   def update_status
     new_status = params[:status]

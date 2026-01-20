@@ -1,10 +1,10 @@
 class HelpMagicsController < ApplicationController
   def new
-    @help_magic = current_user.help_magics.build
+    @help_magic = current_user.build_help_magic
   end
 
   def create
-    @help_magic = current_user.help_magics.build(help_magic_params)
+    @help_magic = current_user.build_help_magic(help_magic_params)
     if @help_magic.save
       redirect_to tasks_path, success: '魔法を登録しました'
     else
