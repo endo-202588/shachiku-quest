@@ -1,7 +1,7 @@
 class Task < ApplicationRecord
   belongs_to :user
   has_one :help_request, dependent: :destroy
-  accepts_nested_attributes_for :help_request
+  has_one :helper, through: :help_request, source: :helper
 
   enum status: {
     in_progress: 0,

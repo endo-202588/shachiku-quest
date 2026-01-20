@@ -1,0 +1,74 @@
+.container.mx-auto.px-4.py-8
+  .max-w-2xl.mx-auto
+    / ヘッダー部分
+    .flex.justify-between.items-center.mb-6
+      h1.text-3xl.font-bold タスク詳細
+      .flex.gap-2
+        = link_to '編集', edit_task_path(@task), class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
+        = link_to '一覧に戻る', tasks_path, class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition'
+
+    / タスク情報カード
+    .bg-white.shadow-md.rounded-lg.p-6
+      / タイトル
+      .mb-4
+        .text-sm.text-gray-600.mb-1 タイトル
+        .text-xl.font-semibold= @task.title
+
+      / ステータス
+      .mb-4
+        .text-sm.text-gray-600.mb-1 ステータス
+        = @task.status_badge_html
+
+      / 説明
+      - if @task.description.present?
+        .mb-4
+          .text-sm.text-gray-600.mb-1 説明
+          .text-gray-800.whitespace-pre-wrap= @task.description
+
+      / ヘルプ要請情報
+      - if @help_request.present?
+        .mt-6.pt-4.border-t
+          .text-lg.font-semibold.mb-3 ヘルプ要請情報
+          .space-y-3
+            / ステータス
+            .flex.items-center.gap-2
+              span.text-sm.text-gray-600 ステータス:
+              = @help_request.status_badge
+
+            / 必要な時間
+            .flex.items-center.gap-2
+              span.text-sm.text-gray-600 必要な時間:
+              = @help_request.required_time_display
+
+            / ヘルパー
+            .flex.items-center.gap-2
+              span.text-sm.text-gray-600 ヘルパー:
+              = @help_request.helper_name
+
+      / ステータス変更ボタン
+      - if @help_request.task.user_id == current_user&.id
+        .mt-4.space-y-2
+          .text-sm.text-gray-600.mb-2 ステータスを変更
+
+          - case @help_request.status
+          - when 'open'
+            = form_with url: update_status_help_request_path(@help_request, status: :matched), method: :patch, local: true do |f|
+              = f.submit 'マッチング済みにする', class: 'px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-sm'
+
+          - when 'matched'
+            .flex.gap-2.flex-wrap
+              = form_with url: update_status_help_request_path(@help_request, status: :closed), method: :patch, local: true, data: { turbo_confirm: '本当にクローズしますか?' } do |f|
+                = f.submit 'クローズする', class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm'
+
+              = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true do |f|
+                = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
+
+          - when 'closed'
+            = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true do |f|
+              = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
+
+      / 日時の表示
+      .mt-6.pt-4.border-t.text-sm.text-gray-500
+        .flex.justify-between
+          span 作成日時: #{@task.formatted_created_at}
+          span 更新日時: #{@task.formatted_updated_at}

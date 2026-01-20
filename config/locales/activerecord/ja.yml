@@ -24,24 +24,35 @@ ja:
         status_date: 日付
         memo: メモ
         user: ユーザー
-    enums:
+  enums:
+    status:
+      status_type:
+        peaceful: 🟢 平和
+        tired: 🟡 疲れ気味
+        busy: 🟠 やばいかも
+        very_busy: 🔴 きてます
+        overloaded: ⚫ 昇天
+        day_off: 🏖️ 休暇中
+    task:
       status:
-        status_type:
-          peaceful: 🟢 平和
-          tired: 🟡 疲れ気味
-          busy: 🟠 やばいかも
-          very_busy: 🔴 きてます
-          overloaded: ⚫ 昇天
-          day_off: 🏖️ 休暇中
-      task:
-        status:
-          in_progress: 進行中
-          help_request: ヘルプ要請
-          complete: 完了
-      help_request:
-        required_time:
-          half_hour: 30分
-          one_hour: 1時間
-          one_and_half_hours: 1時間30分
-          two_hours: 2時間
-          long_time: 2時間以上
+        in_progress: 進行中
+        help_request: ヘルプ要請
+        complete: 完了
+    help_request:
+      required_time:
+        half_hour: 30分
+        one_hour: 1時間
+        one_and_half_hours: 1時間30分
+        two_hours: 2時間
+        long_time: 2時間以上
+      status:
+        open: 募集中
+        matched: お手伝い成立
+        closed: 完了
+    help_magic:
+      available_time:
+        half_hour: 30分
+        one_hour: 1時間
+        one_and_half_hours: 1時間30分
+        two_hours: 2時間
+        long_time: 2時間以上

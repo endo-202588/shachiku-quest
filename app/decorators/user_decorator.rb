@@ -57,7 +57,8 @@ class UserDecorator < Draper::Decorator
   # 絵文字付きステータス表示
   def status_with_emoji
     return "📝 未登録" if today_status.blank?
-    I18n.t("activerecord.enums.status.status_type.#{today_status.status_type}")
+    # I18n.t("activerecord.enums.status.status_type.#{today_status.status_type}")
+    today_status.status_type_i18n
   end
 
   # HTMLバッジ付きステータス表示（Tailwind CSS版）
@@ -224,6 +225,20 @@ class UserDecorator < Draper::Decorator
         class: 'bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
     end
   end
+
+  # =====================================
+  # help_magic表示
+  # =====================================
+
+  def available_time_with_icon
+    return nil unless help_magic&.available_time  # 直接アクセス可能
+
+    h.content_tag :span, class: 'flex items-center gap-1' do
+      h.concat h.content_tag(:span, '⏰')
+      h.concat help_magic.available_time_i18n
+    end
+  end
+
 
   private
 

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "help_magics/new"
+  get "help_magics/create"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -24,9 +26,28 @@ Rails.application.routes.draw do
     resources :status_histories, only: %i[index]
   end
 
-  resources :tasks, only: %i[index new create edit update destroy] do
+  resources :tasks do
+    member do
+      post :add_helper  # ヘルパーをタスクに追加
+    end
+
     collection do
       get :help_requests
+    end
+  end
+
+  resources :help_requests, only: [] do
+    member do
+      patch :update_status  # ステータス更新用のルーティング
+    end
+  end
+
+  resources :help_magics, only: [:new, :create]
+
+  # ヘルパー選択後のタスク選択画面用
+  resources :helpers, only: [] do
+    member do
+      get :select_task  # このヘルパーに依頼するタスクを選択
     end
   end
 end

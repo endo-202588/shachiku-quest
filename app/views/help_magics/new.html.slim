@@ -1,0 +1,18 @@
+.container.mx-auto.px-4.py-8
+  h1.text-2xl.font-bold.mb-6 使える魔法を登録
+
+  = simple_form_for @help_magic, url: help_magics_path do |f|
+    .mb-4
+      = f.input :available_time,
+                as: :select,
+                collection: HelpMagic.available_times_i18n.invert,
+                label: 'お手伝い可能な時間',
+                include_blank: '選択してください',
+                input_html: { class: 'w-full border rounded px-3 py-2' },
+                label_html: { class: 'block mb-2 font-semibold' }
+
+    = f.hidden_field :available_date, value: Date.today
+
+    .flex.gap-2.mt-6
+      = f.button :submit, '魔法を登録', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
+      = link_to 'キャンセル', tasks_path, class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition'

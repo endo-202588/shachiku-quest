@@ -1,6 +1,10 @@
 class HelpRequest < ApplicationRecord
   belongs_to :task
-  belongs_to :helper, optional: true
+  belongs_to :helper, class_name: 'User', foreign_key: 'helper_id'
+
+  validates :required_time, presence: true
+  validates :status, presence: true
+  validates :helper, presence: true, if: :matched?
 
   enum :status, {
     open: 0,
@@ -16,6 +20,7 @@ class HelpRequest < ApplicationRecord
     long_time: 4
   }
 
-  validates :required_time, presence: true
-  validates :status, presence: true
+  def matched?
+    status == 'matched'
+  end
 end
