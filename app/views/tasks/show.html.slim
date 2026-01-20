@@ -1,11 +1,14 @@
 .container.mx-auto.px-4.py-8
   .max-w-2xl.mx-auto
     / ヘッダー部分
-    .flex.justify-between.items-center.mb-6
-      h1.text-3xl.font-bold タスク詳細
-      .flex.gap-2
-        = link_to '編集', edit_task_path(@task), class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
-        = link_to '一覧に戻る', tasks_path, class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition'
+    .flex.gap-2
+      - if @task.user_id == current_user&.id
+        = link_to '編集', edit_task_path(@task),
+          class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
+
+      = link_to '一覧に戻る', tasks_path,
+        class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition'
+
 
     / タスク情報カード
     .bg-white.shadow-md.rounded-lg.p-6
@@ -51,10 +54,6 @@
           .text-sm.text-gray-600.mb-2 ステータスを変更
 
           - case @help_request.status
-          - when 'open'
-            = form_with url: update_status_help_request_path(@help_request, status: :matched), method: :patch, local: true do |f|
-              = f.submit 'マッチング済みにする', class: 'px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-sm'
-
           - when 'matched'
             .flex.gap-2.flex-wrap
               = form_with url: update_status_help_request_path(@help_request, status: :closed), method: :patch, local: true, data: { turbo_confirm: '本当にクローズしますか?' } do |f|

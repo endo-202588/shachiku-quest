@@ -22,9 +22,13 @@
                 - if helper.available_time_with_icon
                   = helper.available_time_with_icon
             .mt-3
-              = link_to select_task_helper_path(helper),
-                        class: 'block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-200' do
-                | 🤝 仲間に加える
+              - if helper.decorate.helping_now?
+                .block.w-full.text-center.bg-gray-400.text-white.font-bold.py-2.px-4.rounded
+                  | 🧹 お手伝い中
+              - else
+                = link_to select_task_helper_path(helper),
+                          class: 'block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-200' do
+                  | 🤝 仲間に加える
     - else
       .bg-gray-100.rounded-lg.p-6.text-center.text-gray-600
         p 現在利用可能なヘルパーはいません

@@ -95,7 +95,7 @@ class TasksController < ApplicationController
 
     # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
     unless helper_available?(@helper)
-      redirect_to select_task_user_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
+      redirect_to select_task_helper_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
       return
     end
 
@@ -239,7 +239,8 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    # @task = current_user.tasks.find(params[:id])
+    @task = Task.find(params[:id])
   end
 
   def helper_available?(helper)

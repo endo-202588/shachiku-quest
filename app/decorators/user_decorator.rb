@@ -239,6 +239,16 @@ class UserDecorator < Draper::Decorator
     end
   end
 
+  # =====================================
+  # シャチークの給湯室
+  # =====================================
+
+  # ヘルパーがヘルプ中かどうかの判定
+  def helping_now?
+    object.received_help_requests.exists?(status: :matched)
+  end
+
+
 
   private
 
