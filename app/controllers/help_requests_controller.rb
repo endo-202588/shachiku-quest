@@ -15,9 +15,6 @@ class HelpRequestsController < ApplicationController
   def update_status
     new_status = params[:status]
 
-    Rails.logger.debug "Received status: #{new_status.inspect}"
-    Rails.logger.debug "All params: #{params.inspect}"
-
     # タスクの所有者のみ変更可能
     unless @help_request.task.user_id == current_user&.id
       redirect_to task_path(@help_request.task), alert: '権限がありません'
@@ -79,6 +76,10 @@ class HelpRequestsController < ApplicationController
 
   def complete_notify
     unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
+      redirect_to help_requests_tasks_path, alert: '権限がありません'
+      return
+    end
+
     # 1) matched 以外では完了通知できない
     unless @help_request.matched?
       redirect_to help_request_path(@help_request.id), alert: '完了通知できる状態ではありません'
@@ -110,12 +111,4 @@ class HelpRequestsController < ApplicationController
   def set_help_request
     @help_request = HelpRequest.find(params[:id])
   end
-
-  # def set_task
-  #   @task = Task.find(params[:task_id])
-  # end
-
-  # def help_request_params
-  #   params.require(:help_request).permit(:status, :required_time)
-  # end
 end
