@@ -7,7 +7,7 @@ class HelpRequest < ApplicationRecord
   validates :status, presence: true
   validates :helper, presence: true, if: :matched?
 
-  before_update :clear_helper_if_open
+  before_save :clear_helper_if_open
 
   enum :status, {
     open: 0,

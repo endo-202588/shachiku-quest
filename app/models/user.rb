@@ -33,10 +33,10 @@ class User < ApplicationRecord
 
   def invalidate_help_magic_if_expired!
     hm = help_magic
-    return unless hm&.available_date.present?
+    return unless hm
     return if hm.available_date >= Date.current
 
-    hm.update!(available_date: nil)
+    hm.destroy!
   end
 
   # ヘルパーとして登録されているかチェック

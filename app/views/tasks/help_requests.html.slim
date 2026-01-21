@@ -88,7 +88,9 @@
             .flex.justify-between.items-start.mb-3
               .flex-1
                 h3.font-bold.text-lg.mb-2 = task.title
-                p.text-gray-700 = task.description
+                - if task.description.present?
+                .bg-yellow-50.rounded.p-3.mb-3
+                  p.text-sm.text-gray-600.mt-1 = task.description
 
               / ステータスバッジ(TaskDecoratorのメソッドを使用)
               .ml-4
@@ -105,16 +107,14 @@
               - if task.required_time_with_icon
                 = task.required_time_with_icon
 
-            / ヘルプ要請の詳細情報
-            - if task.help_request.present?
-              .bg-yellow-50.rounded.p-3.mb-3
-                p.text-sm.text-gray-700 = task.title
-                p.text-sm.text-gray-600.mt-1 = task.description
               p.text-gray-700 = task.help_request_status_html
 
             .flex.gap-2.justify-end
               - if current_user&.helper?
-                - if task.user_id != current_user.id && task.help_request&.open? && task.help_request.helper_id.nil?
+                - if task.user_id == current_user.id
+                  .px-4.py-2.bg-gray-200.text-gray-600.rounded.text-sm
+                    | 🙅 自分のタスクです
+                - elsif task.user_id != current_user.id && task.help_request&.open? && task.help_request.helper_id.nil?
                   = button_to '🤝 この仕事の仲間になる',
                     apply_help_request_path(task.help_request),
                     method: :post,
