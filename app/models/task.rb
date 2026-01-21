@@ -9,6 +9,8 @@ class Task < ApplicationRecord
     complete: 2
   }
 
+  after_update :close_help_request_if_task_not_help_request
+
   scope :by_status, ->(status) { where(status: status) if status.present? }
 
   validates :title, presence: true
@@ -32,6 +34,18 @@ class Task < ApplicationRecord
     # help_requestが存在し、required_timeが空の場合にエラーを追加
     if help_request.present? && help_request.required_time.blank?
       errors.add(:base, '必要な時間を選択してください')
+    end
+  end
+
+  def close_help_request_if_task_not_help_request
+    return unless saved_change_to_status?
+    return if help_request?
+    return if help_request.blank?
+
+    HelpRequest.transaction do
+      hr = help_request
+      hr.update!(status: :open)   # ←ここで last_helper_id 退避 & helper_id=nil
+      hr.update!(status: :closed) # ←募集も閉じる
     end
   end
 end

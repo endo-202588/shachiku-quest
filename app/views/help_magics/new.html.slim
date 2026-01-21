@@ -11,8 +11,6 @@
                 input_html: { class: 'w-full border rounded px-3 py-2' },
                 label_html: { class: 'block mb-2 font-semibold' }
 
-    = f.hidden_field :available_date, value: Date.today
-
     .flex.gap-2.mt-6
       = f.button :submit, '魔法を登録', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
       = link_to 'キャンセル', tasks_path, class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition'

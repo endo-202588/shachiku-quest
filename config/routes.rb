@@ -36,9 +36,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :help_requests, only: [] do
+  resources :help_requests, only: [:show] do
     member do
       patch :update_status  # ステータス更新用のルーティング
+      post  :apply
+      post :complete_notify
     end
   end
 

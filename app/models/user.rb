@@ -31,8 +31,17 @@ class User < ApplicationRecord
     statuses.exists?(status_date: Date.current)
   end
 
+  def invalidate_help_magic_if_expired!
+    hm = help_magic
+    return unless hm&.available_date.present?
+    return if hm.available_date >= Date.current
+
+    hm.update!(available_date: nil)
+  end
+
   # ヘルパーとして登録されているかチェック
   def helper?
-    help_magics.where('available_date >= ?', Date.today).exists?
+    hm = help_magic
+    hm&.available_date.present? && hm.available_date >= Date.current
   end
 end

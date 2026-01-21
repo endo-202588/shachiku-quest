@@ -49,21 +49,21 @@
               = @help_request.helper_name
 
       / ステータス変更ボタン
-      - if @help_request.task.user_id == current_user&.id
+      - if @help_request.present? && @task.user_id == current_user&.id
         .mt-4.space-y-2
           .text-sm.text-gray-600.mb-2 ステータスを変更
 
           - case @help_request.status
           - when 'matched'
             .flex.gap-2.flex-wrap
-              = form_with url: update_status_help_request_path(@help_request, status: :closed), method: :patch, local: true, data: { turbo_confirm: '本当にクローズしますか?' } do |f|
+              = form_with url: update_status_help_request_path(@help_request, status: :closed), method: :patch, local: true, data: { turbo: false, turbo_confirm: '本当にクローズしますか?' } do |f|
                 = f.submit 'クローズする', class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm'
 
-              = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true do |f|
+              = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
                 = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 
           - when 'closed'
-            = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true do |f|
+            = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
               = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 
       / 日時の表示

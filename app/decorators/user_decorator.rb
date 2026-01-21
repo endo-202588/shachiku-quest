@@ -245,7 +245,7 @@ class UserDecorator < Draper::Decorator
 
   # ヘルパーがヘルプ中かどうかの判定
   def helping_now?
-    object.received_help_requests.exists?(status: :matched)
+    object.helper? && object.received_help_requests.exists?(status: :matched)
   end
 
 
