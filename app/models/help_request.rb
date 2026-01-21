@@ -1,6 +1,7 @@
 class HelpRequest < ApplicationRecord
   belongs_to :task
   belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
+  belongs_to :last_helper, class_name: "User", optional: true
 
   validates :required_time, presence: true
   validates :status, presence: true
@@ -22,15 +23,14 @@ class HelpRequest < ApplicationRecord
     long_time: 4
   }
 
-  def matched?
-    status == 'matched'
-  end
-
   private
-  
+
   def clear_helper_if_open
-    if will_save_change_to_status? && status == "open"
-      self.helper_id = nil
-    end
+    return unless will_save_change_to_status?
+    return unless open?
+
+    self.last_helper_id = helper_id if helper_id.present?
+
+    self.helper_id = nil
   end
 end

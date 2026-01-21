@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_18_084220) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_21_094854) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,7 +31,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_18_084220) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "required_time", default: 0, null: false
+    t.bigint "last_helper_id"
+    t.datetime "completed_notified_at"
+    t.datetime "completed_read_at"
     t.index ["helper_id"], name: "index_help_requests_on_helper_id"
+    t.index ["last_helper_id"], name: "index_help_requests_on_last_helper_id"
     t.index ["status"], name: "index_help_requests_on_status"
     t.index ["task_id", "helper_id"], name: "index_help_requests_on_task_id_and_helper_id", unique: true
     t.index ["task_id"], name: "index_help_requests_on_task_id"
@@ -44,7 +48,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_18_084220) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 

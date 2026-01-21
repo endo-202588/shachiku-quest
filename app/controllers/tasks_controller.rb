@@ -11,6 +11,14 @@ class TasksController < ApplicationController
   def show
     @task = @task.decorate
     @help_request = @task.help_request&.decorate
+
+    if @help_request.present? &&
+      @task.user_id == current_user&.id &&
+      @help_request.completed_notified_at.present? &&
+      @help_request.completed_read_at.nil?
+
+      @help_request.update_column(:completed_read_at, Time.current)
+    end
   end
 
   def new
@@ -42,6 +50,16 @@ class TasksController < ApplicationController
                   .distinct
                   .order(:last_name, :first_name)
                   .decorate
+
+    if current_user&.helper?
+      @current_help_request =
+        HelpRequest.find_by(helper_id: current_user.id, status: :matched)
+
+      @helping_task = @current_help_request&.task&.decorate
+    else
+      @current_help_request = nil
+      @helping_task = nil
+    end
   end
 
   def edit

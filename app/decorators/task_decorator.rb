@@ -137,3 +137,22 @@ class TaskDecorator < Draper::Decorator
     object.updated_at.strftime('%Y年%m月%d日 %H:%M')
   end
 end
+
+# ヘルプ完了通知
+def completion_unread_badge_html(current_user)
+  hr = object.help_request
+  return nil unless hr
+
+  # 発注者本人のみ表示
+  return nil unless object.user_id == current_user&.id
+
+  # 未読ならバッジ表示
+  if hr.completed_notified_at.present? && hr.completed_read_at.nil?
+    h.content_tag(
+      :span,
+      "🔔 完了通知あり",
+      class: "px-3 py-1 text-xs rounded-full bg-yellow-400 text-yellow-900 font-bold shadow animate-pulse",
+      title: "ヘルパーから完了通知が届いています"
+    )
+  end
+end
