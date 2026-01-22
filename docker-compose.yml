@@ -10,10 +10,13 @@ services:
       - "5432:5432"
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev   # ← ここを追加（開発用Dockerfileを使う）
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
     volumes:
       - .:/rails
+      - bundle:/usr/local/bundle   # ← ここを追加（gemを永続化）
     ports:
       - "3000:3000"
     depends_on:
@@ -28,3 +31,4 @@ services:
 
 volumes:
   postgres_data:
+  bundle:  # ← ここを追加

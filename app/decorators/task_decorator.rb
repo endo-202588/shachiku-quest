@@ -109,7 +109,8 @@ class TaskDecorator < Draper::Decorator
   HELP_REQUEST_STATUS_COLORS = {
     'open' => 'bg-blue-100 text-blue-800',
     'matched' => 'bg-green-100 text-green-800',
-    'closed' => 'bg-gray-100 text-black' # ヘルプ要請タスク
+    'completed' => 'bg-gray-100 text-black',
+    'cancelled' => 'bg-gray-100 text-black'
   }.freeze
 
   def help_request_status_html

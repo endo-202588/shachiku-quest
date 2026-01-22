@@ -52,4 +52,8 @@ Rails.application.routes.draw do
       get :select_task  # このヘルパーに依頼するタスクを選択
     end
   end
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 end

@@ -190,20 +190,21 @@ class TasksController < ApplicationController
       description: permitted_attr[:description]
     )
 
-    required_time = nil
-
-    # ヘルプ要請タスクの場合
     if task.help_request?
       unless valid_required_time?(permitted_attr[:required_time])
         task.errors.add(:required_time, 'はヘルプ要請時に必須です。有効な時間を選択してください。')
-        return { task: task, valid: false, required_time: nil }
+        return { task: task, valid: false }
       end
 
-      # HelpRequestのenumを使用して整数値に変換
-      required_time = HelpRequest.required_times[permitted_attr[:required_time].to_s]
+      required_time_int = HelpRequest.required_times[permitted_attr[:required_time].to_s]
+
+      task.build_help_request(
+        required_time: required_time_int,
+        status: :open
+      )
     end
 
-    { task: task, valid: task.valid?, required_time: required_time }
+    { task: task, valid: task.valid? }
   end
 
   def valid_required_time?(required_time)
@@ -216,16 +217,7 @@ class TasksController < ApplicationController
   def save_all_tasks(valid_tasks)
     ActiveRecord::Base.transaction do
       valid_tasks.each do |task_data|
-        task = task_data[:task]
-        task.save!
-
-        # help_requestが必要な場合は作成
-        if task.help_request? && task_data[:required_time].present?
-          task.create_help_request!(
-            required_time: task_data[:required_time],
-            status: :open
-          )
-        end
+        task_data[:task].save!
       end
     end
 
@@ -236,9 +228,10 @@ class TasksController < ApplicationController
     handle_unexpected_error(e, valid_tasks.map { |td| td[:task] })
   end
 
+
   def handle_validation_errors(valid_tasks, invalid_tasks)
     # valid_tasksからtaskオブジェクトを取り出す
-    @tasks = valid_tasks.map { |td| td[:task] } + invalid_tasks
+    @tasks = valid_tasks.map { |td| td[:task] } + invalid_tasks.map { |td| td[:task] }
     flash.now[:alert] = 'タスクの登録に失敗しました。入力内容を確認してください。'
     render :new, status: :unprocessable_entity
   end

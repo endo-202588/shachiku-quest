@@ -46,8 +46,8 @@ class HelpRequestsController < ApplicationController
     end
 
     # 2) すでに誰かがマッチしている/クローズなら不可（必要に応じて条件調整）
-    if @help_request.matched? || @help_request.closed?
-      redirect_to help_requests_tasks_path, alert: 'この依頼はすでにマッチ済み、またはクローズされています'
+    if @help_request.matched? || @help_request.completed? || @help_request.cancelled?
+      redirect_to help_requests_tasks_path, alert: 'この依頼はすでにマッチ済み、または終了しています'
       return
     end
 
@@ -75,33 +75,51 @@ class HelpRequestsController < ApplicationController
   end
 
   def complete_notify
+    Rails.logger.info ">>> ENTER complete_notify"
+    
     unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
+      Rails.logger.info ">>> FAIL: permission"
       redirect_to help_requests_tasks_path, alert: '権限がありません'
       return
     end
 
+    Rails.logger.info ">>> PASS: permission"
+
     # 1) matched 以外では完了通知できない
     unless @help_request.matched?
+      Rails.logger.info ">>> FAIL: not matched"
       redirect_to help_request_path(@help_request.id), alert: '完了通知できる状態ではありません'
       return
     end
 
+    Rails.logger.info ">>> PASS: matched"
+
     # 2) 担当ヘルパー本人だけが押せる
     unless @help_request.helper_id == current_user&.id
+      Rails.logger.info ">>> FAIL: helper mismatch"
       redirect_to help_request_path(@help_request.id), alert: '権限がありません'
       return
     end
 
+    Rails.logger.info ">>> PASS: helper"
+
     # 3) すでに通知済みなら二重送信防止
     if @help_request.completed_notified_at.present?
+      Rails.logger.info ">>> FAIL: already notified"
       redirect_to help_request_path(@help_request.id), notice: 'すでに完了通知済みです'
       return
     end
 
-    # 4) 通知：DBに記録 + ステータスを closed に（あなたの仕様に合わせる）
-    if @help_request.update(status: :closed, completed_notified_at: Time.current)
+    Rails.logger.info ">>> PASS: NOT notified"
+
+    # 4) 通知：DBに記録（※ status は変えない）
+    if @help_request.update(completed_notified_at: Time.current)
+      Rails.logger.info ">>> PASS: UPDATE OK"
+      HelpRequestMailer.completed_notify(@help_request.id).deliver_now
+      Rails.logger.info ">>> MAIL SENT"
       redirect_to help_requests_tasks_path, notice: '完了を通知しました！'
     else
+      Rails.logger.info ">>> FAIL: update error #{@help_request.errors.full_messages}"
       redirect_to help_request_path(@help_request.id), alert: @help_request.errors.full_messages.join(', ')
     end
   end

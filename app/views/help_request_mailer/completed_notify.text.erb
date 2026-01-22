@@ -1,0 +1,12 @@
+<%= @owner.decorate.full_name rescue @owner.name %> さん
+
+ヘルパー（<%= @helper&.decorate&.full_name || @helper&.name || "不明" %>）が、
+以下のヘルプ要請タスクについて「完了通知」を送りました。
+
+タスク: <%= @task.title %>
+
+詳細はこちら:
+<%= task_url(@task) %>
+
+---
+シャチーク

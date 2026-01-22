@@ -48,7 +48,8 @@ ja:
       status:
         open: 募集中
         matched: お手伝い成立
-        closed: 完了
+        completed: 完了
+        cancelled: キャンセル
     help_magic:
       available_time:
         half_hour: 30分

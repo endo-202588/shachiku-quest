@@ -78,7 +78,8 @@
     / 見出しとボタンを横並びに配置
     .flex.justify-between.items-center.mb-4.border-b.pb-2
       h2.text-xl.font-semibold ヘルプ要請タスク
-      = link_to '魔法を登録', new_help_magic_path, class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
+      - if current_user.help_magic.blank?
+        = link_to '魔法を登録', new_help_magic_path, class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
 
     - if @tasks.present?
       .space-y-4
@@ -124,8 +125,12 @@
                   .px-4.py-2.bg-gray-400.text-white.rounded.text-sm
                     | 🧹 募集終了
               - else
-                = link_to '魔法を登録して応募', new_help_magic_path,
-                  class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
+                - if task.user_id == current_user.id
+                  .px-4.py-2.bg-gray-200.text-gray-600.rounded.text-sm
+                    | 🙅 自分のタスクです
+                - else
+                  = link_to '魔法を登録して応募', new_help_magic_path,
+                    class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
 
     - else
       .bg-gray-100.rounded-lg.p-6.text-center.text-gray-600

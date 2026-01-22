@@ -8,8 +8,10 @@ class HelpRequestDecorator < Draper::Decorator
       h.content_tag(:span, 'オープン', class: 'px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm')
     when 'matched'
       h.content_tag(:span, 'マッチング済み', class: 'px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm')
-    when 'closed'
-      h.content_tag(:span, 'クローズ', class: 'px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm')
+    when 'completed'
+      h.content_tag(:span, '完了', class: 'px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm')
+    when 'cancelled'
+      h.content_tag(:span, 'キャンセル', class: 'px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm')
     end
   end
 
@@ -47,9 +49,9 @@ class HelpRequestDecorator < Draper::Decorator
       when 'open'
         h.concat(matched_button)
       when 'matched'
-        h.concat(closed_button)
+        h.concat(completed_button)
         h.concat(open_button)
-      when 'closed'
+      when 'completed'
         h.concat(open_button)
       end
     end
@@ -62,12 +64,20 @@ class HelpRequestDecorator < Draper::Decorator
       class: 'px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-sm')
   end
 
-  def closed_button
-    h.button_to('クローズする',
-      h.update_status_help_request_path(object, status: :closed),
+  def completed_button
+    h.button_to('完了にする',
+      h.update_status_help_request_path(object, status: :completed),
       method: :patch,
       class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm',
-      data: { turbo_confirm: '本当にクローズしますか?' })
+      data: { turbo_confirm: '本当に完了にしますか?' })
+  end
+
+  def cancelled_button
+    h.button_to('ヘルプ要請をキャンセルする',
+      h.update_status_help_request_path(object, status: :cancelled),
+      method: :patch,
+      class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm',
+      data: { turbo_confirm: '本当にキャンセルしますか?' })
   end
 
   def open_button

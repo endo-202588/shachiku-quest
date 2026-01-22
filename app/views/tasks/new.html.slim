@@ -28,7 +28,17 @@
                 label.text-sm.font-medium.text-gray-700.mb-1 ステータス
                 select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][status]" required=true
                   option value="in_progress" 進行中
-                  option value="help_requested" ヘルプ要請
+                  option value="help_request" ヘルプ要請
+
+              .flex.flex-col style="display: none;"
+                label.text-sm.font-medium.text-gray-700.mb-1 必要時間
+                select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]"
+                  option value="" 選択してください
+                  option value="half_hour" 30分
+                  option value="one_hour" 1時間
+                  option value="one_and_half_hours" 1時間30分
+                  option value="two_hours" 2時間
+                  option value="long_time" 2時間以上
 
               .flex.flex-col
                 label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
@@ -56,11 +66,12 @@
           label.text-sm.font-medium.text-gray-700.mb-1 ステータス
           select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][status]" required=true
             option value="in_progress" 進行中
-            option value="help_requested" ヘルプ要請
+            option value="help_request" ヘルプ要請
 
         .flex.flex-col
           label.text-sm.font-medium.text-gray-700.mb-1 必要時間
-          select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]" required=true
+          select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]"
+            option value="" 選択してください
             option value="half_hour" 30分
             option value="one_hour" 1時間
             option value="one_and_half_hours" 1時間30分

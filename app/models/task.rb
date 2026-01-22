@@ -42,10 +42,6 @@ class Task < ApplicationRecord
     return if help_request?
     return if help_request.blank?
 
-    HelpRequest.transaction do
-      hr = help_request
-      hr.update!(status: :open)   # ←ここで last_helper_id 退避 & helper_id=nil
-      hr.update!(status: :closed) # ←募集も閉じる
-    end
+    help_request.update!(status: :cancelled)
   end
 end

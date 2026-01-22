@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :statuses, dependent: :destroy
   has_many :tasks, dependent: :destroy
   has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
-  has_many :help_requested_tasks, -> { where(status: 'help_request') }, class_name: 'Task'
+  has_many :help_request_tasks, -> { where(status: 'help_request') }, class_name: 'Task'
   has_one :help_magic, dependent: :destroy
   has_many :received_help_requests,
          class_name: 'HelpRequest',

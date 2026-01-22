@@ -7,12 +7,14 @@ class HelpRequest < ApplicationRecord
   validates :status, presence: true
   validates :helper, presence: true, if: :matched?
 
-  before_save :clear_helper_if_open
+  # before_save :clear_helper_if_open
+  before_update :stash_and_clear_helper, if: :should_clear_helper_on_status_change?
 
   enum :status, {
     open: 0,
     matched: 1,
-    closed: 2
+    completed: 2,
+    cancelled: 3
   }
 
   enum :required_time, {
@@ -31,6 +33,19 @@ class HelpRequest < ApplicationRecord
 
     self.last_helper_id = helper_id if helper_id.present?
 
+    self.helper_id = nil
+  end
+
+  def ending_status_change?
+    will_save_change_to_attribute?(:status) && (completed? || cancelled?)
+  end
+
+  def should_clear_helper_on_status_change?
+    will_save_change_to_attribute?(:status) && (open? || completed? || cancelled?)
+  end
+  
+  def stash_and_clear_helper
+    self.last_helper_id ||= helper_id if helper_id.present?
     self.helper_id = nil
   end
 end
