@@ -1,0 +1,19 @@
+.container.mx-auto.px-4.py-8
+  h1.text-2xl.font-bold.mb-6 ステータス履歴一覧
+    
+  p.text-gray-600.mb-4
+    | #{@status.user.name}さんのステータス履歴
+  
+  .space-y-4
+    - @status_histories.each do |history|
+      .bg-white.rounded-lg.shadow.p-4
+        .flex.justify-between.items-start
+          div
+            p.font-semibold = history.status_type
+            p.text-sm.text-gray-600 = history.created_at.strftime('%Y年%m月%d日 %H:%M')
+          div
+            - if history.comment.present?
+              p.text-sm = history.comment
+  
+  .mt-6
+    = link_to '戻る', edit_status_path(@status), class: "text-blue-600 hover:text-blue-800"

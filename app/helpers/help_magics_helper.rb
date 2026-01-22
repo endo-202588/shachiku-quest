@@ -1,0 +1,2 @@
+module HelpMagicsHelper
+end

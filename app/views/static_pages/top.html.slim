@@ -1,0 +1,26 @@
+.min-h-screen.bg-gradient-to-b.from-gray-900.to-black.flex.items-center.justify-center
+  .container.mx-auto.px-4
+    .text-center
+      / タイトル部分
+      h1.text-6xl.font-bold.text-yellow-400.mb-2
+        | 🏰 社畜クエスト 🏰
+      p.text-2xl.text-gray-300.mb-8
+        | 〜デスクの上の大冒険〜
+
+      / 本日の日付
+      .bg-gray-800.bg-opacity-50.backdrop-blur-sm.rounded-lg.p-6.mb-8.inline-block.border.border-yellow-600
+        p.text-yellow-300.text-lg
+          | 📅
+          span.ml-2.font-bold.text-yellow-400
+            = l(Date.current, format: :long)
+
+      / 冒険に出かけるボタン
+      .mt-8
+        = link_to login_path, class: 'inline-block bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold text-xl py-4 px-12 rounded-full shadow-lg transform transition hover:scale-105 hover:shadow-yellow-500/50' do
+          span.mr-2 ⚔️
+          | 冒険に出かける
+          span.ml-2 🛡️
+
+      / 補足説明
+      p.text-gray-400.mt-8.text-sm
+        | ※ログインして冒険へ出かけましょう

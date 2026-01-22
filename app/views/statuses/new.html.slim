@@ -1,0 +1,44 @@
+.min-h-screen.bg-gradient-to-br.from-purple-100.to-blue-100.flex.items-center.justify-center.p-4
+  .w-full.max-w-md.mx-auto.space-y-6
+
+    / ========== ステータス登録フォーム ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      .w-full.max-w-xl.mx-auto
+        / 日付をタイトルに表示
+        h1.text-3xl.font-bold.text-center.mb-2.text-purple-600
+          = "#{@status.status_date.strftime('%Y年%m月%d日')}のステータス"
+        
+        / サブタイトル（今日であることを強調）
+        p.text-center.text-green-600.font-bold.mb-6
+          | ✅ 本日のステータスを登録します
+
+      / フラッシュメッセージ（既存レコードがある場合に表示）
+      - if flash[:notice]
+          .bg-blue-50.border.border-blue-200.rounded-lg.p-4.mb-4
+            p.text-blue-800.font-bold = flash[:notice]
+
+      / フォームをパーシャルで読み込む
+      = render 'form', status: @status
+
+      / 当日以外のステータス編集へのリンク
+      .mt-6.text-center.pt-4.border-t.border-gray-200
+        p.text-gray-600.mb-2.text-sm 過去や未来のステータスを編集したい場合はこちら
+        = link_to new_schedule_statuses_path, class: "inline-block bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200" do
+          | 📅 当日以外のステータス編集
+
+      / キャンセルリンク
+      .text-center.mt-4
+        = link_to "← 戻る", users_path, class: "text-gray-600 hover:text-gray-800"
+
+    / ========== 補足情報セクション(オプション) ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      .w-full.max-w-xl.mx-auto
+        h2.text-2xl.font-bold.text-gray-800.mb-4
+          | 💡 ステータス登録のヒント
+        .text-gray-700.space-y-2.break-words.whitespace-normal
+          p
+            | ・日々のステータスを記録することで、体調の変化を把握できます
+          p
+            | ・過去のデータは自動的に保存されます
+          p
+            | ・メモ欄には自由に気分や状況を書き込めます

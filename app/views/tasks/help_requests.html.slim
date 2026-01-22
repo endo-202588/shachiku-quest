@@ -1,0 +1,137 @@
+.container.mx-auto.px-4.py-8
+  h1.text-2xl.font-bold.mb-6 ヘルプ要請一覧
+
+  / ========== ヘルプ中セクション（最大1件） ==========
+  - if current_user&.helper? && @current_help_request.present? && @helping_task.present?
+    .mb-8
+      .flex.items-center.justify-between.mb-4.border-b.pb-2
+        h2.text-xl.font-semibold
+          | 🧹 ヘルプ中のタスク
+        span.text-sm.text-gray-500
+          | （現在1件）
+
+      .bg-green-50.rounded-lg.p-6.border.border-green-200.shadow-sm
+        .flex.justify-between.items-start.mb-3
+          .flex-1
+            h3.font-bold.text-lg.mb-2 = @helping_task.title
+            p.text-gray-700 = @helping_task.description
+
+          .ml-4
+            = @helping_task.status_badge_html
+
+        .flex.gap-6.text-sm.text-gray-600.mb-3
+          .flex.items-center.gap-1
+            i.fas.fa-user
+            = @helping_task.user.decorate.full_name
+
+          - if @helping_task.required_time_with_icon
+            = @helping_task.required_time_with_icon
+
+        / ヘルプ要請の状態表示（既存のヘルパー用メソッドがあれば流用）
+        - if @helping_task.help_request.present?
+          p.text-gray-700 = @helping_task.help_request_status_html
+
+        .flex.gap-2.justify-end
+          = link_to '🔎 詳細を見る',
+            help_request_path(@current_help_request),
+            class: 'px-4 py-2 bg-white border border-green-300 text-green-800 rounded hover:bg-green-100 transition'
+
+          / 将来：詳細ページに置く想定だけど、ここに仮で置くならこれ
+          / = button_to '✅ 完了通知', complete_notify_help_request_path(@current_help_request), method: :post, data: { turbo: false },
+          /   class: 'px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition'
+
+  / ========== ヘルパー一覧セクション ==========
+  .mb-8
+    h2.text-xl.font-semibold.mb-4.border-b.pb-2 利用可能なヘルパー
+
+    - if @helpers.present?
+      .grid.grid-cols-1.md:grid-cols-2.lg:grid-cols-3.gap-4
+        - @helpers.each do |helper|
+          .bg-blue-50.rounded-lg.p-4.border.border-blue-200
+            .flex.items-center.gap-3
+              / アイコン部分
+              .w-10.h-10.bg-blue-500.rounded-full.flex.items-center.justify-center.text-white.font-bold
+                = helper.last_name[0]
+
+              / 名前表示(UserDecoratorのfull_nameを使用)
+              .flex-1
+                p.font-bold.text-lg = helper.decorate.full_name
+
+              / 必要時間(TaskDecoratorのメソッドを使用)
+              - if helper.available_time_with_icon
+                .ml-auto
+                  = helper.available_time_with_icon
+            .mt-3
+              - if helper.decorate.helping_now?
+                .block.w-full.text-center.bg-gray-400.text-white.font-bold.py-2.px-4.rounded
+                  | 🧹 お手伝い中
+              - else
+                = link_to select_task_helper_path(helper),
+                          class: 'block w-full text-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-200' do
+                  | 🤝 仲間に加える
+    - else
+      .bg-gray-100.rounded-lg.p-6.text-center.text-gray-600
+        p 現在利用可能なヘルパーはいません
+
+  / ========== タスク一覧セクション ==========
+  .mb-8
+    / 見出しとボタンを横並びに配置
+    .flex.justify-between.items-center.mb-4.border-b.pb-2
+      h2.text-xl.font-semibold ヘルプ要請タスク
+      - if current_user.help_magic.blank?
+        = link_to '魔法を登録', new_help_magic_path, class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
+
+    - if @tasks.present?
+      .space-y-4
+        - @tasks.each do |task|
+          .bg-white.rounded-lg.p-6.border.shadow-sm
+            / タスク情報
+            .flex.justify-between.items-start.mb-3
+              .flex-1
+                h3.font-bold.text-lg.mb-2 = task.title
+                - if task.description.present?
+                .bg-yellow-50.rounded.p-3.mb-3
+                  p.text-sm.text-gray-600.mt-1 = task.description
+
+              / ステータスバッジ(TaskDecoratorのメソッドを使用)
+              .ml-4
+                = task.status_badge_html
+
+            / タスクの詳細情報
+            .flex.gap-6.text-sm.text-gray-600.mb-3
+              / ユーザー名(UserDecoratorのfull_nameを使用)
+              .flex.items-center.gap-1
+                i.fas.fa-user
+                = task.user.decorate.full_name
+
+              / 必要時間(TaskDecoratorのメソッドを使用)
+              - if task.required_time_with_icon
+                = task.required_time_with_icon
+
+              p.text-gray-700 = task.help_request_status_html
+
+            .flex.gap-2.justify-end
+              - if current_user&.helper?
+                - if task.user_id == current_user.id
+                  .px-4.py-2.bg-gray-200.text-gray-600.rounded.text-sm
+                    | 🙅 自分のタスクです
+                - elsif task.user_id != current_user.id && task.help_request&.open? && task.help_request.helper_id.nil?
+                  = button_to '🤝 この仕事の仲間になる',
+                    apply_help_request_path(task.help_request),
+                    method: :post,
+                    data: { turbo: false },
+                    class: 'px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition'
+                - else
+                  .px-4.py-2.bg-gray-400.text-white.rounded.text-sm
+                    | 🧹 募集終了
+              - else
+                - if task.user_id == current_user.id
+                  .px-4.py-2.bg-gray-200.text-gray-600.rounded.text-sm
+                    | 🙅 自分のタスクです
+                - else
+                  = link_to '魔法を登録して応募', new_help_magic_path,
+                    class: 'px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition'
+
+    - else
+      .bg-gray-100.rounded-lg.p-6.text-center.text-gray-600
+        p 現在ヘルプ要請はありません

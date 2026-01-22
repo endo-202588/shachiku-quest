@@ -1,0 +1,17 @@
+.min-h-screen.bg-gradient-to-br.from-purple-100.to-blue-100.flex.items-center.justify-center.p-4
+  .max-w-4xl.w-full.space-y-6
+    / ========== ステータス編集フォーム ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      h1.text-3xl.font-bold.text-center.mb-6.text-purple-600
+        | ✏️ ステータスを編集
+
+      = render 'form', status: @status
+
+        .mt-6.text-center.pt-4.border-t.border-gray-200
+          p.text-gray-600.mb-2.text-sm 過去や未来のステータスを編集したい場合はこちら
+          = link_to new_schedule_statuses_path, class: "inline-block bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition duration-200" do
+            | 📅 当日以外のステータス編集
+
+      / キャンセルリンク
+      .text-center.mt-4
+        = link_to "← 戻る", users_path, class: "text-gray-600 hover:text-gray-800"
