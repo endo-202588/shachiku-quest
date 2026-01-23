@@ -70,7 +70,7 @@ class TasksController < ApplicationController
     @task.assign_attributes(task_params)
 
     # ヘルプ要請で「選択してください」(空文字)が送信された場合のチェック
-    if @task.help_request? && params[:help_request]&.[](:required_time).blank?
+    if @task.help_request? && params.dig(:help_request, :required_time).blank?
       @task.errors.add(:base, '必要な時間を選択してください')
       flash.now[:alert] = '必要な時間を選択してください'
       render :edit, status: :unprocessable_entity
@@ -78,39 +78,39 @@ class TasksController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      # help_requestタイプの場合
+      required_time = params.dig(:help_request, :required_time)
+
       if @task.help_request?
         if @task.help_request.present?
-          # 既存のhelp_requestを更新
-          @task.help_request.assign_attributes(
-            required_time: params[:help_request][:required_time],
-            status: @task.help_request.status || :open
-          )
+          # 既存は required_time だけ更新（statusは触らない）
+          @task.help_request.assign_attributes(required_time: required_time)
         else
-          # 新規作成
-          @task.build_help_request(
-            required_time: params[:help_request][:required_time],
-            status: :open
-          )
+          # 新規は open で作る
+          @task.build_help_request(required_time: required_time, status: :open)
         end
       end
 
-      if @task.save
-        redirect_to tasks_path, notice: 'タスクを更新しました'
-      else
-        flash.now[:alert] = 'タスクの更新に失敗しました'
-        render :edit, status: :unprocessable_entity
-      end
+      @task.save!   # ← transaction内はこれで確実にロールバックされる
     end
+
+    redirect_to tasks_path, notice: 'タスクを更新しました'
+
   rescue ActiveRecord::RecordInvalid => e
-    flash.now[:alert] = "更新に失敗しました: #{e.message}"
+    flash.now[:alert] = "タスクの更新に失敗しました: #{e.record.errors.full_messages.join(', ')}"
     render :edit, status: :unprocessable_entity
   end
 
+
   def add_helper
     @task = Task.find(params[:id])
-    @helper = User.find(params[:helper_id]).decorate
+    helper = User.find(params[:helper_id])
+    @helper = helper.decorate
 
+    if @task.user_id == helper.id
+      redirect_to select_task_helper_path(@helper), alert: '自分のタスクに自分を仲間として追加できません'
+      return
+    end
+    
     # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
     unless helper_available?(@helper)
       redirect_to select_task_helper_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
@@ -133,12 +133,12 @@ class TasksController < ApplicationController
     help_request = @task.help_request || @task.build_help_request
 
     help_request.assign_attributes(
-      helper: @helper,
+      helper: helper,
       status: :matched
     )
 
     if help_request.save
-      redirect_to @task, notice: "#{@helper.decorate.full_name}さんが仲間になりました!"
+      redirect_to @task, notice: "#{@helper.full_name}さんが仲間になりました!"
     else
       redirect_to select_task_helper_path(@helper), alert: 'ヘルパーの追加に失敗しました'
     end
@@ -151,10 +151,9 @@ class TasksController < ApplicationController
     @helper_available_time = @helper.help_magic&.available_time
 
     # 全てのヘルプ要請タスクを取得
-    @matching_tasks = Task.help_request
+    @matching_tasks = current_user.tasks.help_request
                           .includes(:user, :help_request)
                           .order(created_at: :desc)
-                          # decorateは削除 ✅
   end
 
   def destroy

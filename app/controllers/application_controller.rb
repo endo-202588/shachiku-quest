@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
   before_action :refresh_daily_state
   before_action :check_today_status
+  before_action :set_header_help_request
 
   add_flash_types :success, :danger
 
@@ -37,5 +38,10 @@ class ApplicationController < ActionController::Base
     return if current_user.has_today_status?
 
     redirect_to new_status_path(date: Date.current), alert: "本日のステータスを登録してください"
+  end
+
+  def set_header_help_request
+    return unless current_user&.helper?
+    @header_help_request = HelpRequest.find_by(helper_id: current_user.id, status: :matched)
   end
 end

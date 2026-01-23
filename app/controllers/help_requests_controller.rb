@@ -13,25 +13,89 @@ class HelpRequestsController < ApplicationController
   end
 
   def update_status
-    new_status = params[:status]
+    new_status = params[:status].to_s
 
-    # タスクの所有者のみ変更可能
     unless @help_request.task.user_id == current_user&.id
       redirect_to task_path(@help_request.task), alert: '権限がありません'
       return
     end
 
-    if HelpRequest.statuses.key?(new_status)
-      if @help_request.update(status: new_status)
-        redirect_to task_path(@help_request.task), notice: 'ステータスを更新しました'
-      else
-        # エラーメッセージを確認
-        redirect_to task_path(@help_request.task), alert: "ステータスの更新に失敗しました: #{@help_request.errors.full_messages.join(', ')}"
-      end
-    else
+    unless HelpRequest.statuses.key?(new_status)
       redirect_to task_path(@help_request.task), alert: '無効なステータスです'
+      return
+    end
+
+    # ====== open に戻す：履歴退避＋リセット ======
+    if new_status == "open"
+      @help_request.assign_attributes(
+        status: :open,
+        last_helper_id: @help_request.helper_id, # ←退避（不要なら削除OK）
+        helper_id: nil,
+        completed_notified_at: nil
+      )
+
+      if @help_request.save
+        redirect_to task_path(@help_request.task), notice: 'オープンに戻しました'
+      else
+        redirect_to task_path(@help_request.task), alert: @help_request.errors.full_messages.join(', ')
+      end
+      return
+    end
+
+    # ====== completed への遷移ガード（update前） ======
+    if new_status == "completed"
+      unless @help_request.matched?
+        redirect_to task_path(@help_request.task), alert: '完了にできる状態ではありません'
+        return
+      end
+
+      if @help_request.completed_notified_at.blank?
+        redirect_to task_path(@help_request.task), alert: 'ヘルパーからの完了通知がまだです'
+        return
+      end
+
+      if @help_request.helper_id.blank?
+        redirect_to task_path(@help_request.task), alert: '担当ヘルパーが設定されていません'
+        return
+      end
+    end
+
+    if new_status == "cancelled"
+      unless @help_request.open?
+        redirect_to task_path(@help_request.task), alert: 'キャンセルできるのは募集中（open）のみです'
+        return
+      end
+    end
+
+    # ====== 更新 ======
+    if @help_request.update(status: new_status)
+      if new_status == "completed"
+        helper = @help_request.helper
+        hm = helper&.help_magic
+
+        if hm.nil?
+          Rails.logger.info "HelpMagic already nil: user_id=#{helper&.id}"
+        end
+
+        HelpRequestMailer.owner_thanks(@help_request.id).deliver_now
+
+        if hm
+          if hm.destroy
+            Rails.logger.info "HelpMagic destroyed: id=#{hm.id} user_id=#{helper.id}"
+          else
+            Rails.logger.warn "HelpMagic destroy failed: #{hm.errors.full_messages}"
+          end
+        end
+      end
+
+      redirect_to task_path(@help_request.task), notice: 'ステータスを更新しました'
+    else
+      redirect_to task_path(@help_request.task),
+                  alert: "ステータスの更新に失敗しました: #{@help_request.errors.full_messages.join(', ')}"
     end
   end
+
+
 
   def apply
     # 1) ヘルパー登録していないなら不可
@@ -75,51 +139,34 @@ class HelpRequestsController < ApplicationController
   end
 
   def complete_notify
-    Rails.logger.info ">>> ENTER complete_notify"
-    
     unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
-      Rails.logger.info ">>> FAIL: permission"
       redirect_to help_requests_tasks_path, alert: '権限がありません'
       return
     end
 
-    Rails.logger.info ">>> PASS: permission"
-
     # 1) matched 以外では完了通知できない
     unless @help_request.matched?
-      Rails.logger.info ">>> FAIL: not matched"
       redirect_to help_request_path(@help_request.id), alert: '完了通知できる状態ではありません'
       return
     end
 
-    Rails.logger.info ">>> PASS: matched"
-
     # 2) 担当ヘルパー本人だけが押せる
     unless @help_request.helper_id == current_user&.id
-      Rails.logger.info ">>> FAIL: helper mismatch"
       redirect_to help_request_path(@help_request.id), alert: '権限がありません'
       return
     end
 
-    Rails.logger.info ">>> PASS: helper"
-
     # 3) すでに通知済みなら二重送信防止
     if @help_request.completed_notified_at.present?
-      Rails.logger.info ">>> FAIL: already notified"
       redirect_to help_request_path(@help_request.id), notice: 'すでに完了通知済みです'
       return
     end
 
-    Rails.logger.info ">>> PASS: NOT notified"
-
     # 4) 通知：DBに記録（※ status は変えない）
     if @help_request.update(completed_notified_at: Time.current)
-      Rails.logger.info ">>> PASS: UPDATE OK"
-      HelpRequestMailer.completed_notify(@help_request.id).deliver_now
-      Rails.logger.info ">>> MAIL SENT"
+      HelpRequestMailer.completed_notify(@help_request.id).deliver_later
       redirect_to help_requests_tasks_path, notice: '完了を通知しました！'
     else
-      Rails.logger.info ">>> FAIL: update error #{@help_request.errors.full_messages}"
       redirect_to help_request_path(@help_request.id), alert: @help_request.errors.full_messages.join(', ')
     end
   end

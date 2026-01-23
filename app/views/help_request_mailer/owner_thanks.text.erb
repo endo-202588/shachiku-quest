@@ -1,0 +1,12 @@
+<%= @helper.decorate.full_name rescue @helper.name %> さん
+
+発注者（<%= @owner.decorate.full_name rescue @owner.name %>）です。
+完了通知を確認しました。お手伝いありがとうございました！
+
+タスク: <%= @task.title %>
+
+詳細はこちら:
+<%= task_url(@task) %>
+
+---
+シャチーク

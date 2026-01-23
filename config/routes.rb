@@ -48,6 +48,10 @@ Rails.application.routes.draw do
 
   # ヘルパー選択後のタスク選択画面用
   resources :helpers, only: [] do
+    collection do
+      get :helping  # /helpers/helping
+    end
+    
     member do
       get :select_task  # このヘルパーに依頼するタスクを選択
     end

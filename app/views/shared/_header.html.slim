@@ -6,9 +6,14 @@ header.bg-indigo-600.shadow-lg
         = link_to users_path, class: 'text-white text-xl font-bold hover:text-indigo-200 transition' do
           | ⚔️ 社畜クエスト ⚔️
 
-      / ユーザー情報とログアウトボタン
       .flex.items-center.gap-4
-        .text-white.text-sm
-          span.mr-2 👤
-          = current_user.decorate.full_name
-        = button_to 'ログアウト', logout_path, method: :delete, class: 'bg-white text-indigo-600 hover:bg-indigo-100 font-bold py-2 px-4 rounded transition duration-200'
+          - if @header_help_request.present?
+            = link_to helping_helpers_path,
+              class: 'inline-flex items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold px-3 py-1 rounded-full transition' do
+              span 🧹
+              span ヘルプ中のタスク
+              
+          .text-white.text-sm
+            span.mr-2 👤
+            = current_user.decorate.full_name
+          = button_to 'ログアウト', logout_path, method: :delete, class: 'bg-white text-indigo-600 hover:bg-indigo-100 font-bold py-2 px-4 rounded transition duration-200'

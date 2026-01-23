@@ -44,4 +44,12 @@ class User < ApplicationRecord
     hm = help_magic
     hm&.available_date.present? && hm.available_date >= Date.current
   end
+
+  def helping_now?
+    HelpRequest.exists?(helper_id: id, status: :matched)
+  end
+
+  def can_delete_help_magic?
+    helper? && !helping_now?
+  end
 end

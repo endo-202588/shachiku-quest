@@ -20,7 +20,10 @@
             strong.text-gray-900 必要時間:
             = task.required_time_with_icon
 
-          - if task.matchable?
+          - if task.user_id == @helper.id
+            button.bg-gray-300.text-gray-500.font-medium.px-4.py-2.rounded-lg.w-full.cursor-not-allowed disabled=true
+              | 自分のタスクです
+          - elsif task.matchable?
             = button_to 'このタスクの仲間にする', \
                         add_helper_task_path(task, helper_id: @helper.id), \
                         method: :post, \

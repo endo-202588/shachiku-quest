@@ -5,7 +5,7 @@ class HelpRequest < ApplicationRecord
 
   validates :required_time, presence: true
   validates :status, presence: true
-  validates :helper, presence: true, if: :matched?
+  validates :helper, presence: true, if: -> { matched? || completed? }
 
   # before_save :clear_helper_if_open
   before_update :stash_and_clear_helper, if: :should_clear_helper_on_status_change?
@@ -41,7 +41,7 @@ class HelpRequest < ApplicationRecord
   end
 
   def should_clear_helper_on_status_change?
-    will_save_change_to_attribute?(:status) && (open? || completed? || cancelled?)
+    will_save_change_to_attribute?(:status) && open?
   end
   
   def stash_and_clear_helper

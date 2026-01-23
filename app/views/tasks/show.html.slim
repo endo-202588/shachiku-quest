@@ -56,7 +56,7 @@
           - case @help_request.status
           - when 'matched'
             .flex.gap-2.flex-wrap
-              = form_with url: update_status_help_request_path(@help_request, status: :completed), method: :patch, local: true, data: { turbo: false, turbo_confirm: '本当にクローズしますか?' } do |f|
+              = form_with url: update_status_help_request_path(@help_request, status: :completed), method: :patch, local: true, data: { turbo: false, confirm: '本当に完了しますか?' } do |f|
                 = f.submit '完了にする', class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm'
 
               = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
