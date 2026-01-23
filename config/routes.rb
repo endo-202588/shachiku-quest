@@ -55,5 +55,8 @@ Rails.application.routes.draw do
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    
+    # CSRF保護を無効化
+    LetterOpenerWeb::Engine.config.action_controller.default_protect_from_forgery = false
   end
 end
