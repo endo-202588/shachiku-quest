@@ -48,6 +48,10 @@
               span.text-sm.text-gray-600 ヘルパー:
               = @help_request.helper_name
 
+            .flex.items-center.gap-2
+              span.text-sm.text-gray-600 メッセージ:
+              = @help_request&.request_message
+
       / ステータス変更ボタン
       - if @help_request.present? && @task.user_id == current_user&.id
         .mt-4.space-y-2

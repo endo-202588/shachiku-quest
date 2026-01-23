@@ -70,7 +70,9 @@ class TasksController < ApplicationController
     @task.assign_attributes(task_params)
 
     # ヘルプ要請で「選択してください」(空文字)が送信された場合のチェック
-    if @task.help_request? && params.dig(:help_request, :required_time).blank?
+    required_time_key = params.dig(:help_request, :required_time)
+
+    if @task.help_request? && required_time_key.blank?
       @task.errors.add(:base, '必要な時間を選択してください')
       flash.now[:alert] = '必要な時間を選択してください'
       render :edit, status: :unprocessable_entity
@@ -78,15 +80,25 @@ class TasksController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
-      required_time = params.dig(:help_request, :required_time)
+      request_message = params.dig(:help_request, :request_message)
+
+      required_time_int =
+        required_time_key.present? ? HelpRequest.required_times[required_time_key.to_s] : nil
 
       if @task.help_request?
         if @task.help_request.present?
           # 既存は required_time だけ更新（statusは触らない）
-          @task.help_request.assign_attributes(required_time: required_time)
+          @task.help_request.assign_attributes(
+            required_time: required_time_int,
+            request_message: request_message
+          )
         else
           # 新規は open で作る
-          @task.build_help_request(required_time: required_time, status: :open)
+          @task.build_help_request(
+            required_time: required_time_int,
+            request_message: request_message,
+            status: :open
+          )
         end
       end
 
@@ -181,7 +193,7 @@ class TasksController < ApplicationController
   end
 
   def prepare_single_task(task_attr)
-    permitted_attr = task_attr.permit(:title, :status, :description, :required_time)
+    permitted_attr = task_attr.permit(:title, :status, :description, :required_time, :request_message)
 
     task = current_user.tasks.build(
       title: permitted_attr[:title],
@@ -199,6 +211,7 @@ class TasksController < ApplicationController
 
       task.build_help_request(
         required_time: required_time_int,
+        request_message: permitted_attr[:request_message],
         status: :open
       )
     end
@@ -249,8 +262,7 @@ class TasksController < ApplicationController
   end
 
   def set_task
-    # @task = current_user.tasks.find(params[:id])
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def helper_available?(helper)
@@ -270,6 +282,9 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :status)
+    params.require(:task).permit(
+      :title, :description, :status,
+      help_request_attributes: [:id, :required_time, :request_message]
+    )
   end
 end

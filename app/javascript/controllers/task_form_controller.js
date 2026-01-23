@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["taskTypeSelect", "requiredTimeField", "requiredTimeInput"];
+  static targets = ["taskTypeSelect", "requiredTimeField", "requiredTimeInput", "requestMessageField", "requestMessageInput"];
 
   connect() {
     this.toggleRequiredTime();
@@ -12,12 +12,13 @@ export default class extends Controller {
 
     if (isHelpRequest) {
       this.requiredTimeFieldTarget.classList.remove("hidden");
-      setTimeout(() => {
-        this.requiredTimeInputTarget.focus();
-      }, 100);
+      this.requestMessageFieldTarget.classList.remove("hidden");
+      setTimeout(() => this.requiredTimeInputTarget.focus(), 100);
     } else {
       this.requiredTimeFieldTarget.classList.add("hidden");
+      this.requestMessageFieldTarget.classList.add("hidden");
       this.requiredTimeInputTarget.value = "";
+      this.requestMessageInputTarget.value = "";
     }
   }
 }

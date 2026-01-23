@@ -34,6 +34,9 @@ class HelpRequest < ApplicationRecord
     self.last_helper_id = helper_id if helper_id.present?
 
     self.helper_id = nil
+    self.helper_message = nil
+    self.completed_notified_at = nil
+    self.completed_read_at = nil
   end
 
   def ending_status_change?

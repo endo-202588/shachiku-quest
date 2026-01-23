@@ -75,13 +75,13 @@ export default class extends Controller {
   toggleRequiredTime(taskField) {
     const statusSelect = taskField.querySelector("select[name='tasks[][status]']");
     const requiredTimeField = taskField.querySelector("select[name='tasks[][required_time]']")?.closest(".flex.flex-col");
+    const requestMessageField = taskField.querySelector("textarea[name='tasks[][request_message]']")?.closest(".flex.flex-col");
 
-    if (statusSelect && requiredTimeField) {
-      if (statusSelect.value === "help_request") {
-        requiredTimeField.style.display = "flex";
-      } else {
-        requiredTimeField.style.display = "none";
-      }
-    }
+    if (!statusSelect) return;
+
+    const show = statusSelect.value === "help_request";
+
+    if (requiredTimeField) requiredTimeField.style.display = show ? "flex" : "none";
+    if (requestMessageField) requestMessageField.style.display = show ? "flex" : "none";
   }
 }

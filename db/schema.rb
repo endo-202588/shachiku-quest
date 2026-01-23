@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_21_094854) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_23_071437) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_21_094854) do
     t.bigint "last_helper_id"
     t.datetime "completed_notified_at"
     t.datetime "completed_read_at"
+    t.text "request_message"
+    t.text "helper_message"
     t.index ["helper_id"], name: "index_help_requests_on_helper_id"
     t.index ["last_helper_id"], name: "index_help_requests_on_last_helper_id"
     t.index ["status"], name: "index_help_requests_on_status"
