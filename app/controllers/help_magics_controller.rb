@@ -1,4 +1,18 @@
 class HelpMagicsController < ApplicationController
+  before_action :require_login
+  before_action :set_help_magic, only: %i[edit update destroy]
+
+  def edit
+  end
+
+  def update
+    if @help_magic.update(help_magic_params)
+      redirect_to dashboard_path, notice: "魔法を更新しました"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   def new
     @help_magic = current_user.help_magic || current_user.build_help_magic
   end
@@ -26,6 +40,12 @@ class HelpMagicsController < ApplicationController
   end
 
   private
+
+    def set_help_magic
+      @help_magic = current_user.help_magic
+      redirect_to dashboard_path, alert: "魔法が見つかりません" unless @help_magic
+    end
+
     def help_magic_params
       params.require(:help_magic).permit(:available_time)
     end

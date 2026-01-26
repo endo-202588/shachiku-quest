@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.role = :general
     if @user.save
       redirect_to users_path, success: '勇者登録が完了しました'
     else

@@ -1,0 +1,18 @@
+.container.max-w-xl.mx-auto.px-4.py-8
+  .bg-white.rounded-lg.shadow-md.p-6
+    h1.text-2xl.font-bold.text-gray-900.mb-6 ユーザー編集
+
+    = simple_form_for [:admin, @user] do |f|
+      = f.error_notification
+
+      .space-y-4
+        = f.input :last_name
+        = f.input :first_name
+        = f.input :department
+        = f.input :email
+        - unless @user.id == current_user.id
+          = f.input :role, as: :select, collection: User.roles_i18n.map { |k, v| [v, k] }, include_blank: false
+
+      .mt-6.flex.justify-end.gap-2
+        = link_to "戻る", admin_users_path, class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+        = f.button :submit, "更新する", class: "px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"

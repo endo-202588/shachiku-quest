@@ -1,0 +1,140 @@
+.container.max-w-5xl.mx-auto.px-4.py-8
+  h1.text-2xl.font-bold.text-gray-800.mb-6 ダッシュボード
+
+  / =============================
+  /  上段2つ：今日のステータス & 今日のタスク
+  / =============================
+  .grid.grid-cols-1.md:grid-cols-2.gap-6
+    / ---- 今日のステータス ----
+    .bg-white.rounded-lg.shadow-md.p-6
+      h2.text-lg.font-bold.text-gray-800.mb-2 今日のステータス
+      - if @today_status
+        .text-gray-800.font-medium = @today_status.display_type
+        - if @today_status.memo.present?
+          p.text-gray-600.text-sm.mt-2 = @today_status.memo
+        = link_to "編集する", edit_status_path(@today_status.object),
+          class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+      - else
+        p.text-gray-600.text-sm 今日はまだステータスが登録されていません。
+        = link_to "登録する", new_status_path,
+          class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+
+    / ---- 今日のタスク ----
+    .bg-white.rounded-lg.shadow-md.p-6
+      h2.text-lg.font-bold.text-gray-800.mb-2 今日のタスク
+
+      - if @today_tasks&.any?
+        ul.divide-y.divide-gray-200
+          - @today_tasks.each do |task|
+            li.py-3.flex.items-start.justify-between.gap-3
+              .min-w-0.flex-1
+                .flex.items-center.gap-2.min-w-0
+                  = link_to task.title, task_path(task.object),
+                    class: "truncate text-gray-900 font-medium hover:underline"
+                  == task.status_badge_html
+                .mt-2.flex.flex-wrap.items-center.gap-2.text-sm.text-gray-600
+                  - if task.help_request?
+                    == task.help_request_status_html
+                    - if task.required_time_with_icon
+                      == task.required_time_with_icon
+                  - badge = task.completion_unread_badge_html(current_user)
+                  - if badge
+                    == badge
+
+              = link_to "開く", task_path(task.object),
+                class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+
+        .mt-4.text-right
+          = link_to "タスク一覧へ", tasks_path, class: "text-sm text-indigo-600 hover:underline"
+      - else
+        p.text-gray-600.text-sm タスクがありません。
+        .mt-4
+          = link_to "タスクを作成", new_task_path,
+            class: "inline-flex.items-center px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+
+
+  / =============================
+  / 下段：ヘルプ要請の状況 + ヘルプ中のタスク
+  / =============================
+  .space-y-6.mt-6
+
+    / ---- ヘルプ要請の状況 ----
+    .bg-white.rounded-lg.shadow-md.p-6
+      h2.text-lg.font-bold.text-gray-800.mb-2 ヘルプ要請の状況
+
+      .space-y-4
+        .flex.items-center.justify-between
+          span.text-gray-800.font-medium 募集中（open）
+          span.text-sm.bg-blue-100.text-blue-800.px-3.py-1.rounded-full = @hr_open.count
+
+        .flex.items-center.justify-between
+          span.text-gray-800.font-medium ヘルパー対応中（matched）
+          span.text-sm.bg-green-100.text-green-800.px-3.py-1.rounded-full = @hr_matched.count
+
+        .flex.items-center.justify-between
+          span.text-gray-800.font-medium 完了通知（未読）
+          span.text-sm.bg-yellow-100.text-yellow-800.px-3.py-1.rounded-full = @hr_completed_unread.count
+
+        .flex.items-center.justify-between
+          span.text-gray-800.font-medium キャンセル済み
+          span.text-sm.bg-yellow-100.text-yellow-800.px-3.py-1.rounded-full = @hr_cancelled.count
+
+      - if @hr_completed_unread.any?
+        .mt-4
+          p.text-sm.text-yellow-700.mb-2 🔔 未読の完了通知があります
+          = link_to "完了通知を確認する", help_requests_path,
+            class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+
+    / ---- ヘルプ中のタスク ----
+    .bg-gray-50.rounded-lg.shadow-md.p-6
+      h2.text-lg.font-bold.text-gray-800.mb-2 ヘルプ中のタスク
+
+      - if @helping_request
+        - task = @helping_request.task.decorate
+
+        ul.divide-y.divide-gray-200
+          li.py-3.flex.items-start.justify-between.gap-3
+            .min-w-0.flex-1
+              .flex.items-center.gap-2.min-w-0
+                = link_to task.title, helping_helpers_path,
+                  class: "truncate text-gray-900 font-medium hover:underline"
+                == task.status_badge_html
+
+              .mt-2.flex.flex-wrap.items-center.gap-2.text-sm.text-gray-600
+                == @helping_request.decorate.status_badge
+                == @helping_request.decorate.required_time_display
+
+            = link_to "詳細", helping_helpers_path,
+              class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+
+      - else
+        p.text-gray-600.text-sm 現在ヘルプ中のタスクはありません。
+
+  .bg-purple-50.rounded-lg.shadow-md.p-6.mt-6
+    h2.text-lg.font-bold.text-purple-900.mb-2 🔮 魔法
+
+    - if @help_magic.present?
+      .text-gray-800.font-medium.mb-4
+        | 登録中の魔法:
+        span.font-bold.text-purple-700 = @help_magic.decorate.required_time_with_icon
+
+      / 🔧 編集 & 削除ボタン（横並び）
+      .mt-4.flex.items-center.gap-3
+
+        = link_to "編集",
+          edit_help_magic_path,
+          class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+
+        = link_to "削除",
+          help_magic_path(@help_magic),
+          method: :delete,
+          data: { confirm: "本当に魔法を消しますか？" },
+          class: "inline-flex items-center px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm"
+
+    - else
+      p.text-gray-700.text-sm.mb-4 まだ魔法が登録されていません。
+
+      = link_to "新しく魔法を登録する",
+        new_help_magic_path,
+        class: "inline-flex items-center px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 text-sm"
+

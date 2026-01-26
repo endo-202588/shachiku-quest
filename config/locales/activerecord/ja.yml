@@ -25,6 +25,10 @@ ja:
         memo: メモ
         user: ユーザー
   enums:
+    user:
+      role:
+        general: 一般
+        admin: 管理者
     status:
       status_type:
         peaceful: 🟢 平和

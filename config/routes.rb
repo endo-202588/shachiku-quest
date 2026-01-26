@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
+  get "dashboard/show"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
   root 'static_pages#top'
+
+  get "dashboard", to: "dashboard#show"
 
   # ユーザー登録
   resources :users, only: %i[new create index]
@@ -34,7 +37,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :help_requests, only: [:show] do
+  resources :help_requests, only: %i[index show] do
     member do
       patch :update_status  # ステータス更新用のルーティング
       post  :apply
@@ -43,7 +46,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :help_magic, only: [:new, :create, :destroy]
+  resource :help_magic, only: %i[new create edit update destroy]
 
   # ヘルパー選択後のタスク選択画面用
   resources :helpers, only: [] do
@@ -63,6 +66,13 @@ Rails.application.routes.draw do
     resource :email, only: %i[edit update]
 
     get "email/confirm", to: "email_confirmations#show", as: :email_confirm
+  end
+
+  namespace :admin do
+    root to: "dashboard#show"   # /admin → Admin::DashboardController#show
+
+    resources :users, only: %i[index edit update destroy]
+    resources :tasks, only: %i[index edit update destroy]
   end
 
   if Rails.env.development?

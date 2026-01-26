@@ -3,15 +3,35 @@ class HelpRequestsController < ApplicationController
   before_action :set_help_request, only: [:show, :update_status, :apply, :complete_form, :complete_notify]
   before_action :authorize_complete_notify!, only: [:complete_form, :complete_notify]
 
+  def index
+    # 自分（発注者）のタスクに紐づく help_request
+    base = HelpRequest.joins(:task).where(tasks: { user_id: current_user.id })
+
+    # 完了通知が来ているもの（必要に応じて条件調整）
+    @completed_requests = base
+      .where.not(completed_notified_at: nil)
+      .includes(:task, :helper)
+      .order(completed_notified_at: :desc)
+
+    # 未読だけ（バッジ用）
+    @unread_completed_requests = @completed_requests.where(completed_read_at: nil)
+  end
+
   def show
-    unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
+    task_owner = @help_request.task.user_id
+    me = current_user&.id
+
+    unless task_owner == me
       redirect_to help_requests_tasks_path, alert: '権限がありません'
       return
     end
 
-    task = @help_request.task
+    if @help_request.completed_notified_at.present? && @help_request.completed_read_at.nil?
+      @help_request.update!(completed_read_at: Time.current)
+    end
+
     @help_request_decorated = @help_request.decorate
-    @task = task.decorate
+    @task = @help_request.task.decorate
   end
 
   def update_status

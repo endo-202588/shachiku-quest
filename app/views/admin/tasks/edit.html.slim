@@ -1,0 +1,21 @@
+.container.max-w-xl.mx-auto.px-4.py-8
+  .bg-white.rounded-lg.shadow-md.p-6
+    .flex.items-end.justify-between.mb-6
+      h1.text-2xl.font-bold.text-gray-900 タスク編集
+      = link_to "一覧へ戻る", admin_tasks_path, class: "text-sm text-indigo-600 hover:underline"
+
+    = simple_form_for [:admin, @task] do |f|
+      = f.error_notification
+
+      .space-y-4
+        = f.input :title
+        = f.input :description, as: :text, input_html: { rows: 6 }
+
+        / status が enum の場合は select 推奨（必要なら次で整える）
+        = f.input :status, as: :select, collection: Task.statuses_i18n.map { |k, v| [v, k] }
+
+      .mt-6.flex.justify-end.gap-2
+        = link_to "キャンセル", admin_tasks_path,
+          class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+        = f.button :submit, "更新する",
+          class: "px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"

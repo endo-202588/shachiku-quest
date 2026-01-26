@@ -1,0 +1,30 @@
+.container.max-w-6xl.mx-auto.px-4.py-8
+  .flex.items-end.justify-between.mb-6
+    h1.text-2xl.font-bold.text-gray-900 ユーザー管理
+    = link_to "管理ダッシュボードへ", admin_root_path, class: "text-sm text-indigo-600 hover:underline"
+
+  .bg-white.rounded-lg.shadow-md.overflow-hidden
+    table.w-full.text-sm
+      thead.bg-gray-50.text-gray-700
+        tr
+          th.text-left.px-4.py-3 ID
+          th.text-left.px-4.py-3 名前
+          th.text-left.px-4.py-3 Email
+          th.text-left.px-4.py-3 Role
+          th.text-right.px-4.py-3 操作
+
+      tbody.divide-y.divide-gray-200
+        - @users.each do |u|
+          tr
+            td.px-4.py-3 = u.id
+            td.px-4.py-3 = (u.respond_to?(:decorate) ? u.decorate.full_name : (u.try(:name) || "-"))
+            td.px-4.py-3 = u.email
+            td.px-4.py-3 = (u.respond_to?(:role) ? u.role : "-")
+            td.px-4.py-3.text-right.space-x-2
+              = link_to "編集", edit_admin_user_path(u),
+                class: "inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+              = button_to "削除", admin_user_path(u),
+                method: :delete,
+                data: { confirm: "本当に削除しますか？" },
+                form_class: "inline-block m-0",
+                class: "inline-flex items-center px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700"
