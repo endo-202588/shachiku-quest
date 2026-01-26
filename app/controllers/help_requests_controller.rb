@@ -57,7 +57,7 @@ class HelpRequestsController < ApplicationController
       )
 
       if @help_request.save
-        redirect_to task_path(@help_request.task), notice: 'オープンに戻しました'
+        redirect_to edit_task_path(@help_request.task), notice: 'オープンに戻しました。付与ポイントを選び直してください'
       else
         redirect_to task_path(@help_request.task), alert: @help_request.errors.full_messages.join(', ')
       end

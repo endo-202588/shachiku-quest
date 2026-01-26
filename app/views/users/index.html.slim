@@ -14,7 +14,10 @@
                 = user.full_name
               p.text-sm.text-gray-500
                 = user.display_department
-          = user.help_badge_html
+          .flex.items-center.gap-2
+            = user.level_badge
+            = user.total_virtue_points_badge
+            = user.help_badge_html
 
         / ステータス表示
         = user.status_section_html(current_user)

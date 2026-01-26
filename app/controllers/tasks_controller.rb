@@ -80,23 +80,31 @@ class TasksController < ApplicationController
     end
 
     ActiveRecord::Base.transaction do
+      virtue_points = params.dig(:help_request, :virtue_points)
       request_message = params.dig(:help_request, :request_message)
 
       required_time_int =
         required_time_key.present? ? HelpRequest.required_times[required_time_key.to_s] : nil
 
+      if @task.help_request? && virtue_points.blank?
+        @task.errors.add(:base, '付与ポイントを選択してください')
+        flash.now[:alert] = '付与ポイントを選択してください'
+        render :edit, status: :unprocessable_entity
+        return
+      end
+
       if @task.help_request?
         if @task.help_request.present?
-          # 既存は required_time だけ更新（statusは触らない）
           @task.help_request.assign_attributes(
             required_time: required_time_int,
-            request_message: request_message
+            request_message: request_message,
+            virtue_points: virtue_points.to_i
           )
         else
-          # 新規は open で作る
           @task.build_help_request(
             required_time: required_time_int,
             request_message: request_message,
+            virtue_points: virtue_points.to_i,
             status: :open
           )
         end
@@ -122,7 +130,7 @@ class TasksController < ApplicationController
       redirect_to select_task_helper_path(@helper), alert: '自分のタスクに自分を仲間として追加できません'
       return
     end
-    
+
     # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
     unless helper_available?(@helper)
       redirect_to select_task_helper_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
@@ -193,7 +201,7 @@ class TasksController < ApplicationController
   end
 
   def prepare_single_task(task_attr)
-    permitted_attr = task_attr.permit(:title, :status, :description, :required_time, :request_message)
+    permitted_attr = task_attr.permit(:title, :status, :description, :required_time, :request_message, :virtue_points)
 
     task = current_user.tasks.build(
       title: permitted_attr[:title],
@@ -207,11 +215,17 @@ class TasksController < ApplicationController
         return { task: task, valid: false }
       end
 
+      if permitted_attr[:virtue_points].blank?
+        task.errors.add(:base, '付与ポイントを選択してください')
+        return { task: task, valid: false }
+      end
+
       required_time_int = HelpRequest.required_times[permitted_attr[:required_time].to_s]
 
       task.build_help_request(
         required_time: required_time_int,
         request_message: permitted_attr[:request_message],
+        virtue_points: permitted_attr[:virtue_points].to_i,
         status: :open
       )
     end
@@ -284,7 +298,7 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(
       :title, :description, :status,
-      help_request_attributes: [:id, :required_time, :request_message]
+      help_request_attributes: [:id, :required_time, :request_message, :virtue_points]
     )
   end
 end

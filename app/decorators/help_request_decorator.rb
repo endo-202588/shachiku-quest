@@ -27,6 +27,12 @@ class HelpRequestDecorator < Draper::Decorator
     object.helper.decorate.full_name
   end
 
+  def helper_message
+    return h.content_tag(:span, 'なし', class: 'text-gray-400') unless object.helper_message.present?
+
+    object&.helper_message
+  end
+
   # ステータス変更ボタン（タスク所有者のみ）
   def status_change_buttons(current_user)
     return unless can_change_status?(current_user)

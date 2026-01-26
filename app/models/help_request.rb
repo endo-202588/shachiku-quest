@@ -11,6 +11,7 @@ class HelpRequest < ApplicationRecord
   validates :helper, presence: true, if: -> { matched? || completed? }
 
   before_update :reset_fields_when_status_becomes_open
+  after_update :add_points_to_helper, if: :saved_change_to_status?
 
   enum :status, {
     open: 0,
@@ -55,5 +56,11 @@ class HelpRequest < ApplicationRecord
     self.completed_notified_at = nil
     self.completed_read_at = nil if respond_to?(:completed_read_at)
     self.helper_message = nil if respond_to?(:helper_message)
+  end
+
+  def add_points_to_helper
+    return unless completed?
+
+    helper&.increment!(:total_virtue_points, virtue_points.to_i)
   end
 end

@@ -52,17 +52,21 @@
               span.text-sm.text-gray-600 ヘルパー:
               = @help_request.helper_name
 
+            / virtue_points
+            .flex.items-center.gap-2
+              span.text-sm.text-gray-600 付与される徳:
+              = @help_request.virtue_points
+
             .mb-4
               .text-sm.text-gray-600.mb-1 完了メッセージ
-              = @help_request&.helper_message
+              = @help_request.helper_message
 
       / ステータス変更ボタン
-      - if @help_request.present? && @task.user_id == current_user&.id
+      - if @help_request.present? && @task.user_id == current_user&.id && !@help_request.open?
         .mt-4.space-y-2
           .text-sm.text-gray-600.mb-2 ステータスを変更
 
-          - case @help_request.status
-          - when 'matched'
+          - if @help_request.matched?
             .flex.gap-2.flex-wrap
               = form_with url: update_status_help_request_path(@help_request, status: :completed), method: :patch, local: true, data: { turbo: false, confirm: '本当に完了しますか?' } do |f|
                 = f.submit '完了にする', class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm'
@@ -70,7 +74,7 @@
               = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
                 = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 
-          - when 'completed'
+          - elsif @help_request.completed?
             = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
               = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 

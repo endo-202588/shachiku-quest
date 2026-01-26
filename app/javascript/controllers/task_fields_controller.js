@@ -33,6 +33,7 @@ export default class extends Controller {
 
     // 新しく追加したフィールドの監視設定
     this.setupStatusListener(lastField);
+    this.toggleRequiredTime(lastField);
   }
 
   remove(event) {
@@ -76,6 +77,9 @@ export default class extends Controller {
     const statusSelect = taskField.querySelector("select[name='tasks[][status]']");
     const requiredTimeField = taskField.querySelector("select[name='tasks[][required_time]']")?.closest(".flex.flex-col");
     const requestMessageField = taskField.querySelector("textarea[name='tasks[][request_message]']")?.closest(".flex.flex-col");
+    const virtuePointsField = taskField
+      .querySelector("select[name='tasks[][virtue_points]']")
+      ?.closest(".flex.flex-col");
 
     if (!statusSelect) return;
 
@@ -83,5 +87,7 @@ export default class extends Controller {
 
     if (requiredTimeField) requiredTimeField.style.display = show ? "flex" : "none";
     if (requestMessageField) requestMessageField.style.display = show ? "flex" : "none";
+    if (virtuePointsField)
+      virtuePointsField.style.display = show ? "flex" : "none";
   }
 }

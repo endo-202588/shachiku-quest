@@ -43,6 +43,29 @@ class UserDecorator < Draper::Decorator
   end
 
   # =====================================
+  # レベル、total_virtue_points表示
+  # =====================================
+
+  LEVEL_STEP = 30
+
+  def computed_level
+    # 0..29 => 1, 30..59 => 2 ...
+    (object.total_virtue_points / LEVEL_STEP) + 1
+  end
+
+  def level_badge
+    h.content_tag(:span, "Lv.#{computed_level}",
+      class: "text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
+    )
+  end
+
+  def total_virtue_points_badge
+    h.content_tag(:span, "#{object.total_virtue_points}pt",
+      class: "text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full"
+    )
+  end
+
+  # =====================================
   # ステータス表示
   # =====================================
 
