@@ -1,7 +1,7 @@
 .container.mx-auto.px-4.py-8
   h1.text-2xl.font-bold.mb-6 使える魔法を登録
 
-  = simple_form_for @help_magic, url: help_magics_path do |f|
+  = simple_form_for @help_magic, url: help_magic_path do |f|
     .mb-4
       = f.input :available_time,
                 as: :select,

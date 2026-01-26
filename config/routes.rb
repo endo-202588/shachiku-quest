@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "help_magics/new"
-  get "help_magics/create"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -40,26 +38,36 @@ Rails.application.routes.draw do
     member do
       patch :update_status  # ステータス更新用のルーティング
       post  :apply
+      get  :complete_form
       post :complete_notify
     end
   end
 
-  resources :help_magics, only: [:new, :create]
+  resource :help_magic, only: [:new, :create, :destroy]
 
   # ヘルパー選択後のタスク選択画面用
   resources :helpers, only: [] do
     collection do
       get :helping  # /helpers/helping
     end
-    
+
     member do
       get :select_task  # このヘルパーに依頼するタスクを選択
     end
   end
 
+  namespace :settings do
+    get "email_confirmations/show"
+    resource :profile, only: %i[show edit update]
+    resource :password, only: %i[edit update]
+    resource :email, only: %i[edit update]
+
+    get "email/confirm", to: "email_confirmations#show", as: :email_confirm
+  end
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
-    
+
     # CSRF保護を無効化
     LetterOpenerWeb::Engine.config.action_controller.default_protect_from_forgery = false
   end

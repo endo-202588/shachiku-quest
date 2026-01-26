@@ -1,5 +1,7 @@
 class HelpRequestsController < ApplicationController
-  before_action :set_help_request, only: [:show, :update_status, :apply, :complete_notify]
+  before_action :require_login
+  before_action :set_help_request, only: [:show, :update_status, :apply, :complete_form, :complete_notify]
+  before_action :authorize_complete_notify!, only: [:complete_form, :complete_notify]
 
   def show
     unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
@@ -8,7 +10,7 @@ class HelpRequestsController < ApplicationController
     end
 
     task = @help_request.task
-    @help_request = @help_request.decorate
+    @help_request_decorated = @help_request.decorate
     @task = task.decorate
   end
 
@@ -95,8 +97,6 @@ class HelpRequestsController < ApplicationController
     end
   end
 
-
-
   def apply
     # 1) ヘルパー登録していないなら不可
     unless current_user&.helper?
@@ -138,40 +138,52 @@ class HelpRequestsController < ApplicationController
     end
   end
 
+  def complete_form
+    # 表示だけ（@help_request は before_action でセット済み）
+  end
+
   def complete_notify
-    unless @help_request.task.user_id == current_user&.id || @help_request.helper_id == current_user&.id
-      redirect_to help_requests_tasks_path, alert: '権限がありません'
+    # 二重送信防止
+    if @help_request.completed_notified_at.present?
+      redirect_to help_request_path(@help_request), notice: 'すでに完了通知済みです'
       return
     end
 
+    # ここで helper_message と notified_at を同時に保存
+    if @help_request.update(complete_notify_params.merge(completed_notified_at: Time.current))
+      HelpRequestMailer.completed_notify(@help_request.id).deliver_later
+      redirect_to help_requests_tasks_path, notice: '完了を通知しました！'
+    else
+      flash.now[:alert] = @help_request.errors.full_messages.join(', ')
+      render :complete_form, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def complete_notify_params
+    params.fetch(:help_request, {}).permit(:helper_message)
+  end
+
+  def authorize_complete_notify!
     # 1) matched 以外では完了通知できない
     unless @help_request.matched?
-      redirect_to help_request_path(@help_request.id), alert: '完了通知できる状態ではありません'
+      redirect_to help_request_path(@help_request), alert: '完了通知できる状態ではありません'
       return
     end
 
     # 2) 担当ヘルパー本人だけが押せる
     unless @help_request.helper_id == current_user&.id
-      redirect_to help_request_path(@help_request.id), alert: '権限がありません'
+      redirect_to help_request_path(@help_request), alert: '権限がありません'
       return
     end
 
-    # 3) すでに通知済みなら二重送信防止
+    # 3) すでに通知済みなら（フォームも開けない）
     if @help_request.completed_notified_at.present?
-      redirect_to help_request_path(@help_request.id), notice: 'すでに完了通知済みです'
+      redirect_to help_request_path(@help_request), notice: 'すでに完了通知済みです'
       return
-    end
-
-    # 4) 通知：DBに記録（※ status は変えない）
-    if @help_request.update(completed_notified_at: Time.current)
-      HelpRequestMailer.completed_notify(@help_request.id).deliver_later
-      redirect_to help_requests_tasks_path, notice: '完了を通知しました！'
-    else
-      redirect_to help_request_path(@help_request.id), alert: @help_request.errors.full_messages.join(', ')
     end
   end
-
-  private
 
   def set_help_request
     @help_request = HelpRequest.find(params[:id])

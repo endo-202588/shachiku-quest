@@ -1,0 +1,29 @@
+.container.max-w-xl.mx-auto.p-6
+  h1.text-xl.font-bold.mb-4 完了通知を送りますか？
+
+  p.text-sm.text-gray-600.mb-4
+    依頼主にひとことメッセージを添えて送信できます（任意）。
+
+  = simple_form_for @help_request,
+      url: complete_notify_help_request_path(@help_request),
+      method: :post,
+      html: { class: "space-y-6" } do |f|
+
+    / ▼ エラー表示（フォーム内の先頭）
+    - if @help_request.errors.any?
+      .bg-red-50.border.border-red-200.text-red-700.rounded-md.p-3.mb-3
+        = @help_request.errors.full_messages.join("、")
+
+    = f.input :helper_message, \
+      as: :text, \
+      label: "ヘルパーからのメッセージ（任意）", \
+      input_html: { \
+        rows: 5, \
+        placeholder: "例：ここまで対応しました！残りは○○です。", \
+        class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" }
+
+    .flex.gap-3
+      = f.button :submit, "送信して完了通知",
+          class: "bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md"
+      = link_to "キャンセル", help_request_path(@help_request),
+          class: "py-2 px-4 border rounded-md"

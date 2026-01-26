@@ -30,10 +30,10 @@ class UserDecorator < Draper::Decorator
   # Help!バッジの表示判定と生成
   def help_badge_html
     open_help_requests = help_request_tasks.select { |t| t.help_request&.open? }
-
     return nil if open_help_requests.empty?
 
     count = open_help_requests.size
+
     h.content_tag(
       :span,
       "🆘 Help! (#{count})",

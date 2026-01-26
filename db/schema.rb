@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_23_071437) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_26_053721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,7 +50,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_23_071437) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 
@@ -76,7 +75,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_23_071437) do
     t.integer "total_virtue_points", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "unconfirmed_email"
+    t.string "email_change_token"
+    t.datetime "email_change_token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email_change_token"], name: "index_users_on_email_change_token", unique: true
+    t.index ["unconfirmed_email"], name: "index_users_on_unconfirmed_email"
   end
 
   add_foreign_key "help_magics", "users"

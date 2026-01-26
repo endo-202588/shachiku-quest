@@ -1,0 +1,26 @@
+.container.max-w-2xl.mx-auto.px-4.py-8
+  .bg-white.rounded-lg.shadow-md.p-6
+    h1.text-2xl.font-bold.text-gray-800.mb-6 プロフィール編集
+
+    = form_with model: @user, url: settings_profile_path, method: :patch, class: "space-y-6" do |f|
+
+      / 姓
+      .space-y-1
+        = f.label :last_name, "姓", class: "text-sm font-medium text-gray-700"
+        = f.text_field :last_name, class: "w-full rounded-md border-gray-300 shadow-sm"
+
+      / 名
+      .space-y-1
+        = f.label :first_name, "名", class: "text-sm font-medium text-gray-700"
+        = f.text_field :first_name, class: "w-full rounded-md border-gray-300 shadow-sm"
+
+      / 部署
+      .space-y-1
+        = f.label :department, "部署", class: "text-sm font-medium text-gray-700"
+        = f.text_field :department, class: "w-full rounded-md border-gray-300 shadow-sm"
+
+      .flex.justify-end.space-x-3
+        = link_to "キャンセル", settings_profile_path,
+          class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+        = f.submit "更新する",
+          class: "px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"

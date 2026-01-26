@@ -15,6 +15,16 @@ class HelpMagicsController < ApplicationController
     end
   end
 
+  def destroy
+    help_magic = current_user.help_magic
+
+    if help_magic&.destroy
+      redirect_to help_requests_tasks_path, notice: '魔法を削除（待機解除）しました'
+    else
+      redirect_to help_requests_tasks_path, alert: '魔法を削除できませんでした'
+    end
+  end
+
   private
     def help_magic_params
       params.require(:help_magic).permit(:available_time)

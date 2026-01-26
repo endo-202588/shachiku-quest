@@ -28,7 +28,28 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
       RAILS_ENV: development
+  cron:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: >
+      bash -c "
+      bundle exec whenever --update-crontab --set environment=development &&
+      touch /rails/log/cron.log &&
+      cron &&
+      tail -f /rails/log/cron.log
+      "
+    volumes:
+      - .:/rails
+      - bundle:/usr/local/bundle
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: password
+      RAILS_ENV: development
 
 volumes:
   postgres_data:
-  bundle:  # ← ここを追加
+  bundle:

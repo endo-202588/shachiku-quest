@@ -1,0 +1,29 @@
+.container.max-w-2xl.mx-auto.px-4.py-8
+  .bg-white.rounded-lg.shadow-md.p-6
+    .flex.items-center.justify-between.mb-6
+      h1.text-2xl.font-bold.text-gray-800 プロフィール設定
+      = link_to "編集する", edit_settings_profile_path,
+        class: "inline-flex items-center px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+
+    .flex.justify-end.gap-3.mb-6
+      = link_to "パスワードを変更", edit_settings_password_path,
+        class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+      = link_to "メールアドレスを変更", edit_settings_email_path, class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+      / = link_to "メールアドレスを変更", edit_settings_email_path, class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+
+    dl.divide-y.divide-gray-200
+      .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium 姓
+        dd.text-gray-900.text-sm = @user.last_name.presence || "未設定"
+
+      .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium 名
+        dd.text-gray-900.text-sm = @user.first_name.presence || "未設定"
+
+      .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium 部署
+        dd.text-gray-900.text-sm = @user.department.presence || "未設定"
+
+      .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium メールアドレス
+        dd.text-gray-900.text-sm = @user.email

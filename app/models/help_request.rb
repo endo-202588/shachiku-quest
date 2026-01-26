@@ -3,12 +3,14 @@ class HelpRequest < ApplicationRecord
   belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
   belongs_to :last_helper, class_name: "User", optional: true
 
+  scope :yesterday_or_before, ->(time) { where("help_requests.updated_at < ?", time.beginning_of_day) }
+  scope :matched_only, -> { where(status: :matched) }
+
   validates :required_time, presence: true
   validates :status, presence: true
   validates :helper, presence: true, if: -> { matched? || completed? }
 
-  # before_save :clear_helper_if_open
-  before_update :stash_and_clear_helper, if: :should_clear_helper_on_status_change?
+  before_update :reset_fields_when_status_becomes_open
 
   enum :status, {
     open: 0,
@@ -25,30 +27,33 @@ class HelpRequest < ApplicationRecord
     long_time: 4
   }
 
+  def self.reset_yesterday_matched_all!(now: Time.zone.now)
+    matched_only
+      .yesterday_or_before(now)
+      .find_each { |hr| hr.update!(status: :open) }
+  end
+
+  def self.reset_yesterday_matched_for_owner!(owner_id:, now: Time.zone.now)
+    matched_only
+      .joins(:task)
+      .where(tasks: { user_id: owner_id })
+      .yesterday_or_before(now)
+      .find_each { |hr| hr.update!(status: :open) }
+  end
+
   private
 
-  def clear_helper_if_open
+  def reset_fields_when_status_becomes_open
     return unless will_save_change_to_status?
     return unless open?
 
+    # open に戻る直前の helper を last_helper_id に退避
     self.last_helper_id = helper_id if helper_id.present?
 
+    # open に戻ったら必ずリセット
     self.helper_id = nil
-    self.helper_message = nil
     self.completed_notified_at = nil
-    self.completed_read_at = nil
-  end
-
-  def ending_status_change?
-    will_save_change_to_attribute?(:status) && (completed? || cancelled?)
-  end
-
-  def should_clear_helper_on_status_change?
-    will_save_change_to_attribute?(:status) && open?
-  end
-  
-  def stash_and_clear_helper
-    self.last_helper_id ||= helper_id if helper_id.present?
-    self.helper_id = nil
+    self.completed_read_at = nil if respond_to?(:completed_read_at)
+    self.helper_message = nil if respond_to?(:helper_message)
   end
 end

@@ -28,6 +28,10 @@
           .text-sm.text-gray-600.mb-1 説明
           .text-gray-800.whitespace-pre-wrap= @task.description
 
+      .mb-4
+          .text-sm.text-gray-600.mb-1 ヘルパーへのメッセージ
+          = @help_request&.request_message
+
       / ヘルプ要請情報
       - if @help_request.present?
         .mt-6.pt-4.border-t
@@ -48,9 +52,9 @@
               span.text-sm.text-gray-600 ヘルパー:
               = @help_request.helper_name
 
-            .flex.items-center.gap-2
-              span.text-sm.text-gray-600 メッセージ:
-              = @help_request&.request_message
+            .mb-4
+              .text-sm.text-gray-600.mb-1 完了メッセージ
+              = @help_request&.helper_message
 
       / ステータス変更ボタン
       - if @help_request.present? && @task.user_id == current_user&.id
