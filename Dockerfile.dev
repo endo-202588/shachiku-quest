@@ -11,8 +11,9 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libyaml-dev \
   curl \
   cron \
-  postgresql-client && \
-  rm -rf /var/lib/apt/lists/*
+  postgresql-client \
+  libvips \
+  && rm -rf /var/lib/apt/lists/*
 
 ENV RAILS_ENV=development \
   BUNDLE_PATH=/usr/local/bundle
@@ -24,8 +25,8 @@ COPY . .
 
 # cronログ用ディレクトリとファイルの作成
 RUN mkdir -p /rails/log && \
-    touch /rails/log/cron.log && \
-    chmod 777 /rails/log && \
-    chmod 666 /rails/log/cron.log
+  touch /rails/log/cron.log && \
+  chmod 777 /rails/log && \
+  chmod 666 /rails/log/cron.log
 
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]

@@ -5,6 +5,13 @@
       = link_to "編集する", edit_settings_profile_path,
         class: "inline-flex items-center px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
 
+    - if @user.avatar.attached?
+      = image_tag @user.avatar.variant(resize_to_fill: [48, 48]).processed,
+        class: "w-12 h-12 rounded-full object-cover"
+    - else
+      .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center
+        span.text-2xl 🧙‍♂️
+
     .flex.justify-end.gap-3.mb-6
       = link_to "パスワードを変更", edit_settings_password_path,
         class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"

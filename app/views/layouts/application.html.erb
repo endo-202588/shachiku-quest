@@ -15,12 +15,12 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@100;400;700;800&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="bg-gray-100">
     <%# ログイン済みの場合のみヘッダーを表示 %>
     <% if logged_in? %>
       <%= render 'shared/header' %>
@@ -30,16 +30,5 @@
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>
-    <%# シャチークの酒場への固定リンク（ログイン時のみ） %>
-    <% if logged_in? %>
-      <%= link_to help_requests_tasks_path, class: 'tavern-door-fixed' do %>
-        <div class="tavern-door">
-          <div class="yunomi-icon">
-            <%= image_tag "ocha_ryokucha_yunomi_white_chataku_brown.png" , alt: "湯呑み" , class: "door-img" %>
-          </div>
-          <div class="door-text">シャチークの給湯室</div>
-        </div>
-      <% end %>
-    <% end %>
   </body>
 </html>

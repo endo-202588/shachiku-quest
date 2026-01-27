@@ -57,14 +57,15 @@
     - if @tasks.present?
       .space-y-4
         - @tasks.each do |task|
-          .bg-white.rounded-lg.p-6.border.shadow-sm
+          .bg-white.p-6.border.shadow-sm
             / タスク情報
             .flex.justify-between.items-start.mb-3
               .flex-1
                 h3.font-bold.text-lg.mb-2 = task.title
-                - if task.description.present?
-                .bg-yellow-50.rounded.p-3.mb-3
-                  p.text-sm.text-gray-600.mt-1 = task.description
+                - if task.object.description.present?
+                  .bg-yellow-50.rounded.p-3.mb-3
+                    p.text-sm.text-gray-600.mt-1
+                      = task.object.description
 
               / ステータスバッジ(TaskDecoratorのメソッドを使用)
               .ml-4

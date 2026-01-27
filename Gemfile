@@ -26,6 +26,9 @@ gem 'sorcery', '~> 0.18.0'
 # Form
 gem 'simple_form'
 
+# image
+gem "image_processing", "~> 1.0"
+
 # Others
 gem 'draper'
 gem 'enum_help', '0.0.19'

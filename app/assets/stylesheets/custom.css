@@ -1,9 +1,9 @@
 .pixel-box {
-  background: #fffacd;
+  background: white;
   position: relative;
 
   /* ドット枠っぽい二重フチ */
-  box-shadow: 0 0 0 4px #84a2d4, 4px 4px 0 4px #698aab;
+  box-shadow: 0 0 0 4px #a9a9a9, 4px 4px 0 4px #696969;
 }
 
 /* ドット絵風の枠のスタイル */

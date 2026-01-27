@@ -1,4 +1,4 @@
-header.bg-indigo-600.shadow-lg
+header.bg-sky-700.shadow-lg
   .container.mx-auto.px-4
     .flex.justify-between.items-center.h-16
       / ロゴ・アプリ名
@@ -30,6 +30,11 @@ header.bg-indigo-600.shadow-lg
           span ⚙️
           span 設定
 
+        / 🍵 シャチークの給湯室（ヘルプ要請一覧）
+        = link_to help_requests_tasks_path,
+          class: "inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-gray-900 text-sm font-bold px-3 py-1 rounded-full transition shadow" do
+          span 🍵
+          span シャチークの給湯室
         / 🛡 管理（admin だけ表示）
         - if current_user.admin?
           = link_to admin_root_path,

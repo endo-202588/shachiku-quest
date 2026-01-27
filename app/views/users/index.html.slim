@@ -5,23 +5,34 @@
   .grid.gap-6.md:grid-cols-2.lg:grid-cols-3
     - @users.each do |user|
       .pixel-box.p-6
-        .flex.items-center.justify-between.mb-4
-          .flex.items-center
-            .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center.mr-3
-              span.text-2xl 🧙‍♂️
-            div
-              h3.text-lg.font-bold.text-gray-900
-                = user.full_name
-              p.text-sm.text-gray-500
-                = user.display_department
-          .flex.items-center.gap-2
-            = user.level_badge
+
+        / ------------- 上段〜中段：左（アイコン+氏名/部署） 右（バッジ2段）-------------
+        .flex.justify-between.items-start
+          / 左側：アイコン + (氏名/部署を縦)
+          .flex.items-start.gap-3
+            - if user.avatar.attached?
+              = image_tag user.avatar.variant(resize_to_fill: [48, 48]).processed,
+                class: "w-12 h-12 rounded-full object-cover"
+            - else
+              .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center
+                span.text-2xl 🧙‍♂️
+
+            / 氏名（上）・部署（下）を同じ箱で縦並び
+            .flex.flex-col
+              h3.mb-1.text-lg.font-bold.text-gray-900.leading-tight = user.full_name
+              p.text-sm.text-gray-500.leading-tight = user.display_department
+
+          / 右側：バッジ2段を縦並びで右端へ
+          .flex.flex-col.items-end.gap-1
+            = user.virtue_rank_badge
             = user.total_virtue_points_badge
-            = user.help_badge_html
 
-        / ステータス表示
+
+        / ------------- 下段：help_badge_html（フル幅） -------------
+        .mt-2
+          = user.help_badge_html
+
+        / その他の情報
         = user.status_section_html(current_user)
-
         = user.in_progress_tasks_section(current_user)
-
         = user.tasks_index_link
