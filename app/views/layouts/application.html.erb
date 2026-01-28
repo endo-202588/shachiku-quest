@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@100;400;700;800&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -27,7 +28,7 @@
     <% end %>
     <%= render 'shared/flash_messages' %>
 
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="container mx-auto px-5 flex">
       <%= yield %>
     </main>
   </body>

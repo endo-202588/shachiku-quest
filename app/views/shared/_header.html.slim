@@ -12,6 +12,12 @@ header.bg-sky-700.shadow-lg
           = current_user.decorate.full_name + 'さん'
 
       .flex.items-center.gap-4
+        / 🍵 シャチークの給湯室（ヘルプ要請一覧）
+        = link_to help_requests_tasks_path,
+          class: "inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-gray-900 text-sm font-bold px-3 py-1 rounded-full transition shadow" do
+          span 🍵
+          span シャチークの給湯室
+
         - if @header_help_request.present?
           = link_to helping_helpers_path,
             class: 'inline-flex.items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold px-3 py-1 rounded-full transition' do
@@ -30,16 +36,19 @@ header.bg-sky-700.shadow-lg
           span ⚙️
           span 設定
 
-        / 🍵 シャチークの給湯室（ヘルプ要請一覧）
-        = link_to help_requests_tasks_path,
-          class: "inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-gray-900 text-sm font-bold px-3 py-1 rounded-full transition shadow" do
-          span 🍵
-          span シャチークの給湯室
+        / 👥 スタッフ管理（manager / admin のみ表示）
+        - if current_user&.manager? || current_user&.admin?
+          = link_to manager_staff_conditions_path,
+            class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
+            span 👥
+            span スタッフ管理
+
         / 🛡 管理（admin だけ表示）
         - if current_user.admin?
           = link_to admin_root_path,
-            class: "text-white hover:text-indigo-200 transition px-2 py-1 rounded text-sm font-bold" do
-            | 🛡 管理
+            class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
+            span 🛡
+            span 管理
 
         = button_to 'ログアウト', logout_path,
           method: :delete,

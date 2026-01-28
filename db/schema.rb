@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_28_053023) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
     t.index ["task_id"], name: "index_help_requests_on_task_id"
   end
 
+  create_table "personality_tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "statuses", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "status_type", default: 0, null: false
@@ -79,7 +85,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "status_date"], name: "index_statuses_on_user_id_and_status_date", unique: true
     t.index ["user_id"], name: "index_statuses_on_user_id"
   end
 
@@ -91,6 +96,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
     t.datetime "updated_at", null: false
     t.integer "status", default: 0, null: false
     t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
+
+  create_table "user_personality_tags", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "personality_tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["personality_tag_id"], name: "index_user_personality_tags_on_personality_tag_id"
+    t.index ["user_id", "personality_tag_id"], name: "index_user_personality_tags_on_user_id_and_personality_tag_id", unique: true
+    t.index ["user_id"], name: "index_user_personality_tags_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -108,6 +123,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
     t.string "email_change_token"
     t.datetime "email_change_token_expires_at"
     t.integer "role", default: 0, null: false
+    t.string "nickname"
+    t.string "hobbies"
+    t.text "introduction"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_change_token"], name: "index_users_on_email_change_token", unique: true
     t.index ["unconfirmed_email"], name: "index_users_on_unconfirmed_email"
@@ -120,4 +138,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_27_045409) do
   add_foreign_key "help_requests", "users", column: "helper_id"
   add_foreign_key "statuses", "users"
   add_foreign_key "tasks", "users"
+  add_foreign_key "user_personality_tags", "personality_tags"
+  add_foreign_key "user_personality_tags", "users"
 end

@@ -36,7 +36,7 @@ class UserDecorator < Draper::Decorator
 
     h.content_tag(
       :span,
-      "🆘 Help! (#{count})",
+      "Help! (#{count})",
       class: "px-3 py-1 text-xs rounded-full bg-red-600 text-white font-bold shadow-lg animate-pulse",
       title: "ヘルプが必要なタスク: #{count}件"
     )
@@ -49,28 +49,28 @@ class UserDecorator < Draper::Decorator
   def virtue_rank
     case object.total_virtue_points
     when 0..99
-      "🌱 旅人"
+      "旅人"
     when 100..299
-      "🌿 先輩"
+      "先輩"
     when 300..599
-      "🌳 達人"
+      "達人"
     when 600..999
-      "🏆 仙人"
+      "仙人"
     else
-      "🙏 仏"
+      "仏"
     end
   end
 
   def virtue_rank_badge
     h.content_tag(
       :span,
-      virtue_rank,
+      'Lv.' + virtue_rank,
       class: "text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
     )
   end
 
   def total_virtue_points_badge
-    h.content_tag(:span, "#{object.total_virtue_points}vp",
+    h.content_tag(:span, "Vp.#{object.total_virtue_points}",
       class: "text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full"
     )
   end
@@ -98,7 +98,7 @@ class UserDecorator < Draper::Decorator
   # HTMLバッジ付きステータス表示（Tailwind CSS版）
   def status_badge_html
     if today_status.blank?
-      h.content_tag(:span, "📝 未登録", class: "px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700")
+      h.content_tag(:span, "未登録", class: "px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700")
     else
       # 定数から色を取得(デフォルト値も設定)
       color_class = STATUS_COLORS[today_status.status_type] || "bg-gray-100 text-gray-800"
@@ -144,24 +144,31 @@ class UserDecorator < Draper::Decorator
   def status_edit_button_html
     return unless today_status
 
-    h.link_to(
-      "✏️ 編集",
-      h.edit_status_path(today_status),
-      class: "inline-block mt-2 px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition"
-    )
+    h.link_to h.edit_status_path(today_status),
+      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
+      h.raw <<~HTML
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+      </svg>
+      HTML
+    end
   end
 
   def status_reset_button_html
     return unless today_status
 
-      h.button_to(
-    "🔄 リセット",
-      h.status_path(today_status),
-      method: :delete,  # ← 追加
-      data: { turbo_method: :delete, turbo_confirm: "本当にリセットしますか?" },
-      class: "inline-block mt-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition",
-      form: { class: "inline-block" }  # ← 追加(フォームのスタイルを整える)
-    )
+      h.button_to h.status_path(today_status),
+      method: :delete,
+      data: { turbo_method: :delete, turbo_confirm: '本当にリセットしますか?' },
+      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
+
+      h.raw <<~HTML
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      HTML
+    end
   end
 
   # =====================================

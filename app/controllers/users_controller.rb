@@ -2,7 +2,9 @@ class UsersController < ApplicationController
   skip_before_action :require_login, only: %i[new create]
 
   def index
-    @users = User.includes(:statuses, :in_progress_tasks, :help_request_tasks).all.decorate
+    @users = User.order(:id)
+             .includes(avatar_attachment: :blob) # avatar使うなら
+             .page(params[:page]).per(12)
   end
 
   def new
@@ -15,7 +17,7 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to users_path, success: '勇者登録が完了しました'
     else
-      flash.new[:danger] = '勇者登録に失敗しました'
+      flash.now[:danger] = '勇者登録に失敗しました'
       render :new, status: :unprocessable_entity
     end
   end

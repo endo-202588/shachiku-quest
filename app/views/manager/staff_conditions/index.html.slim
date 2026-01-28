@@ -1,0 +1,33 @@
+.container.mx-auto.px-4.py-8
+  h1.text-2xl.font-bold.mb-6 スタッフコンディション
+
+  / 部署フィルタ
+  .mb-6
+    = form_with url: manager_staff_conditions_path, method: :get, local: true, class: "flex items-center gap-3 flex-wrap" do
+      span.text-sm.font-bold.text-gray-700.whitespace-nowrap 部署選択
+      = select_tag :department,
+        options_for_select([["全員", "all"]] + @departments.map { |d| [d, d] }, @department || "all"),
+        class: "rounded-md border-gray-300 shadow-sm text-sm",
+        onchange: "this.form.submit()"
+
+  .grid.grid-cols-1.gap-6
+    - @data.each do |user_data|
+      .bg-white.rounded-lg.shadow.p-5
+        h2.text-lg.font-bold.mb-4 = user_data[:name]
+
+        = tag.div class: "staff-chart",
+                  data: { controller: "staff-condition",
+                          staff_condition_data_value: user_data }
+          .relative.w-full style="height: 180px;"
+            canvas.absolute.inset-0
+
+        .mt-4.text-sm.text-gray-600.flex.items-center.gap-1
+          span 進行中タスク：
+          span.font-semibold = "#{user_data[:in_progress_tasks]} 件"
+
+        .mt-1.text-sm.text-gray-600.flex.items-center.gap-1
+          span 過去30日間のヘルプ要請：
+          span.font-semibold = "#{user_data[:help_requests_30days]} 件"
+
+  .mt-8.flex.justify-center
+    = paginate @users

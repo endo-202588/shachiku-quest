@@ -12,6 +12,7 @@ ja:
         email: メールアドレス
         password: パスワード
         password_confirmation: パスワード確認
+        role: 役職
       task:
         title: タイトル
         description: 説明
@@ -29,6 +30,7 @@ ja:
       role:
         general: 一般
         admin: 管理者
+        manager: 管理職
     status:
       status_type:
         peaceful: 🟢 平和

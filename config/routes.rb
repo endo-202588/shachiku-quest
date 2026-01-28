@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "introductions/index"
+  get "introductions/edit"
   get "dashboard/show"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
@@ -69,11 +71,20 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get "personality_tags/index"
     root to: "dashboard#show"   # /admin → Admin::DashboardController#show
 
     resources :users, only: %i[index edit update destroy]
     resources :tasks, only: %i[index edit update destroy]
+    resources :personality_tags, only: [:index, :destroy]
   end
+
+  namespace :manager do
+    get "staff_conditions/index"
+    resources :staff_conditions, only: [:index]
+  end
+
+  resources :introductions, only: [:show, :edit, :update]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

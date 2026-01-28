@@ -1,0 +1,19 @@
+.container.mx-auto.max-w-3xl.px-4.py-8
+  h1.text-2xl.font-bold.mb-6 🏷 性格タグ管理
+
+  .bg-white.rounded-lg.shadow.p-6
+    - if @tags.any?
+      ul.space-y-3
+        - @tags.each do |tag|
+          li.flex.items-center.justify-between.gap-4.border-b.border-gray-100.pb-3
+            .min-w-0
+              p.font-bold.text-gray-900 = tag.name
+              p.text-xs.text-gray-500 = "利用中：#{tag.user_personality_tags.count} 件"
+
+            = button_to "削除",
+              admin_personality_tag_path(tag),
+              method: :delete,
+              data: { turbo_confirm: "「#{tag.name}」を削除します。選択しているユーザーからも外れます。よろしいですか？" },
+              class: "bg-red-600 hover:bg-red-500 text-white text-sm font-bold px-3 py-2 rounded transition"
+    - else
+      p.text-gray-500 タグがありません

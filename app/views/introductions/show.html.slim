@@ -1,0 +1,59 @@
+.container.mx-auto.max-w-4xl.px-4.py-8
+  .mb-6.flex.items-center.justify-between
+    = link_to users_path,
+      class: "inline-flex items-center gap-2 text-sky-700 hover:text-sky-900 font-bold transition" do
+      span ←
+      span 本日の勇者たちへ戻る
+
+    - if current_user == @user
+      = link_to edit_introduction_path(@user),
+        class: "inline-flex items-center gap-2 bg-sky-700 hover:bg-sky-600 text-white text-sm font-bold px-4 py-2 rounded-lg shadow transition" do
+        span ✏️
+        span 自己紹介を編集
+
+  .bg-white.rounded-lg.shadow.p-6
+    .flex.items-start.gap-5
+      / アバター
+      - if @user.avatar.attached?
+        = image_tag @user.avatar.variant(resize_to_fill: [96, 96]).processed,
+          class: "w-24 h-24 rounded-full object-cover"
+      - else
+        .w-24.h-24.bg-indigo-100.rounded-full.flex.items-center.justify-center
+          span.text-4xl 🧙‍♂️
+
+      .flex-1.min-w-0
+        .flex.items-start.justify-between.gap-4
+          .min-w-0
+            h1.text-2xl.font-bold.text-gray-900.truncate = @user.decorate.full_name
+            p.text-sm.text-gray-500.mt-1 = @user.display_department
+
+        / （もし既存のバッジが使えるなら表示）
+        .mt-3.flex.flex-wrap.gap-2
+          = @user.virtue_rank_badge
+          = @user.total_virtue_points_badge
+
+    / ニックネーム
+    .mt-6
+      h2.text-lg.font-bold.text-gray-900.mb-2 ニックネーム
+      p.text-sm.text-gray-700 = @user.nickname.presence || "未設定"
+
+    / 性格タグ
+    .mt-6
+      h2.text-lg.font-bold.text-gray-900.mb-2 性格
+      - if @user.personality_tags.any?
+        .flex.flex-wrap.gap-2
+          - @user.personality_tags.order(:name).each do |tag|
+            span.inline-flex.items-center.rounded-full.bg-sky-100.text-sky-800.px-3.py-1.text-xs.font-bold
+              = tag.name
+      - else
+        p.text-sm.text-gray-500 未設定
+
+    / 趣味
+    .mt-6
+      h2.text-lg.font-bold.text-gray-900.mb-2 趣味
+      p.text-sm.text-gray-700.whitespace-pre-wrap = @user.hobbies.presence || "未設定"
+
+    / ひとこと
+    .mt-6
+      h2.text-lg.font-bold.text-gray-900.mb-2 ひとこと
+      p.text-sm.text-gray-700.whitespace-pre-wrap = @user.introduction.presence || "未設定"

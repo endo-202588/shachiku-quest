@@ -33,6 +33,7 @@ gem "image_processing", "~> 1.0"
 gem 'draper'
 gem 'enum_help', '0.0.19'
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+gem "kaminari"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw mswin x64_mingw ], require: "debug/prelude"

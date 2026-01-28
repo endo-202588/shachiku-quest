@@ -24,4 +24,10 @@ class ApplicationController < ActionController::Base
     return unless current_user&.helper?
     @header_help_request = HelpRequest.find_by(helper_id: current_user.id, status: :matched)
   end
+
+  def require_manager!
+    unless current_user&.manager? || current_user&.admin?
+      redirect_to root_path, alert: "権限がありません"
+    end
+  end
 end
