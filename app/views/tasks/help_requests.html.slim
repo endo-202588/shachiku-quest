@@ -1,5 +1,28 @@
 .container.mx-auto.px-4.py-8
-  h1.text-2xl.font-bold.mb-6 ここはシャチークの給湯室です
+  h1.text-4xl.font-bold.text-sky-900.mb-4.flex.items-center.justify-center.w-full.gap-1
+    | シャチークの給湯室
+
+  - full_text = "こんにちは！シャチークの給湯室へようこそ。[br]おや、お仕事いっぱいいっぱいですか？それとも人助けをして徳を積みたい方？ [br]ここは助けてもらいたい勇者と助けたい勇者の橋渡しをする場所。[br]・魔法（お手伝いできる時間）を登録すると、ヘルパーになれます[br]・お手伝いを頼みたい方は、ヘルパーを仲間にすることでお手伝いを頼むことができます"
+  - full_text_render = full_text.gsub("[br]", "\n")
+
+  .div.mt-6.mb-8
+    .mx-auto.max-w-3xl
+      .message-window.rounded-xl.bg-black/65.px-6.py-4.text-white.shadow-md.shadow-black/30.ring-2.ring-white/80(
+        data-controller="typewriter-fixed"
+        data-typewriter-fixed-speed-value="35"
+        data-typewriter-fixed-start-delay-value="200"
+      )
+        .grid.whitespace-pre-wrap.text-base.leading-relaxed.font-semibold.tracking-wide
+          / 高さ確保（最終形を invisible で配置）
+          .invisible.col-start-1.row-start-1.whitespace-pre-wrap(
+            aria-hidden="true"
+            data-typewriter-fixed-target="measure"
+          )= full_text_render
+
+          / 表示用（ここにタイプされる）
+          .col-start-1.row-start-1.z-10.whitespace-pre-wrap(
+            data-typewriter-fixed-target="out"
+          )
 
   .mb-6
     - if current_user.help_magic.blank?
@@ -57,7 +80,7 @@
     - if @tasks.present?
       .space-y-4
         - @tasks.each do |task|
-          .bg-white.p-6.border.shadow-sm
+          .bg-white.p-6.border-gray-600.border-2.shadow-sm
             / タスク情報
             .flex.justify-between.items-start.mb-3
               .flex-1

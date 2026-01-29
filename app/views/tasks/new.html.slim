@@ -4,16 +4,24 @@
       = flash[:notice]
 
   .bg-white.rounded-lg.shadow-md.p-6
-    h1.text-2xl.font-bold.text-gray-800.mb-6 📝 タスクを登録
+    h1.text-2xl.font-bold.text-gray-800.mb-3.flex.items-center.gap-2
+      svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+        path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+      | タスクを登録
+    
+    p.text-m.font-bold.text-gray-800.mb-6.whitespace-pre-line
+      |
+        本日予定しているタスクを登録してください
+        自分でできないものはヘルプ要請に出しましょう
 
     / 複数タスク登録フォーム
     = form_with url: tasks_path, method: :post, html: { id: "tasks-form", class: "space-y-6" } do |form|
       / タスク一覧セクション
       .bg-purple-50.rounded-lg.p-4.mb-6
         .flex.items-center.justify-between.mb-4
-          h2.text-lg.font-bold.text-gray-800 📋 タスク一覧
+          h2.text-lg.font-bold.text-gray-800 タスク一覧
           button.bg-purple-600.text-white.px-4.py-2.rounded-lg.hover:bg-purple-700.transition.text-sm.font-bold type="button" data-action="click->task-fields#add"
-            | ➕ タスクを追加
+            | ▶ タスクを追加
 
         / タスクリストのコンテナ
         #tasks-container.space-y-4 data-task-fields-target="container"
@@ -59,7 +67,7 @@
                   option value="50" 50
 
               .text-right
-                button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ❌ 削除
+                button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ▶ 削除
 
       / 送信ボタン
       .text-center

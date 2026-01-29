@@ -21,3 +21,49 @@
   
   border: none !important;
 }
+
+.bg-pixel-sky {
+  background-color: #a7eef0;
+
+  /* 雲レイヤーを複数重ねる */
+  background-image:
+    url("/assets/pixel-clouds.png"),
+    url("/assets/pixel-clouds.png"),
+    url("/assets/pixel-clouds.png"),
+    url("/assets/pixel-clouds.png"),
+    url("/assets/pixel-clouds.png");
+
+  background-repeat: no-repeat, no-repeat, no-repeat;
+
+  /* それぞれ位置を変える */
+  background-position:
+    1% 100px,
+    98% 30px,
+    10% 800px,
+    95% 900px,
+    80% 200px;
+
+  /* それぞれサイズも変える（縦横比崩さない） */
+  background-size:
+    auto 350px,
+    auto 400px,
+    1000 900px,
+    auto 1000px,
+    850 800px;
+
+  min-height: 100vh;
+}
+
+.fade-in-initial {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.fade-in-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 600ms ease, transform 600ms ease;
+}
+
+
+

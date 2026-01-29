@@ -1,10 +1,32 @@
 .container.mx-auto.px-4.py-8
-  .text-center.mb-8
-    h1.text-4xl.font-bold.text-indigo-900.mb-2 🏰 本日の勇者たち 🏰
+  h1.text-4xl.font-bold.text-sky-900.mb-4.flex.items-center.justify-center.w-full.gap-1
+    | 本日の勇者たち
+  
+  - full_text = "お疲れさまです！今日もぼちぼちいきましょう。[br]仕事が忙しすぎる方、おヒマな方は、「シャチークの給湯室」へ行くと助け合うことができます。[br]さくさく終わらせて、早くお家に帰りましょう！"
+  - full_text_render = full_text.gsub("[br]", "\n")
+
+  .div.mt-6.mb-8
+    .mx-auto.max-w-3xl
+      .message-window.rounded-xl.bg-black/65.px-6.py-4.text-white.shadow-md.shadow-black/30.ring-2.ring-white/80(
+        data-controller="typewriter-fixed"
+        data-typewriter-fixed-speed-value="35"
+        data-typewriter-fixed-start-delay-value="200"
+      )
+        .grid.whitespace-pre-wrap.text-base.leading-relaxed.font-semibold.tracking-wide
+          / 高さ確保（最終形を invisible で配置）
+          .invisible.col-start-1.row-start-1.whitespace-pre-wrap(
+            aria-hidden="true"
+            data-typewriter-fixed-target="measure"
+          )= full_text_render
+
+          / 表示用（ここにタイプされる）
+          .col-start-1.row-start-1.z-10.whitespace-pre-wrap(
+            data-typewriter-fixed-target="out"
+          )
 
   .grid.gap-6.md:grid-cols-2.lg:grid-cols-3
     - UserDecorator.decorate_collection(@users).each do |user|
-      .pixel-box.p-6
+      .pixel-box.p-5
         .flex.justify-between.items-start
           .flex.items-start.gap-3
             - if user.avatar.attached?

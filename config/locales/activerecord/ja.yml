@@ -33,12 +33,12 @@ ja:
         manager: 管理職
     status:
       status_type:
-        peaceful: 🟢 平和
-        tired: 🟡 疲れ気味
-        busy: 🟠 やばいかも
-        very_busy: 🔴 きてます
-        overloaded: ⚫ 昇天
-        day_off: 🏖️ 休暇中
+        peaceful: 平和
+        tired: 疲れ気味
+        busy: やばいかも
+        very_busy: きてます
+        overloaded: 昇天
+        day_off: 休暇中
     task:
       status:
         in_progress: 進行中

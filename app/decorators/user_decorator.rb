@@ -65,13 +65,13 @@ class UserDecorator < Draper::Decorator
     h.content_tag(
       :span,
       'Lv.' + virtue_rank,
-      class: "text-xs font-bold bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
+      class: "text-s font-bold bg-sky-100 text-sky-800 px-2 py-1 rounded-full"
     )
   end
 
   def total_virtue_points_badge
     h.content_tag(:span, "Vp.#{object.total_virtue_points}",
-      class: "text-xs font-bold bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full"
+      class: "text-xs font-bold text-gray-700 px-2 py-1 rounded-full"
     )
   end
 
@@ -89,23 +89,61 @@ class UserDecorator < Draper::Decorator
   end
 
   # 絵文字付きステータス表示
-  def status_with_emoji
-    return "📝 未登録" if today_status.blank?
-    # I18n.t("activerecord.enums.status.status_type.#{today_status.status_type}")
+  def status_text
+    return if today_status.blank?
     today_status.status_type_i18n
+  end
+
+  STATUS_ICONS = {
+    peaceful: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM450.7 372.9C462.6 369.2 474.6 379.2 470.3 391C447.9 452.3 389 496.1 320 496.1C251 496.1 192.1 452.2 169.7 390.9C165.4 379.1 177.4 369.1 189.3 372.8C228.5 385 273 391.9 320 391.9C367 391.9 411.5 385 450.7 372.8zM208 272C208 254.3 222.3 240 240 240C257.7 240 272 254.3 272 272C272 289.7 257.7 304 240 304C222.3 304 208 289.7 208 272zM400 240C417.7 240 432 254.3 432 272C432 289.7 417.7 304 400 304C382.3 304 368 289.7 368 272C368 254.3 382.3 240 400 240z"/></svg>
+    SVG
+
+    tired: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM410.6 462.1C390.2 434.1 357.2 416 320 416C282.8 416 249.8 434.1 229.4 462.1C221.6 472.8 206.6 475.2 195.9 467.4C185.2 459.6 182.8 444.6 190.6 433.9C219.7 394 266.8 368 320 368C373.2 368 420.3 394 449.4 433.9C457.2 444.6 454.8 459.6 444.1 467.4C433.4 475.2 418.4 472.8 410.6 462.1zM208 272C208 254.3 222.3 240 240 240C257.7 240 272 254.3 272 272C272 289.7 257.7 304 240 304C222.3 304 208 289.7 208 272zM400 240C417.7 240 432 254.3 432 272C432 289.7 417.7 304 400 304C382.3 304 368 289.7 368 272C368 254.3 382.3 240 400 240z"/></svg>
+    SVG
+
+    busy: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM228.7 392.7C250.7 370.7 282.6 352 320 352C357.4 352 389.3 370.7 411.3 392.7C422.4 403.8 431.4 416.1 437.7 428.1C443.9 439.8 448 452.5 448 464C448 469.2 445.4 474.2 441.1 477.2C436.8 480.2 431.3 480.9 426.4 479L405.9 471.3C379 461.2 350.4 456 321.6 456L318.4 456C289.6 456 261.1 461.2 234.1 471.3L213.6 479C208.7 480.8 203.2 480.2 198.9 477.2C194.6 474.2 192 469.2 192 464C192 452.4 196.2 439.8 202.3 428.1C208.6 416.1 217.6 403.8 228.7 392.7zM186.6 223.2C191.1 216.4 199.9 214 207.2 217.7L286.8 257.7C292.2 260.4 295.6 265.9 295.6 272C295.6 278.1 292.2 283.6 286.8 286.3L207.2 326.3C199.9 329.9 191.1 327.6 186.6 320.8C182.1 314 183.5 304.9 189.7 299.7L223 272L189.8 244.3C183.6 239.1 182.2 230 186.7 223.2zM450.2 244.3L417 272L450.2 299.7C456.4 304.9 457.8 314 453.3 320.8C448.8 327.6 440 330 432.7 326.3L353.1 286.3C347.7 283.6 344.3 278.1 344.3 272C344.3 265.9 347.7 260.4 353.1 257.7L432.7 217.7C440 214.1 448.8 216.4 453.3 223.2C457.8 230 456.4 239.1 450.2 244.3z"/></svg>
+    SVG
+
+    very_busy: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM198.1 217.9L224 243.8L249.9 217.9C257.7 210.1 270.4 210.1 278.2 217.9C286 225.7 286 238.4 278.2 246.2L252.3 272.1L278.2 298C286 305.8 286 318.5 278.2 326.3C270.4 334.1 257.7 334.1 249.9 326.3L224 300.4L198.1 326.3C190.3 334.1 177.6 334.1 169.8 326.3C162 318.5 162 305.8 169.8 298L195.7 272.1L169.8 246.2C162 238.4 162 225.7 169.8 217.9C177.6 210.1 190.3 210.1 198.1 217.9zM390.1 217.9L416 243.8L441.9 217.9C449.7 210.1 462.4 210.1 470.2 217.9C478 225.7 478 238.4 470.2 246.2L444.3 272.1L470.2 298C478 305.8 478 318.5 470.2 326.3C462.4 334.1 449.7 334.1 441.9 326.3L416 300.4L390.1 326.3C382.3 334.1 369.6 334.1 361.8 326.3C354 318.5 354 305.8 361.8 298L387.7 272.1L361.8 246.2C354 238.4 354 225.7 361.8 217.9C369.6 210.1 382.3 210.1 390.1 217.9zM320 368C355.3 368 384 396.7 384 432C384 467.3 355.3 496 320 496C284.7 496 256 467.3 256 432C256 396.7 284.7 368 320 368z"/></svg>
+    SVG
+
+    overloaded: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM464 416C464 441.2 444.6 461.8 420 463.8L420 368.1C444.6 370.1 464 390.8 464 415.9zM340 368L380 368L380 464L340 464L340 368zM260 464L260 368L300 368L300 464L260 464zM220 368.2L220 463.9C195.4 461.9 176 441.2 176 416.1C176 391 195.4 370.3 220 368.3zM208 272C208 254.3 222.3 240 240 240C257.7 240 272 254.3 272 272C272 289.7 257.7 304 240 304C222.3 304 208 289.7 208 272zM400 240C417.7 240 432 254.3 432 272C432 289.7 417.7 304 400 304C382.3 304 368 289.7 368 272C368 254.3 382.3 240 400 240z"/></svg>
+    SVG
+
+    day_off: <<~SVG,
+      <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM229.4 385.9C249.8 413.9 282.8 432 320 432C357.2 432 390.2 413.9 410.6 385.9C418.4 375.2 433.4 372.8 444.1 380.6C454.8 388.4 457.2 403.4 449.4 414.1C420.3 454 373.2 480 320 480C266.8 480 219.7 454 190.6 414.1C182.8 403.4 185.2 388.4 195.9 380.6C206.6 372.8 221.6 375.2 229.4 385.9zM240 244C224.5 244 212 256.5 212 272L212 280C212 291 203 300 192 300C181 300 172 291 172 280L172 272C172 234.4 202.4 204 240 204C277.6 204 308 234.4 308 272L308 280C308 291 299 300 288 300C277 300 268 291 268 280L268 272C268 256.5 255.5 244 240 244zM372 272L372 280C372 291 363 300 352 300C341 300 332 291 332 280L332 272C332 234.4 362.4 204 400 204C437.6 204 468 234.4 468 272L468 280C468 291 459 300 448 300C437 300 428 291 428 280L428 272C428 256.5 415.5 244 400 244C384.5 244 372 256.5 372 272z"/></svg>
+    SVG
+  }.freeze
+
+  def status_icon_html
+    return "" if today_status.blank?
+
+    icon_svg = STATUS_ICONS[today_status.status_type.to_sym]
+    icon_svg || ""  # 念のため
   end
 
   # HTMLバッジ付きステータス表示（Tailwind CSS版）
   def status_badge_html
     if today_status.blank?
-      h.content_tag(:span, "未登録", class: "px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700")
+      h.content_tag(:span, "未登録",
+        class: "px-3 py-1 text-sm rounded-full bg-gray-200 text-gray-700"
+      )
     else
-      # 定数から色を取得(デフォルト値も設定)
       color_class = STATUS_COLORS[today_status.status_type] || "bg-gray-100 text-gray-800"
 
-      h.content_tag(:span, status_with_emoji, class: "px-3 py-1 text-sm rounded-full #{color_class}")
+      h.content_tag(
+        :span,
+        h.raw("#{status_icon_html} #{status_text}"), # ← アイコン追加！
+        class: "px-3 py-1 text-sm rounded-full #{color_class} inline-flex items-center"
+      )
     end
   end
+
 
   # 今日のステータスのメモを取得
   def today_status_memo
@@ -272,7 +310,7 @@ class UserDecorator < Draper::Decorator
 
     h.content_tag :div, class: 'mt-3' do
       h.link_to '▶︎ タスク一覧を見る', h.tasks_path,
-        class: 'bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
+        class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
     end
   end
 
@@ -329,9 +367,21 @@ class UserDecorator < Draper::Decorator
   # -------------------------------------
 
   # タスクセクションのヘッダー
+  def task_icon_svg
+    <<~SVG
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+      </svg>
+    SVG
+  end
+
   def in_progress_tasks_header
     h.content_tag :div, class: 'flex items-center justify-between mb-2' do
-      h.concat h.content_tag(:span, '📋 本日のタスク:', class: 'text-sm font-medium text-gray-600')
+      h.concat(
+        h.content_tag(:span, class: "flex items-center gap-1 text-sm font-medium text-gray-600") do
+          h.raw(task_icon_svg) + " 本日のタスク"
+        end
+      )
       h.concat in_progress_tasks_badge
     end
   end
