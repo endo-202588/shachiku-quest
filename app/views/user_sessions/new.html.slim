@@ -1,23 +1,23 @@
-.min-h-screen.bg-gradient-to-b.from-purple-900.to-indigo-900.flex.items-center.justify-center.py-12.px-4.sm:px-6.lg:px-8
-  .max-w-md.w-full.space-y-8
-    / ヘッダー部分
-    div
-      .text-center
-        h2.text-4xl.font-bold.text-white.mb-2
-          | 🗝️ 冒険者ログイン 🗝️
-        p.text-indigo-200.text-sm
-          | 魔法の鍵を使って扉を開きましょう
+.min-h-screen.w-full.flex.items-center.justify-center.px-4
+  .w-full.max-w-md.space-y-8
+    .text-center
+      h2.text-4xl.font-bold.text-slate-800.mb-2
+        | 🗝️ 冒険者ログイン 🗝️
+      p.text-slate-500.text-sm
+        | 魔法の鍵を使って扉を開きましょう
 
-    / ログインフォーム
-    .bg-white.rounded-lg.shadow-2xl.p-8
+    .bg-white.rounded-lg.shadow-xl.p-8
       = form_with url: login_path, local: true, class: 'space-y-6' do |f|
+
         / メールアドレス
         .space-y-2
           = f.label :email, 'メールアドレス', class: 'block text-sm font-medium text-gray-700'
           .relative
             .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
               span.text-gray-400 📧
-            = f.email_field :email, class: 'pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500', placeholder: 'hero@example.com', required: true
+            = f.email_field :email,
+              class: 'pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500',
+              placeholder: 'hero@example.com', required: true
 
         / パスワード
         .space-y-2
@@ -25,15 +25,18 @@
           .relative
             .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
               span.text-gray-400 🔒
-            = f.password_field :password, class: 'pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500', placeholder: '••••••••', required: true
+            = f.password_field :password,
+              class: 'pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500',
+              placeholder: '••••••••', required: true
 
         / ログインボタン
         div
-          = f.submit '冒険の扉を開く', class: 'w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105'
+          = f.submit '冒険の扉を開く',
+            class: 'w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition transform hover:scale-105'
 
-    / 新規登録リンク
     .text-center
-      p.text-indigo-200.text-sm
+      p.text-slate-500.text-sm
         | まだ冒険者登録をしていない方は
-        = link_to 'こちら', new_user_path, class: 'ml-1 font-bold text-yellow-300 hover:text-yellow-400 underline'
+        = link_to 'こちら', new_user_path,
+          class: 'ml-1 font-bold text-indigo-600 hover:text-indigo-800 underline'
         | から登録できます

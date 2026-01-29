@@ -1,19 +1,20 @@
-.container.mx-auto.px-4.py-8
+.min-h-screen.py-10.px-4.bg-slate-50
   .max-w-md.mx-auto
-    h1.text-3xl.font-bold.text-center.mb-8 勇者の登録
+    .bg-white.rounded-xl.shadow-lg.p-8.sm:p-10
+      h1.text-3xl.font-bold.text-center.mb-8 勇者の登録
 
-    = simple_form_for @user do |f|
-      = f.error_notification
-      = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+      = simple_form_for @user do |f|
+        = f.error_notification
+        = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
-      .space-y-6
-        = f.input :avatar, as: :file, label: "アバター画像", required: false
-        = f.input :last_name, required: true, autofocus: true
-        = f.input :first_name, required: true
-        = f.input :department, required: true
-        = f.input :email, required: true, input_html: { autocomplete: "email" }
-        = f.input :password, required: true, hint: "8文字以上で入力してください", input_html: { autocomplete: "new-password" }
-        = f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" }
+        .space-y-6
+          = f.input :avatar, as: :file, label: "アバター画像", required: false
+          = f.input :last_name, required: true, autofocus: true
+          = f.input :first_name, required: true
+          = f.input :department, required: true
+          = f.input :email, required: true, input_html: { autocomplete: "email" }
+          = f.input :password, required: true, hint: "8文字以上で入力してください", input_html: { autocomplete: "new-password" }
+          = f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" }
 
-      .mt-6
-        = f.button :submit, "登録", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        .mt-6
+          = f.button :submit, "登録", class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
