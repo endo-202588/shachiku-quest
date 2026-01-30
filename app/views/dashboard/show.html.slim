@@ -122,7 +122,7 @@
       .mt-4.flex.items-center.gap-3
 
         = link_to "編集",
-          edit_help_magic_path,
+          edit_help_magic_path(return_to: request.fullpath),
           class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
         = button_to "削除",
