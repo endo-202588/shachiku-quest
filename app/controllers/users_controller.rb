@@ -22,6 +22,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def read_total_virtue_points
+    current_user.update!(total_virtue_points_read_at: Time.current)
+    redirect_to users_path
+  end
+
   private
 
   def user_params

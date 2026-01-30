@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "introductions/index"
-  get "introductions/edit"
-  get "dashboard/show"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -12,7 +9,9 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#show"
 
   # ユーザー登録
-  resources :users, only: %i[new create index]
+  resources :users, only: %i[new create index] do
+    patch :read_total_virtue_points, on: :collection
+  end
 
   # ログイン・ログアウト(後で実装)
   get 'login', to: 'user_sessions#new'

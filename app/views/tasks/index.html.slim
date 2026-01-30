@@ -26,9 +26,9 @@
           = task_count_by_status('complete')
 
   / タスク一覧
-  .space-y-4
+  .space-y-6
     - @tasks.each do |task|
-      .pixel-box.p-6
+      .pixel-box.p-4
         .flex.justify-between.items-start
           div
             h3.text-lg.font-bold.text-gray-900.mb-2.flex.items-center.gap-2
@@ -36,12 +36,24 @@
               = task.completion_unread_badge_html(current_user)
 
             / ステータスバッジ
-            .mb-2
-              = task.status_badge_html
+            - if task.help_request? && task.help_request.present?
+              - hr = task.help_request.decorate
+
+              .flex.gap-2.mb-4
+                = task.status_badge_html
+                = hr.status_badge
+
+              .mt-1.mb-2.text-sm.text-gray-700
+                | ヘルパー名：
+                = hr.helper_name
+                
+            - else
+              .flex.gap-2.items-center.mb-1
+                = task.status_badge_html
 
             / メモがあれば表示
             - if task.description.present?
-              p.text-sm.text-gray-600.mb-2
+              p.text-sm.text-gray-600
                 = task.description
 
           / 操作ボタン

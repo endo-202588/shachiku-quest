@@ -336,7 +336,30 @@ class UserDecorator < Draper::Decorator
     object.helper? && object.received_help_requests.exists?(status: :matched)
   end
 
+  # -------------------------------------
+  # virtue_points付与バッジ
+  # -------------------------------------
 
+  def total_virtue_points_unread_badge_html(current_user)
+    # 本人だけに表示
+    return nil unless object.id == current_user&.id
+
+    # 未読なら表示
+    return nil unless object.total_virtue_points_notified_at.present? &&
+                      object.total_virtue_points_read_at.nil?
+
+    added = object.total_virtue_points_last_added.to_i
+    text  = added.positive? ? "🔔 徳ポイント +#{added}" : "🔔 徳ポイント加算あり"
+
+    h.link_to(
+      h.read_total_virtue_points_users_path,
+      data: { turbo_method: :patch },
+      class: "px-3 py-1 text-xs rounded-full bg-yellow-400 text-yellow-900 font-bold shadow animate-pulse inline-block",
+      title: "クリックで既読にします"
+    ) do
+      text
+    end
+  end
 
   private
 

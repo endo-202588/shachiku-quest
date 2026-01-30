@@ -6,6 +6,6 @@ namespace :help_requests do
 
     # ログに出力
     Rails.logger.info "昨日マッチングした助け合いリクエストをリセットしました"
-    puts "昨日マッチングした助け合いリクエストをリセットしました"
+    puts "[#{Time.current}] 昨日マッチングした助け合いリクエストと魔法をリセットしました"
   end
 end

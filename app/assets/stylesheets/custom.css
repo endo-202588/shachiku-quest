@@ -33,7 +33,7 @@
     url("/assets/pixel-clouds.png"),
     url("/assets/pixel-clouds.png");
 
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 
   /* それぞれ位置を変える */
   background-position:
@@ -54,7 +54,31 @@
   min-height: 100vh;
 }
 
-.fade-in-initial {
+.bg-top-page {
+  background-image:
+    url("/assets/birds.png"),               /* ① カラス（最前面） */
+    url("/assets/buildings.png"),        /* ② 建物（その下） */
+    linear-gradient(#4da3ff, #a7eef0);      /* ③ グラデーション（最背面） */
+
+  background-repeat:
+    no-repeat,   /* カラス → 繰り返さない */
+    repeat-x,    /* 建物 → 横だけリピート */
+    no-repeat;   /* グラデ → 繰り返し不要 */
+
+  background-position:
+    right 150px top 700px,   /* カラス → 位置は自由に調整OK */
+    center bottom,         /* 建物 → 画面下ぴったり */
+    center top;            /* グラデーション */
+
+  background-size:
+    auto 150px,     /* カラスのサイズ（高さ120px）自由に調整OK */
+    auto 200px,     /* 建物の高さ200px */
+    cover;          /* グラデは全面 */
+
+  min-height: 100vh;
+}
+
+/* .fade-in-initial {
   opacity: 0;
   transform: translateY(6px);
 }
@@ -63,7 +87,7 @@
   opacity: 1;
   transform: translateY(0);
   transition: opacity 600ms ease, transform 600ms ease;
-}
+} */
 
 
 

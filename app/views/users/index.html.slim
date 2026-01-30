@@ -43,6 +43,7 @@
           .flex.flex-col.items-end.gap-1
             = user.virtue_rank_badge
             = user.total_virtue_points_badge
+            = user.total_virtue_points_unread_badge_html(current_user)
 
         .mt-2
           = user.help_badge_html

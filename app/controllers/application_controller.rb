@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
   before_action :check_today_status
   before_action :set_header_help_request
+  before_action :set_header_help_magic
 
   add_flash_types :success, :danger
 
@@ -23,6 +24,11 @@ class ApplicationController < ActionController::Base
   def set_header_help_request
     return unless current_user&.helper?
     @header_help_request = HelpRequest.find_by(helper_id: current_user.id, status: :matched)
+  end
+
+  def set_header_help_magic
+    return unless logged_in?
+    @header_help_magic = current_user.help_magic&.decorate
   end
 
   def require_manager!

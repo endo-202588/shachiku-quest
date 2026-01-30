@@ -1,7 +1,7 @@
 .container.mx-auto.px-4.py-8
   .max-w-2xl.mx-auto
     / ヘッダー部分
-    .flex.gap-2
+    .flex.gap-2.mb-2
       - if @task.user_id == current_user&.id
         = link_to '編集', edit_task_path(@task),
           class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'

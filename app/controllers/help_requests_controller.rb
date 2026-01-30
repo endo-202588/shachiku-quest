@@ -49,17 +49,11 @@ class HelpRequestsController < ApplicationController
 
     # ====== open に戻す：履歴退避＋リセット ======
     if new_status == "open"
-      @help_request.assign_attributes(
-        status: :open,
-        last_helper_id: @help_request.helper_id, # ←退避（不要なら削除OK）
-        helper_id: nil,
-        completed_notified_at: nil
-      )
-
-      if @help_request.save
+      begin
+        @help_request.reset_to_open!
         redirect_to edit_task_path(@help_request.task), notice: 'オープンに戻しました。付与ポイントを選び直してください'
-      else
-        redirect_to task_path(@help_request.task), alert: @help_request.errors.full_messages.join(', ')
+      rescue ActiveRecord::RecordInvalid => e
+        redirect_to task_path(@help_request.task), alert: e.record.errors.full_messages.join(', ')
       end
       return
     end
@@ -90,30 +84,50 @@ class HelpRequestsController < ApplicationController
     end
 
     # ====== 更新 ======
-    if @help_request.update(status: new_status)
+    begin
       if new_status == "completed"
-        helper = @help_request.helper
-        hm = helper&.help_magic
+        @help_request.transaction do
+          @help_request.update!(status: :completed)
 
-        if hm.nil?
-          Rails.logger.info "HelpMagic already nil: user_id=#{helper&.id}"
-        end
+          helper = @help_request.helper
+          raise ActiveRecord::RecordInvalid.new(@help_request) if helper.nil?
 
-        HelpRequestMailer.owner_thanks(@help_request.id).deliver_now
+          award = @help_request.virtue_points.to_i
+          award = 1 if award <= 0
 
-        if hm
-          if hm.destroy
-            Rails.logger.info "HelpMagic destroyed: id=#{hm.id} user_id=#{helper.id}"
-          else
-            Rails.logger.warn "HelpMagic destroy failed: #{hm.errors.full_messages}"
+          helper.with_lock do
+            helper.total_virtue_points = helper.total_virtue_points.to_i + award
+            helper.total_virtue_points_last_added = award
+            helper.total_virtue_points_notified_at = Time.current
+            helper.total_virtue_points_read_at = nil
+            helper.save!
           end
+
+          hm = helper.help_magic
+          Rails.logger.info "HelpMagic already nil: user_id=#{helper.id}" if hm.nil?
+          hm&.destroy!
         end
+
+        # transaction 成功後に送る
+        HelpRequestMailer.owner_thanks(@help_request.id).deliver_later
+
+        redirect_to task_path(@help_request.task), notice: 'ステータスを更新しました'
+        return
       end
 
+      @help_request.update!(status: new_status)
       redirect_to task_path(@help_request.task), notice: 'ステータスを更新しました'
-    else
+
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotDestroyed => e
+      msg =
+        if e.respond_to?(:record) && e.record
+          e.record.errors.full_messages.join(', ')
+        else
+          e.message
+        end
+
       redirect_to task_path(@help_request.task),
-                  alert: "ステータスの更新に失敗しました: #{@help_request.errors.full_messages.join(', ')}"
+                  alert: "ステータスの更新に失敗しました: #{msg}"
     end
   end
 

@@ -12,7 +12,7 @@ class Task < ApplicationRecord
 
   after_update :close_help_request_if_task_not_help_request
 
-  scope :by_status, ->(status) { where(status: status) if status.present? }
+  scope :by_status, ->(status) { status.present? ? where(status:) : all }
 
   validates :title, presence: true
   validates :status, presence: true

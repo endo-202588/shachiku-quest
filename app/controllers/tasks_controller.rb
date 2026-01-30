@@ -4,6 +4,7 @@ class TasksController < ApplicationController
   def index
     @tasks = current_user.tasks
                        .by_status(params[:status])
+                       .includes(help_request: :helper)
                        .order(created_at: :desc)
                        .decorate
   end

@@ -125,10 +125,10 @@
           edit_help_magic_path,
           class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
-        = link_to "削除",
-          help_magic_path(@help_magic),
+        = button_to "削除",
+          help_magic_path,
           method: :delete,
-          data: { confirm: "本当に魔法を消しますか？" },
+          data: { turbo_method: :delete, turbo_confirm: "本当に魔法を消しますか？" },
           class: "inline-flex items-center px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm"
 
     - else

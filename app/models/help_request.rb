@@ -29,9 +29,13 @@ class HelpRequest < ApplicationRecord
   }
 
   def self.reset_yesterday_matched_all!(now: Time.zone.now)
-    matched_only
-      .yesterday_or_before(now)
-      .find_each { |hr| hr.update!(status: :open) }
+    ActiveRecord::Base.transaction do
+      matched_only
+        .yesterday_or_before(now)
+        .find_each(&:reset_to_open!)
+
+      HelpMagic.delete_all
+    end
   end
 
   def self.reset_yesterday_matched_for_owner!(owner_id:, now: Time.zone.now)
@@ -40,6 +44,17 @@ class HelpRequest < ApplicationRecord
       .where(tasks: { user_id: owner_id })
       .yesterday_or_before(now)
       .find_each { |hr| hr.update!(status: :open) }
+  end
+
+  def reset_to_open!
+    prev_helper_id = helper_id
+
+    update!(
+      status: :open,
+      last_helper_id: prev_helper_id,
+      helper_id: nil,
+      completed_notified_at: nil
+    )
   end
 
   private

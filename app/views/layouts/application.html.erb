@@ -21,7 +21,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-pixel-sky">
+  <body class="<%= controller_name == 'static_pages' && action_name == 'top' ? 'bg-top-page' : 'bg-pixel-sky' %>">
     <%# ログイン済みの場合のみヘッダーを表示 %>
     <% if logged_in? %>
       <%= render 'shared/header' %>
