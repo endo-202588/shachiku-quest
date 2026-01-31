@@ -19,8 +19,44 @@ class UserDecorator < Draper::Decorator
     "#{object.last_name} #{object.first_name}"
   end
 
+  def full_name_kana
+    "#{object.last_name_kana} #{object.first_name_kana}"
+  end
+
   def display_department
     object.department.presence || "未設定"
+  end
+
+  def avatar_initial
+    kana = object.last_name_kana.to_s.strip
+
+    return "?" if kana.empty?
+
+    # カタカナ → ひらがな
+    kana = kana.tr("ァ-ヶ", "ぁ-ゖ")
+
+    kana[0]
+  end
+
+  require "zlib"
+
+  def avatar_color_class
+    palette = %w[
+      bg-indigo-200 text-indigo-900
+      bg-sky-200 text-sky-900
+      bg-emerald-200 text-emerald-900
+      bg-amber-200 text-amber-900
+      bg-rose-200 text-rose-900
+      bg-purple-200 text-purple-900
+    ]
+
+    key = (object.id || object.email || object.last_name).to_s
+    idx = Zlib.crc32(key) % (palette.length / 2)
+
+    bg = palette[idx * 2]
+    fg = palette[idx * 2 + 1]
+
+    "#{bg} #{fg}"
   end
 
   # =====================================

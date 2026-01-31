@@ -10,7 +10,9 @@
         .space-y-6
           = f.input :avatar, as: :file, label: "アバター画像", required: false
           = f.input :last_name, required: true, autofocus: true
+          = f.input :last_name_kana, required: true
           = f.input :first_name, required: true
+          = f.input :first_name_kana, required: true
           = f.input :department, required: true
           = f.input :email, required: true, input_html: { autocomplete: "email" }
           = f.input :password, required: true, hint: "8文字以上で入力してください", input_html: { autocomplete: "new-password" }

@@ -1,7 +1,7 @@
 .container.mx-auto.px-4.py-8
   h1.text-4xl.font-bold.text-sky-900.mb-4.flex.items-center.justify-center.w-full.gap-1
     | 本日の勇者たち
-  
+
   - full_text = "お疲れさまです！今日もぼちぼちいきましょう。[br]仕事が忙しすぎる方、おヒマな方は、「シャチークの給湯室」へ行くと助け合うことができます。[br]さくさく終わらせて、早くお家に帰りましょう！"
   - full_text_render = full_text.gsub("[br]", "\n")
 
@@ -32,8 +32,8 @@
             - if user.avatar.attached?
               = image_tag user.avatar.variant(resize_to_fill: [48, 48]).processed, class: "w-12 h-12 rounded-full object-cover"
             - else
-              .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center
-                span.text-2xl 🧙‍♂️
+              .w-12.h-12.rounded-full.flex.items-center.justify-center.font-bold.select-none(class=user.avatar_color_class)
+                span.text-xl.leading-none = user.avatar_initial
 
             .flex.flex-col
               h3.mb-1.text-lg.font-bold.text-gray-900.leading-tight

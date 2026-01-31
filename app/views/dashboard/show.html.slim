@@ -12,7 +12,7 @@
         .text-gray-800.font-medium = @today_status.display_type
         - if @today_status.memo.present?
           p.text-gray-600.text-sm.mt-2 = @today_status.memo
-        = link_to "編集する", edit_status_path(@today_status.object),
+        = link_to "編集する", edit_status_path(@today_status.object, return_to: request.fullpath),
           class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
       - else
         p.text-gray-600.text-sm 今日はまだステータスが登録されていません。

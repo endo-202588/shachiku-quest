@@ -9,8 +9,8 @@
       = image_tag @user.avatar.variant(resize_to_fill: [48, 48]).processed,
         class: "w-12 h-12 rounded-full object-cover"
     - else
-      .w-12.h-12.bg-indigo-100.rounded-full.flex.items-center.justify-center
-        span.text-2xl 🧙‍♂️
+      .w-12.h-12.rounded-full.flex.items-center.justify-center.font-bold.select-none(class=@user.decorate.avatar_color_class)
+        span.text-xl.leading-none = @user.decorate.avatar_initial
 
     .flex.justify-end.gap-3.mb-6
       = link_to "パスワードを変更", edit_settings_password_path,
@@ -24,8 +24,22 @@
         dd.text-gray-900.text-sm = @user.last_name.presence || "未設定"
 
       .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium 姓（ふりがな）
+        - kana = @user.last_name_kana.presence
+        - dd_class = kana ? "text-gray-900 text-sm" : "text-amber-600 font-semibold text-sm"
+        dd(class=dd_class)
+          = kana || "未設定（ひらがなで入力）"
+
+      .py-4.flex.items-center.justify-between
         dt.text-gray-600.text-sm.font-medium 名
         dd.text-gray-900.text-sm = @user.first_name.presence || "未設定"
+
+      .py-4.flex.items-center.justify-between
+        dt.text-gray-600.text-sm.font-medium 名（ふりがな）
+        - kana = @user.first_name_kana.presence
+        - dd_class = kana ? "text-gray-900 text-sm" : "text-amber-600 font-semibold text-sm"
+        dd(class=dd_class)
+          = kana || "未設定（ひらがなで入力）"
 
       .py-4.flex.items-center.justify-between
         dt.text-gray-600.text-sm.font-medium 部署

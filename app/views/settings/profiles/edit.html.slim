@@ -25,10 +25,18 @@
         = f.label :last_name, "姓", class: "text-sm font-medium text-gray-700"
         = f.text_field :last_name, class: "w-full rounded-md border-gray-300 shadow-sm"
 
+      .space-y-1
+        = f.label :last_name_kana, "姓（ふりがな）", class: "block text-sm font-medium text-gray-700"
+        = f.text_field :last_name_kana, class: "block w-full rounded-md border-gray-300 shadow-sm", placeholder: "さとう"
+
       / 名
       .space-y-1
         = f.label :first_name, "名", class: "text-sm font-medium text-gray-700"
         = f.text_field :first_name, class: "w-full rounded-md border-gray-300 shadow-sm"
+
+      .space-y-1
+        = f.label :first_name_kana, "名（ふりがな）", class: "block text-sm font-medium text-gray-700"
+        = f.text_field :first_name_kana, class: "block w-full rounded-md border-gray-300 shadow-sm", placeholder: "たろう"
 
       / 部署
       .space-y-1
