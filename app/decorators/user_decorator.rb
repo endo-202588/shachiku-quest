@@ -180,6 +180,14 @@ class UserDecorator < Draper::Decorator
     end
   end
 
+  # ステータスラベルとバッジ
+  def status_label_and_badge_html
+    h.content_tag(:div, class: "flex items-center justify-between") do
+      h.concat(h.content_tag(:span, "今日のステータス:", class: "text-sm font-medium text-gray-600"))
+      h.concat(status_badge_html)
+    end
+  end
+
 
   # 今日のステータスのメモを取得
   def today_status_memo
@@ -402,14 +410,6 @@ class UserDecorator < Draper::Decorator
   # -------------------------------------
   # ステータス表示 - private
   # -------------------------------------
-
-  # ステータスラベルとバッジ
-  def status_label_and_badge_html
-    h.content_tag(:div, class: "flex items-center justify-between") do
-      h.concat(h.content_tag(:span, "今日のステータス:", class: "text-sm font-medium text-gray-600"))
-      h.concat(status_badge_html)
-    end
-  end
 
   # 編集・リセットボタン(自分のステータスのみ)
   def status_action_buttons_html(current_user)

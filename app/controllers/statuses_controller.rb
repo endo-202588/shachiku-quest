@@ -5,7 +5,16 @@ class StatusesController < ApplicationController
   skip_before_action :check_today_status, only: [:index, :new, :create, :new_schedule, :create_schedule, :complete, :edit, :update]
 
   def index
-    @statuses = current_user.statuses.order(status_date: :desc)
+    base = current_user.statuses.order(status_date: :desc)
+
+    if params[:month].present?
+      @month = Date.parse("#{params[:month]}-01")
+      range  = @month..@month.end_of_month
+      @statuses = base.where(status_date: range).page(params[:page]).per(10)
+    else
+      @month = Date.current.beginning_of_month
+      @statuses = base.limit(30)
+    end
   end
 
   def new
