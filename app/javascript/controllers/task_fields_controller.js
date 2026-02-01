@@ -85,9 +85,9 @@ export default class extends Controller {
 
     const show = statusSelect.value === "help_request";
 
-    if (requiredTimeField) requiredTimeField.style.display = show ? "flex" : "none";
-    if (requestMessageField) requestMessageField.style.display = show ? "flex" : "none";
-    if (virtuePointsField)
-      virtuePointsField.style.display = show ? "flex" : "none";
+    if (requiredTimeField) requiredTimeField.classList.toggle("hidden", !show);
+    if (requestMessageField)
+      requestMessageField.classList.toggle("hidden", !show);
+    if (virtuePointsField) virtuePointsField.classList.toggle("hidden", !show);
   }
 }

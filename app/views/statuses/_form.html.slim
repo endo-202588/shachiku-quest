@@ -3,6 +3,7 @@
 
   / 日付をhiddenフィールドで送信 /
   = f.hidden_field :status_date, value: status.status_date
+  = hidden_field_tag :return_to, params[:return_to] || request.referer
 
   / ステータス選択（ラジオボタン） /
   div

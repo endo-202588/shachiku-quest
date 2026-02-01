@@ -8,7 +8,7 @@
       svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
         path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
       | タスクを登録
-    
+
     p.text-m.font-bold.text-gray-800.mb-6.whitespace-pre-line
       |
         本日予定しているタスクを登録してください
@@ -38,7 +38,7 @@
                   option value="in_progress" 進行中
                   option value="help_request" ヘルプ要請
 
-              .flex.flex-col style="display: none;"
+              .flex.flex-col.hidden
                 label.text-sm.font-medium.text-gray-700.mb-1 必要時間
                 select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]"
                   option value="" 選択してください
@@ -48,7 +48,7 @@
                   option value="two_hours" 2時間
                   option value="long_time" 2時間以上
 
-              .flex.flex-col style="display: none;"
+              .flex.flex-col.hidden
                 label.text-sm.font-medium.text-gray-700.mb-1 ヘルパーへのメッセージ(任意)
                 textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][request_message]" rows="3" placeholder="例: 簡単です / とても困ってます…助けてください！"
 
@@ -56,7 +56,7 @@
                 label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
                 textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
 
-              .flex.flex-col style="display: none;"
+              .flex.flex-col.hidden
                 label.text-sm.font-medium.text-gray-700.mb-1 付与ポイント
                 select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][virtue_points]"
                   option value="" 選択してください
@@ -90,7 +90,7 @@
             option value="in_progress" 進行中
             option value="help_request" ヘルプ要請
 
-        .flex.flex-col
+        .flex.flex-col.hidden
           label.text-sm.font-medium.text-gray-700.mb-1 必要時間
           select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][required_time]"
             option value="" 選択してください
@@ -100,11 +100,15 @@
             option value="two_hours" 2時間
             option value="long_time" 2時間以上
 
+        .flex.flex-col.hidden
+          label.text-sm.font-medium.text-gray-700.mb-1 ヘルパーへのメッセージ(任意)
+          textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][request_message]" rows="3" placeholder="例: 簡単です / とても困ってます…助けてください！"
+
         .flex.flex-col
           label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
           textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
 
-        .flex.flex-col
+        .flex.flex-col.hidden
           label.text-sm.font-medium.text-gray-700.mb-1 付与ポイント
           select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][virtue_points]"
             option value="" 選択してください

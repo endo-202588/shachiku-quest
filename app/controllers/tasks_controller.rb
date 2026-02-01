@@ -114,7 +114,7 @@ class TasksController < ApplicationController
       @task.save!   # ← transaction内はこれで確実にロールバックされる
     end
 
-    redirect_to tasks_path, notice: 'タスクを更新しました'
+    redirect_to(params[:return_to].presence || tasks_path, success: "更新しました")
 
   rescue ActiveRecord::RecordInvalid => e
     flash.now[:alert] = "タスクの更新に失敗しました: #{e.record.errors.full_messages.join(', ')}"

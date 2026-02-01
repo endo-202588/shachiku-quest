@@ -1,0 +1,13 @@
+- return unless task.help_request? && help_request.present?
+
+- hr = help_request.decorate
+
+.mt-6.pt-4.border-t
+  .text-lg.font-semibold.mb-3 ヘルプ要請情報
+  .space-y-3
+    = render "shared/label_value_row", label: "ステータス", value: hr.status_badge
+    = render "shared/label_value_row", label: "必要な時間", value: hr.required_time_display
+    = render "shared/label_value_row", label: "付与される徳", value: hr.virtue_points
+    = render "shared/label_value_row", label: "ヘルパー", value: hr.helper_name
+    = render "shared/label_value_row", label: "ヘルパーへのメッセージ", value: (hr.request_message.presence || "—")
+    = render "shared/label_value_row", label: "完了メッセージ", value: (hr.helper_message.presence || "—")

@@ -3,7 +3,7 @@
     / ヘッダー部分
     .flex.gap-2.mb-2
       - if @task.user_id == current_user&.id
-        = link_to '編集', edit_task_path(@task),
+        = link_to '編集', edit_task_path(@task, return_to: params[:return_to]),
           class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
 
       = link_to '一覧に戻る', tasks_path,
@@ -28,38 +28,7 @@
           .text-sm.text-gray-600.mb-1 説明
           .text-gray-800.whitespace-pre-wrap= @task.description
 
-      .mb-4
-          .text-sm.text-gray-600.mb-1 ヘルパーへのメッセージ
-          = @help_request&.request_message
-
-      / ヘルプ要請情報
-      - if @help_request.present?
-        .mt-6.pt-4.border-t
-          .text-lg.font-semibold.mb-3 ヘルプ要請情報
-          .space-y-3
-            / ステータス
-            .flex.items-center.gap-2
-              span.text-sm.text-gray-600 ステータス:
-              = @help_request.status_badge
-
-            / 必要な時間
-            .flex.items-center.gap-2
-              span.text-sm.text-gray-600 必要な時間:
-              = @help_request.required_time_display
-
-            / ヘルパー
-            .flex.items-center.gap-2
-              span.text-sm.text-gray-600 ヘルパー:
-              = @help_request.helper_name
-
-            / virtue_points
-            .flex.items-center.gap-2
-              span.text-sm.text-gray-600 付与される徳:
-              = @help_request.virtue_points
-
-            .mb-4
-              .text-sm.text-gray-600.mb-1 完了メッセージ
-              = @help_request.helper_message
+      = render "help_request_detail", task: @task, help_request: @help_request
 
       / ステータス変更ボタン
       - if @help_request.present? && @task.user_id == current_user&.id && !@help_request.open?
@@ -74,7 +43,7 @@
               = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
                 = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 
-          - elsif @help_request.completed?
+          - elsif @help_request.completed? || @help_request.cancelled?
             = form_with url: update_status_help_request_path(@help_request, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
               = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
 

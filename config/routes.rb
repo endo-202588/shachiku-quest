@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   delete 'logout', to: 'user_sessions#destroy'
 
   # ステータス関連
-  resources :statuses, only: %i[new create edit update destroy] do
+  resources :statuses, only: %i[index new create edit update destroy] do
     collection do
       get :new_schedule
       post :create_schedule

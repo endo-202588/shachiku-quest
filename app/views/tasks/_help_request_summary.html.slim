@@ -1,0 +1,8 @@
+- return unless task.help_request? && help_request.present?
+
+- hr = help_request.decorate
+
+/ index内で余白が大きすぎないよう、border/mtは控えめに
+.mt-2.space-y-2
+  = render "shared/label_value_row", label: "ヘルプ要請", value: hr.status_badge
+  = render "shared/label_value_row", label: "必要時間", value: hr.required_time_display

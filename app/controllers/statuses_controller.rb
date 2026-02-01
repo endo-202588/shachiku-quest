@@ -2,7 +2,11 @@ class StatusesController < ApplicationController
   before_action :set_status, only: [:edit, :update, :destroy]
 
   # ステータス登録関連のアクションでは本日のステータスチェックをスキップ
-  skip_before_action :check_today_status, only: [:new, :create, :new_schedule, :create_schedule, :complete]
+  skip_before_action :check_today_status, only: [:index, :new, :create, :new_schedule, :create_schedule, :complete, :edit, :update]
+
+  def index
+    @statuses = current_user.statuses.order(status_date: :desc)
+  end
 
   def new
     @target_date = parse_iso_date(params[:date]) || Date.current
@@ -36,7 +40,7 @@ class StatusesController < ApplicationController
       redirect_to edit_status_path(@status)
     else
       # 新規作成の場合は登録画面へ
-      render :new
+      redirect_to new_status_path(date: selected_date.iso8601)
     end
   end
 
@@ -69,7 +73,9 @@ class StatusesController < ApplicationController
   def update
     if @status.update(status_params)
       date_text = @status.status_date.strftime('%Y年%m月%d日')
-      redirect_to users_path, success: "#{date_text}のステータスを更新しました"
+      redirect_back_or_to params[:return_to],
+        fallback_location: users_path,
+        success: "#{date_text}のステータスを更新しました"
     else
       @target_date = @status.status_date
       flash.now[:danger] = 'ステータスの更新に失敗しました'

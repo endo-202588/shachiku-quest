@@ -31,30 +31,20 @@
       .pixel-box.p-4
         .flex.justify-between.items-start
           div
-            h3.text-lg.font-bold.text-gray-900.mb-2.flex.items-center.gap-2
-              = task.title
-              = task.completion_unread_badge_html(current_user)
+            .mb-2
+              p == task.status_badge_html
+            .mb-2
+              h3.text-lg.font-bold.text-gray-900.mb-2.flex.items-center.gap-2
+                = task.title
+                = task.completion_unread_badge_html(current_user)
+                / メモがあれば表示
+            .mb-2
+              - if task.description.present?
+                  .text-sm.font-bold.text-gray-600.mb-1 タスク内容：
+                  .indent-3.text-sm.text-gray-600
+                    = task.description
 
-            / ステータスバッジ
-            - if task.help_request? && task.help_request.present?
-              - hr = task.help_request.decorate
-
-              .flex.gap-2.mb-4
-                = task.status_badge_html
-                = hr.status_badge
-
-              .mt-1.mb-2.text-sm.text-gray-700
-                | ヘルパー名：
-                = hr.helper_name
-                
-            - else
-              .flex.gap-2.items-center.mb-1
-                = task.status_badge_html
-
-            / メモがあれば表示
-            - if task.description.present?
-              p.text-sm.text-gray-600
-                = task.description
+            = render "help_request_summary", task: task, help_request: task.help_request
 
           / 操作ボタン
           .flex.gap-2

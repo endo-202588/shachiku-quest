@@ -14,4 +14,4 @@
 
       / キャンセルリンク
       .text-center.mt-4
-        = link_to "← 戻る",(params[:return_to].presence || users_path), class: "text-gray-600 hover:text-gray-800"
+        = link_to "← 戻る",(params[:return_to].presence || request.referer || users_path), class: "text-gray-600 hover:text-gray-800"

@@ -18,6 +18,8 @@
         p.text-gray-600.text-sm 今日はまだステータスが登録されていません。
         = link_to "登録する", new_status_path,
           class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+      = link_to "ステータス一覧", statuses_path,
+      class: "text-sm text-blue-600 hover:underline"
 
     / ---- 今日のタスク ----
     .bg-white.rounded-lg.shadow-md.p-6
@@ -32,16 +34,14 @@
                   = link_to task.title, task_path(task.object),
                     class: "truncate text-gray-900 font-medium hover:underline"
                   == task.status_badge_html
-                .mt-2.flex.flex-wrap.items-center.gap-2.text-sm.text-gray-600
-                  - if task.help_request?
-                    == task.help_request_status_html
-                    - if task.required_time_with_icon
-                      == task.required_time_with_icon
+                .mt-2.space-y-2.text-sm.text-gray-600
+                  = render "tasks/help_request_summary", task: task, help_request: task.help_request
+
                   - badge = task.completion_unread_badge_html(current_user)
                   - if badge
-                    == badge
+                    p == badge
 
-              = link_to "開く", task_path(task.object),
+              = link_to "詳細", task_path(task.object, return_to: request.fullpath),
                 class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
         .mt-4.text-right
