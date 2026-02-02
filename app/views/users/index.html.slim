@@ -40,7 +40,7 @@
                 = link_to user.full_name, introduction_path(user.object), class: "text-gray-900 hover:underline font-bold"
               p.text-sm.text-gray-500.leading-tight = user.display_department
 
-          .flex.flex-col.items-end.gap-1
+          .flex.flex-col.items-end.gap-1.shrink-0
             = user.virtue_rank_badge
             = user.total_virtue_points_badge
             = user.total_virtue_points_unread_badge_html(current_user)

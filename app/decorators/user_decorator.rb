@@ -101,7 +101,7 @@ class UserDecorator < Draper::Decorator
     h.content_tag(
       :span,
       'Lv.' + virtue_rank,
-      class: "text-s font-bold bg-sky-100 text-sky-800 px-2 py-1 rounded-full"
+      class: "text-sm font-bold bg-sky-100 text-sky-800 px-2 py-1 rounded-full"
     )
   end
 
@@ -188,6 +188,11 @@ class UserDecorator < Draper::Decorator
     end
   end
 
+  def memo_icon_svg
+    <<~SVG
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M64 304C64 358.4 83.3 408.6 115.9 448.9L67.1 538.3C65.1 542 64 546.2 64 550.5C64 564.6 75.4 576 89.5 576C93.5 576 97.3 575.4 101 573.9L217.4 524C248.8 536.9 283.5 544 320 544C461.4 544 576 436.5 576 304C576 171.5 461.4 64 320 64C178.6 64 64 171.5 64 304zM158 471.9C167.3 454.8 165.4 433.8 153.2 418.7C127.1 386.4 112 346.8 112 304C112 200.8 202.2 112 320 112C437.8 112 528 200.8 528 304C528 407.2 437.8 496 320 496C289.8 496 261.3 490.1 235.7 479.6C223.8 474.7 210.4 474.8 198.6 479.9L140 504.9L158 471.9zM208 336C225.7 336 240 321.7 240 304C240 286.3 225.7 272 208 272C190.3 272 176 286.3 176 304C176 321.7 190.3 336 208 336zM352 304C352 286.3 337.7 272 320 272C302.3 272 288 286.3 288 304C288 321.7 302.3 336 320 336C337.7 336 352 321.7 352 304zM432 336C449.7 336 464 321.7 464 304C464 286.3 449.7 272 432 272C414.3 272 400 286.3 400 304C400 321.7 414.3 336 432 336z"/></svg>
+    SVG
+  end
 
   # 今日のステータスのメモを取得
   def today_status_memo
@@ -203,9 +208,13 @@ class UserDecorator < Draper::Decorator
   def status_memo_html
     return nil unless today_status_memo?
 
-    h.content_tag(:div, class: "mt-2 p-2 bg-gray-50 rounded border border-gray-200") do
+    h.content_tag(:div, class: "mt-2") do
       h.content_tag(:p, class: "text-xs text-gray-700") do
-        h.concat h.content_tag(:span, "📝 メモ: ", class: "font-medium")
+        h.concat(
+          h.content_tag(:span, class: "flex items-center gap-1 text-sm font-medium text-gray-600") do
+            h.raw(memo_icon_svg) + "メモ"
+          end
+        )
         h.concat today_status_memo
       end
     end
