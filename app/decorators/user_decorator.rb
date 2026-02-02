@@ -188,6 +188,16 @@ class UserDecorator < Draper::Decorator
     end
   end
 
+    # 編集・リセットボタン(自分のステータスのみ)
+  def status_action_buttons_html(current_user)
+    return "" unless current_user == object
+
+    h.content_tag(:div, class: "flex gap-2 mt-3") do
+      h.concat(status_edit_button_html)
+      h.concat(status_reset_button_html)
+    end
+  end
+
   def memo_icon_svg
     <<~SVG
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M64 304C64 358.4 83.3 408.6 115.9 448.9L67.1 538.3C65.1 542 64 546.2 64 550.5C64 564.6 75.4 576 89.5 576C93.5 576 97.3 575.4 101 573.9L217.4 524C248.8 536.9 283.5 544 320 544C461.4 544 576 436.5 576 304C576 171.5 461.4 64 320 64C178.6 64 64 171.5 64 304zM158 471.9C167.3 454.8 165.4 433.8 153.2 418.7C127.1 386.4 112 346.8 112 304C112 200.8 202.2 112 320 112C437.8 112 528 200.8 528 304C528 407.2 437.8 496 320 496C289.8 496 261.3 490.1 235.7 479.6C223.8 474.7 210.4 474.8 198.6 479.9L140 504.9L158 471.9zM208 336C225.7 336 240 321.7 240 304C240 286.3 225.7 272 208 272C190.3 272 176 286.3 176 304C176 321.7 190.3 336 208 336zM352 304C352 286.3 337.7 272 320 272C302.3 272 288 286.3 288 304C288 321.7 302.3 336 320 336C337.7 336 352 321.7 352 304zM432 336C449.7 336 464 321.7 464 304C464 286.3 449.7 272 432 272C414.3 272 400 286.3 400 304C400 321.7 414.3 336 432 336z"/></svg>
@@ -236,11 +246,12 @@ class UserDecorator < Draper::Decorator
     return unless today_status
 
     h.link_to h.edit_status_path(today_status),
-      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
+      class: 'text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1' do
       h.raw <<~HTML
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-      </svg>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+        </svg>
+        <span>編集</span>
       HTML
     end
   end
@@ -251,13 +262,14 @@ class UserDecorator < Draper::Decorator
       h.button_to h.status_path(today_status),
       method: :delete,
       data: { turbo_method: :delete, turbo_confirm: '本当にリセットしますか?' },
-      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
+      class: 'text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1' do
 
       h.raw <<~HTML
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
         </svg>
+        <span>削除</span>
       HTML
     end
   end
@@ -415,20 +427,6 @@ class UserDecorator < Draper::Decorator
   end
 
   private
-
-  # -------------------------------------
-  # ステータス表示 - private
-  # -------------------------------------
-
-  # 編集・リセットボタン(自分のステータスのみ)
-  def status_action_buttons_html(current_user)
-    return "" unless current_user == object
-
-    h.content_tag(:div, class: "flex gap-2 mt-3") do
-      h.concat(status_edit_button_html)
-      h.concat(status_reset_button_html)
-    end
-  end
 
   # -------------------------------------
   # タスク表示 - private

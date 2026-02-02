@@ -48,7 +48,7 @@
         .mt-2
           = user.help_badge_html
 
-        = user.status_section_html(current_user)
+        = render "users/status_section", user: user
         = user.in_progress_tasks_section(current_user)
         = user.tasks_index_link
 

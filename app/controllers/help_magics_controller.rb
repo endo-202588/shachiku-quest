@@ -7,7 +7,10 @@ class HelpMagicsController < ApplicationController
 
   def update
     if @help_magic.update(help_magic_params)
-      redirect_back_or_to params[:return_to], fallback_location: dashboard_path, success: "魔法を更新しました"
+      redirect_back_or_to(params[:return_to].presence || dashboard_path,
+        fallback_location: dashboard_path,
+        success: "魔法を更新しました"
+      )
     else
       render :edit, status: :unprocessable_entity
     end

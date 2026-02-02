@@ -7,7 +7,7 @@ class HelpRequestDecorator < Draper::Decorator
     when 'open'
       h.content_tag(:span, 'オープン', class: 'px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm')
     when 'matched'
-      h.content_tag(:span, 'マッチング済み', class: 'px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm')
+      h.content_tag(:span, 'マッチング済み', class: 'px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm')
     when 'completed'
       h.content_tag(:span, '完了', class: 'px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm')
     when 'cancelled'

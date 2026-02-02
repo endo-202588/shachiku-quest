@@ -1,0 +1,7 @@
+- user = user.decorate
+
+.mt-4.pt-4.border-t.border-gray-200
+  == user.status_label_and_badge_html
+  == user.hp_display_html
+  == user.status_memo_html
+  == user.send(:status_action_buttons_html, current_user)

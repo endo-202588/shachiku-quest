@@ -8,19 +8,9 @@
     / ---- 今日のステータス ----
     .bg-white.rounded-lg.shadow-md.p-6
       h2.text-lg.font-bold.text-gray-800.mb-2 今日のステータス
-      - if @today_status
-        .text-gray-800.font-medium = current_user.decorate.status_label_and_badge_html
-        - if @today_status.memo.present?
-          p.text-gray-600.text-sm.mt-2 = @today_status.memo
-        .mb-4
-          = link_to "編集する", edit_status_path(@today_status.object, return_to: request.fullpath),
-            class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
-      - else
-        p.text-gray-600.text-sm 今日はまだステータスが登録されていません。
-        = link_to "登録する", new_status_path,
-          class: "inline-flex items-center mt-4 px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+      = render "users/status_section", user: current_user
 
-      .div
+      .div.mt-4
         = link_to "▶︎ ステータス一覧へ", statuses_path,
         class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
 
@@ -47,8 +37,9 @@
               = link_to "詳細", task_path(task.object, return_to: request.fullpath),
                 class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
-        .mt-4.text-right
-          = link_to "タスク一覧へ", tasks_path, class: "text-sm text-indigo-600 hover:underline"
+        .div.mt-4
+          = link_to "▶︎ タスク一覧へ", tasks_path,
+          class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
       - else
         p.text-gray-600.text-sm タスクがありません。
         .mt-4
@@ -63,7 +54,7 @@
 
     / ---- ヘルプ要請の状況 ----
     .bg-white.rounded-lg.shadow-md.p-6
-      h2.text-lg.font-bold.text-gray-800.mb-2 ヘルプ要請の状況
+      h2.text-lg.font-bold.text-gray-800.mb-2 ヘルプ要請中のタスク
 
       .space-y-4
         .flex.items-center.justify-between
@@ -87,6 +78,9 @@
           p.text-sm.text-yellow-700.mb-2 🔔 未読の完了通知があります
           = link_to "完了通知を確認する", help_requests_path,
             class: "inline-flex items-center px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+      .div.mt-4
+        = link_to "▶︎ シャチークの給湯室へ", help_requests_tasks_path,
+        class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
 
     / ---- ヘルプ中のタスク ----
     .bg-gray-50.rounded-lg.shadow-md.p-6
@@ -96,30 +90,30 @@
         - task = @helping_request.task.decorate
 
         ul.divide-y.divide-gray-200
-          li.py-3.flex.items-start.justify-between.gap-3
-            .min-w-0.flex-1
-              .flex.items-center.gap-2.min-w-0
-                = link_to task.title, helping_helpers_path,
-                  class: "truncate text-gray-900 font-medium hover:underline"
-                == task.status_badge_html
+          / flexを使わず縦積みにする
+          li.py-3.space-y-3
+            = link_to task.title, helping_helpers_path,
+              class: "block truncate font-bold text-gray-900 hover:underline"
 
-              .mt-2.flex.flex-wrap.items-center.gap-2.text-sm.text-gray-600
-                == @helping_request.decorate.status_badge
-                == @helping_request.decorate.required_time_display
+            .text-sm.text-gray-600.flex.flex-wrap.items-center.gap-2
+              span.text-gray-500 ヘルプ要請ステータス：
+              == @helping_request.decorate.status_badge
+
+            .text-sm.text-gray-600.flex.flex-wrap.items-center.gap-2
+              span.text-gray-500 必要時間：
+              == task.required_time_with_icon
 
             = link_to "詳細", helping_helpers_path,
-              class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
+              class: "inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
       - else
         p.text-gray-600.text-sm 現在ヘルプ中のタスクはありません。
 
   .bg-purple-50.rounded-lg.shadow-md.p-6.mt-6
-    h2.text-lg.font-bold.text-purple-900.mb-2 🔮 魔法
+    h2.text-lg.font-bold.text-purple-900.mb-2 登録中の魔法
 
     - if @help_magic.present?
-      .text-gray-800.font-medium.mb-4
-        | 登録中の魔法:
-        span.font-bold.text-purple-700 = @help_magic.decorate.required_time_with_icon
+      .font-bold.text-purple-700 = @help_magic.decorate.required_time_with_icon
 
       / 🔧 編集 & 削除ボタン（横並び）
       .mt-4.flex.items-center.gap-3
