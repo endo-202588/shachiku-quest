@@ -19,6 +19,6 @@ set :output, "#{Rails.root}/log/cron.log"
 # end
 
 # 本番用: 毎日午前0時に実行（動作確認後にコメントを切り替え）
-every 1.day, at: "12:00 am" do
-  rake "help_requests:reset_yesterday_matched"
+every 1.hour do
+  runner "::DailyResetService.call"
 end

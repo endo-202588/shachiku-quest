@@ -34,16 +34,8 @@ class HelpRequest < ApplicationRecord
         .yesterday_or_before(now)
         .find_each(&:reset_to_open!)
 
-      HelpMagic.delete_all
+      HelpMagic.where("available_date < ?", now.to_date).delete_all
     end
-  end
-
-  def self.reset_yesterday_matched_for_owner!(owner_id:, now: Time.zone.now)
-    matched_only
-      .joins(:task)
-      .where(tasks: { user_id: owner_id })
-      .yesterday_or_before(now)
-      .find_each { |hr| hr.update!(status: :open) }
   end
 
   def reset_to_open!

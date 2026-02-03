@@ -58,11 +58,17 @@ class User < ApplicationRecord
     hm&.available_date.present? && hm.available_date >= Date.current
   end
 
-  def helping_now?
+  def helping_now?(preloaded_ids = nil)
+    return preloaded_ids.include?(id) if preloaded_ids
+
     HelpRequest.exists?(helper_id: id, status: :matched)
   end
 
+  def can_edit_help_magic?
+    help_magic.present? && !helping_now?
+  end
+
   def can_delete_help_magic?
-    helper? && !helping_now?
+    help_magic.present? && !helping_now?
   end
 end

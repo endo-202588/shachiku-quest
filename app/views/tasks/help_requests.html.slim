@@ -27,33 +27,36 @@
   .mb-3
     - if current_user.help_magic.present?
       .bg-white.rounded-xl.shadow-md.p-4.mb-4
-        .flex.justify-between.items-center
+        .flex.items-center.justify-between.gap-4
           / 左側：魔法テキスト
-          .flex.items-center.gap-2.text-lg.text-sky-800.font-bold
+          .flex.items-center.gap-2.text-lg.text-sky-800.font-bold.min-w-0
             = current_user.help_magic.decorate.help_magic_text
 
-          / 右側：削除ボタン
-          - if current_user.can_delete_help_magic?
-            .flex.items-center.gap-3
+          / 右側：操作エリア（←必ずこのインデントで“右側”に入れる）
+          .flex.items-center.gap-3.shrink-0
+            - if current_user.can_edit_help_magic?
               = link_to edit_help_magic_path(return_to: request.fullpath),
-                  class: 'flex items-center gap-1 text-sky-700 hover:text-sky-900 font-bold text-base px-2 py-1 transition bg-transparent' do
-                svg.h-5.w-5 stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2"
-                  path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                  class: "inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition" do
+                / svg ...
                 span 編集
+            - else
+              span.text-slate-500.text-sm マッチ中のため編集不可
 
+            - if current_user.can_delete_help_magic?
               = button_to help_magic_path,
                   method: :delete,
-                  data: { turbo_confirm: '魔法を削除しますか？' },
-                  class: 'flex items-center gap-1 text-red-600 hover:text-red-800 font-bold text-base px-2 py-1 transition bg-transparent' do
-                svg.h-6.w-6 stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                  path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  form: { class: "inline-block m-0" },
+                  data: { turbo_confirm: "魔法を削除しますか？" },
+                  class: "inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm font-bold bg-red-600 text-white hover:bg-red-700 transition" do
+                / svg ...
                 span 削除
-
-  .mb-6
-    - if current_user.help_magic.blank?
-      = link_to '✨ 魔法を登録する',
-        new_help_magic_path,
-        class: 'inline-block px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition'
+            - else
+              span.text-slate-500.text-sm マッチ中のため削除不可
+    - else
+      .mb-6
+        = link_to '✨ 魔法を登録する',
+          new_help_magic_path,
+          class: 'inline-block px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition'
 
   / ========== ヘルパー一覧セクション ==========
   .mb-8
@@ -65,7 +68,7 @@
             .flex.items-center.gap-3
               / アイコン部分
               .w-10.h-10.bg-blue-500.rounded-full.flex.items-center.justify-center.text-white.font-bold
-                = helper.last_name[0]
+                = helper.last_name.to_s[0]
 
               / 名前表示(UserDecoratorのfull_nameを使用)
               .flex-1
@@ -79,7 +82,7 @@
               - if current_user&.id == helper.id
                 .block.w-full.text-center.bg-gray-400.text-white.font-bold.py-2.px-4.rounded
                   | 🧹 あなたです
-              - elsif helper.helping_now?
+              - elsif helper.helping_now?(@matching_helper_ids)
                 .block.w-full.text-center.bg-gray-400.text-white.font-bold.py-2.px-4.rounded
                   | 🧹 お手伝い中
               - else

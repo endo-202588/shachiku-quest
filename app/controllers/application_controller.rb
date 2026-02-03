@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :check_today_status
   before_action :set_header_help_request
   before_action :set_header_help_magic
+  before_action :daily_reset
 
   add_flash_types :success, :danger
 
@@ -35,5 +36,10 @@ class ApplicationController < ActionController::Base
     unless current_user&.manager? || current_user&.admin?
       redirect_to root_path, alert: "権限がありません"
     end
+  end
+
+  def daily_reset
+    return unless logged_in? # Sorcery 想定（違うならここだけ調整）
+    ::DailyResetService.call
   end
 end

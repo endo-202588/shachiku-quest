@@ -1,3 +1,4 @@
+require "set"
 class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
@@ -44,18 +45,28 @@ class TasksController < ApplicationController
   end
 
   def help_requests
-    @tasks = Task.help_request.includes(:user, :help_request).order(created_at: :desc).decorate
+    @tasks = Task.help_request.includes(:user, :help_request)
+                .order(created_at: :desc).decorate
+
     @helpers = User.includes(:help_magic)
                   .joins(:help_magic)
                   .where('help_magics.available_date >= ?', Date.today)
                   .distinct
                   .order(:last_name, :first_name)
-                  .decorate
 
+    # ★ 追加：マッチ中の helper_id をまとめて1クエリで取得
+    @matching_helper_ids =
+      HelpRequest.where(status: :matched)
+                .where.not(helper_id: nil)
+                .pluck(:helper_id)
+                .to_set
+
+    @helpers = @helpers.decorate
+
+    # current_user の処理は現状のままでOK
     if current_user&.helper?
       @current_help_request =
         HelpRequest.find_by(helper_id: current_user.id, status: :matched)
-
       @helping_task = @current_help_request&.task&.decorate
     else
       @current_help_request = nil
@@ -133,13 +144,13 @@ class TasksController < ApplicationController
     end
 
     # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
-    unless helper_available?(@helper)
+    unless helper_available?(helper)
       redirect_to select_task_helper_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
       return
     end
 
     # 時間がマッチするかチェック
-    unless time_matchable?(@task, @helper)
+    unless time_matchable?(@task, helper)
       redirect_to select_task_user_path(@helper), alert: "#{@helper.full_name}さんの対応可能時間とタスクの必要時間が一致しません"
       return
     end
@@ -280,9 +291,9 @@ class TasksController < ApplicationController
     @task = current_user.tasks.find(params[:id])
   end
 
-  def helper_available?(helper)
+  def helper_available?(user)
     # helperが既にmatchedステータスのhelp_requestに紐づいていないかチェック
-    !HelpRequest.exists?(helper: helper, status: :matched)
+    !HelpRequest.exists?(helper_id: user.id, status: :matched)
   end
 
   def time_matchable?(task, helper)

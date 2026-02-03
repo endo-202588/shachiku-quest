@@ -397,8 +397,14 @@ class UserDecorator < Draper::Decorator
   # =====================================
 
   # ヘルパーがヘルプ中かどうかの判定
-  def helping_now?
-    object.helper? && object.received_help_requests.exists?(status: :matched)
+  def helping_now?(matching_helper_ids = nil)
+    if matching_helper_ids.present?
+      # 事前計算した helper_ids に含まれるかどうか → 超高速
+      matching_helper_ids.include?(object.id)
+    else
+      # 従来の DB クエリ判定（fallback）
+      object.helper? && object.received_help_requests.exists?(status: :matched)
+    end
   end
 
   # -------------------------------------
