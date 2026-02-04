@@ -85,7 +85,7 @@ class TasksController < ApplicationController
     required_time_key = params.dig(:help_request, :required_time)
 
     if @task.help_request? && required_time_key.blank?
-      @task.errors.add(:base, '必要な時間を選択してください')
+      @task.errors.add(:base, :required_time_blank, message: '必要な時間を選択してください')
       flash.now[:alert] = '必要な時間を選択してください'
       render :edit, status: :unprocessable_entity
       return
@@ -99,8 +99,8 @@ class TasksController < ApplicationController
         required_time_key.present? ? HelpRequest.required_times[required_time_key.to_s] : nil
 
       if @task.help_request? && virtue_points.blank?
-        @task.errors.add(:base, '付与ポイントを選択してください')
-        flash.now[:alert] = '付与ポイントを選択してください'
+        @task.errors.add(:base, :virtue_points_blank, message: '付与される徳を選択してください')
+        flash.now[:alert] = '付与される徳を選択してください'
         render :edit, status: :unprocessable_entity
         return
       end

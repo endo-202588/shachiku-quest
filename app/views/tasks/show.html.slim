@@ -19,13 +19,12 @@
 
       / ステータス
       .mb-4
-        .text-sm.text-gray-600.mb-1 ステータス
-        = @task.status_badge_html
+        = render "shared/label_value_row", label: "ステータス", value: @task.status_badge_html
 
       / 説明
       - if @task.description.present?
         .mb-4
-          .text-sm.text-gray-600.mb-1 説明
+          .text-sm.text-gray-600.mb-1 お仕事内容：
           .text-gray-800.whitespace-pre-wrap= @task.description
 
       = render "help_request_detail", task: @task, help_request: @help_request

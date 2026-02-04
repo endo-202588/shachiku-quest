@@ -179,7 +179,7 @@ class HelpRequestsController < ApplicationController
         )
       end
 
-      redirect_to help_requests_tasks_path, notice: '仲間に加わりました！'
+      redirect_to help_requests_tasks_path, success: "#{@help_request.helper.decorate.full_name}さんが仲間になりました!"
     rescue ActiveRecord::RecordInvalid => e
       redirect_to help_requests_tasks_path, alert: "応募に失敗しました: #{e.record.errors.full_messages.join(', ')}"
     rescue StandardError => e
@@ -201,7 +201,7 @@ class HelpRequestsController < ApplicationController
     # ここで helper_message と notified_at を同時に保存
     if @help_request.update(complete_notify_params.merge(completed_notified_at: Time.current))
       HelpRequestMailer.completed_notify(@help_request.id).deliver_later
-      redirect_to help_requests_tasks_path, notice: '完了を通知しました！'
+      redirect_to help_requests_tasks_path, success: '完了を通知しました！'
     else
       flash.now[:alert] = @help_request.errors.full_messages.join(', ')
       render :complete_form, status: :unprocessable_entity
