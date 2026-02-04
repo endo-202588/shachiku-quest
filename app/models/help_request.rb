@@ -29,12 +29,14 @@ class HelpRequest < ApplicationRecord
   }
 
   def self.reset_yesterday_matched_all!(now: Time.zone.now)
+    today = now.to_date
+
     ActiveRecord::Base.transaction do
       matched_only
-        .yesterday_or_before(now)
+        .where("matched_on < ?", today)
         .find_each(&:reset_to_open!)
 
-      HelpMagic.where("available_date < ?", now.to_date).delete_all
+      HelpMagic.where("available_date < ?", today).delete_all
     end
   end
 
@@ -45,6 +47,7 @@ class HelpRequest < ApplicationRecord
       status: :open,
       last_helper_id: prev_helper_id,
       helper_id: nil,
+      matched_on: nil,
       completed_notified_at: nil
     )
   end

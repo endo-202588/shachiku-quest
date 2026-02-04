@@ -13,7 +13,9 @@
         label.flex.items-center.p-3.border.rounded-lg.cursor-pointer.hover:bg-purple-50.transition class=("bg-purple-50 border-purple-300" if status.status_type == status_key)
           = f.radio_button :status_type, status_key, class: "mr-3"
           span.text-lg
-            = Status.human_attribute_name("status_type.#{status_key}")
+            - short = Status.status_types_i18n[status_key.to_s]
+            - desc  = t("status_type_explanations.#{status_key}", default: nil)
+            = desc.present? ? "#{short}（#{desc}）" : short
 
   / メモ /
   div

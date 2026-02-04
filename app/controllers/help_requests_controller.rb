@@ -132,7 +132,6 @@ class HelpRequestsController < ApplicationController
   end
 
   def apply
-    # 1) ヘルパー登録していないなら不可
     unless current_user&.helper?
       redirect_to help_requests_tasks_path, alert: '先に魔法（対応可能時間）を登録してください'
       return
@@ -143,20 +142,17 @@ class HelpRequestsController < ApplicationController
       return
     end
 
-    # 2) すでに誰かがマッチしている/クローズなら不可（必要に応じて条件調整）
     if @help_request.matched? || @help_request.completed? || @help_request.cancelled?
       redirect_to help_requests_tasks_path, alert: 'この依頼はすでにマッチ済み、または終了しています'
       return
     end
 
-    # 3) すでに他タスクを手伝い中なら不可（あなたの既存ルール）
     if HelpRequest.exists?(helper_id: current_user.id, status: :matched)
       redirect_to help_requests_tasks_path, alert: 'すでに別の依頼をお手伝い中です'
       return
     end
 
-    # 4) 時間マッチ判定（ここが肝）
-    helper_time = current_user.help_magic&.available_time   # has_one想定
+    helper_time = current_user.help_magic&.available_time
     task_time   = @help_request.required_time
 
     if helper_time.blank? || task_time.blank? || helper_time.to_s != task_time.to_s
@@ -164,11 +160,30 @@ class HelpRequestsController < ApplicationController
       return
     end
 
-    # 5) マッチ成立：status=matched, helper_idセット
-    if @help_request.update(status: :matched, helper_id: current_user.id)
+    begin
+      @help_request.with_lock do
+        @help_request.reload
+
+        if HelpRequest.exists?(helper_id: current_user.id, status: :matched)
+          raise StandardError, 'すでに別の依頼をお手伝い中です'
+        end
+
+        if @help_request.matched? || @help_request.completed? || @help_request.cancelled?
+          raise StandardError, 'この依頼はすでにマッチ済み、または終了しています'
+        end
+
+        @help_request.update!(
+          status: :matched,
+          helper_id: current_user.id,
+          matched_on: Date.current
+        )
+      end
+
       redirect_to help_requests_tasks_path, notice: '仲間に加わりました！'
-    else
-      redirect_to help_requests_tasks_path, alert: "応募に失敗しました: #{@help_request.errors.full_messages.join(', ')}"
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to help_requests_tasks_path, alert: "応募に失敗しました: #{e.record.errors.full_messages.join(', ')}"
+    rescue StandardError => e
+      redirect_to help_requests_tasks_path, alert: e.message
     end
   end
 

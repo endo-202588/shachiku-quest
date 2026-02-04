@@ -1,4 +1,11 @@
 ja:
+  status_type_explanations:
+    peaceful: 適度な仕事量
+    tired: ちょい負荷あり
+    busy: 助けが欲しい
+    very_busy: かなり多忙
+    overloaded: 限界
+    day_off: おやすみ
   activerecord:
     models:
       user: ユーザー

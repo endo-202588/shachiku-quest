@@ -28,7 +28,7 @@
                 = l(s.status_date, format: :long)
 
               p.text-lg.font-semibold.text-slate-800.mt-1
-                = s.status_type_i18n
+                = s.decorate.status_type_with_explanation
 
               - if s.memo.present?
                 p.text-sm.text-slate-600.mt-2.whitespace-pre-wrap
