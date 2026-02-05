@@ -90,7 +90,9 @@ class TasksController < ApplicationController
 
     service.call!
 
-    redirect_to (params[:return_to].presence || tasks_path), success: "タスクを更新しました"
+    redirect_to(params[:return_to].presence || tasks_path,
+      success: "タスクを更新しました"
+    )
 
   rescue Tasks::UpdateService::ValidationError => e
     flash.now[:danger] = "タスクの更新に失敗しました: #{e.task.errors.full_messages.join(', ')}"

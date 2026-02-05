@@ -14,7 +14,6 @@ class HelpRequest < ApplicationRecord
   validates :status, presence: true
   validates :helper, presence: true, if: -> { matched? || completed? }
 
-  before_update :reset_fields_when_status_becomes_open
   after_update :add_points_to_helper, if: :saved_change_to_status?
 
   enum :status, {
@@ -47,28 +46,38 @@ class HelpRequest < ApplicationRecord
   def reset_to_open!
     prev_helper_id = helper_id
 
-    update!(
+    attrs = {
       status: :open,
       last_helper_id: prev_helper_id,
       helper_id: nil,
       matched_on: nil,
       completed_notified_at: nil
-    )
+    }
+
+    attrs[:completed_read_at] = nil if has_attribute?(:completed_read_at)
+    attrs[:helper_message]    = nil if has_attribute?(:helper_message)
+
+    update!(attrs)
+  end
+
+  def cancel_due_to_task_change!
+    prev_helper_id = helper_id
+
+    attrs = {
+      status: :cancelled,
+      last_helper_id: prev_helper_id.presence || last_helper_id,
+      helper_id: nil,
+      matched_on: nil,
+      completed_notified_at: nil
+    }
+
+    attrs[:completed_read_at] = nil if has_attribute?(:completed_read_at)
+    attrs[:helper_message]    = nil if has_attribute?(:helper_message)
+
+    update!(attrs)
   end
 
   private
-
-  def reset_fields_when_status_becomes_open
-    return unless will_save_change_to_status?
-    return unless open?
-
-    self.last_helper_id = helper_id if helper_id.present?
-
-    self.helper_id = nil
-    self.completed_notified_at = nil
-    self.completed_read_at = nil if respond_to?(:completed_read_at)
-    self.helper_message = nil if respond_to?(:helper_message)
-  end
 
   def add_points_to_helper
     return unless completed?
