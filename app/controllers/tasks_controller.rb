@@ -31,7 +31,7 @@ class TasksController < ApplicationController
     tasks_attributes = params[:tasks] || []
 
     if tasks_attributes.empty?
-      redirect_to new_task_path, alert: 'タスクが入力されていません'
+      redirect_to new_task_path, danger: 'タスクが入力されていません'
       return
     end
 
@@ -79,59 +79,23 @@ class TasksController < ApplicationController
   end
 
   def update
-    @task.assign_attributes(task_params)
+    tp = task_params.to_h
+    hrp = tp.delete("help_request_attributes") || {}
 
-    # ヘルプ要請で「選択してください」(空文字)が送信された場合のチェック
-    required_time_key = params.dig(:help_request, :required_time)
+    service = Tasks::UpdateService.new(
+      task: @task,
+      task_params: tp,
+      help_request_params: hrp
+    )
 
-    if @task.help_request? && required_time_key.blank?
-      @task.errors.add(:base, :required_time_blank, message: '必要な時間を選択してください')
-      flash.now[:alert] = '必要な時間を選択してください'
-      render :edit, status: :unprocessable_entity
-      return
-    end
+    service.call!
 
-    ActiveRecord::Base.transaction do
-      virtue_points = params.dig(:help_request, :virtue_points)
-      request_message = params.dig(:help_request, :request_message)
+    redirect_to (params[:return_to].presence || tasks_path), success: "タスクを更新しました"
 
-      required_time_int =
-        required_time_key.present? ? HelpRequest.required_times[required_time_key.to_s] : nil
-
-      if @task.help_request? && virtue_points.blank?
-        @task.errors.add(:base, :virtue_points_blank, message: '付与される徳を選択してください')
-        flash.now[:alert] = '付与される徳を選択してください'
-        render :edit, status: :unprocessable_entity
-        return
-      end
-
-      if @task.help_request?
-        if @task.help_request.present?
-          @task.help_request.assign_attributes(
-            required_time: required_time_int,
-            request_message: request_message,
-            virtue_points: virtue_points.to_i
-          )
-        else
-          @task.build_help_request(
-            required_time: required_time_int,
-            request_message: request_message,
-            virtue_points: virtue_points.to_i,
-            status: :open
-          )
-        end
-      end
-
-      @task.save!   # ← transaction内はこれで確実にロールバックされる
-    end
-
-    redirect_to(params[:return_to].presence || tasks_path, success: "更新しました")
-
-  rescue ActiveRecord::RecordInvalid => e
-    flash.now[:alert] = "タスクの更新に失敗しました: #{e.record.errors.full_messages.join(', ')}"
+  rescue Tasks::UpdateService::ValidationError => e
+    flash.now[:danger] = "タスクの更新に失敗しました: #{e.task.errors.full_messages.join(', ')}"
     render :edit, status: :unprocessable_entity
   end
-
 
   def add_helper
     @task = Task.find(params[:id])
@@ -139,25 +103,25 @@ class TasksController < ApplicationController
     @helper = helper.decorate
 
     if @task.user_id == helper.id
-      redirect_to select_task_helper_path(@helper), alert: '自分のタスクに自分を仲間として追加できません'
+      redirect_to select_task_helper_path(@helper), danger: '自分のタスクに自分を仲間として追加できません'
       return
     end
 
     # ✅ ヘルパーが既に他のタスクをヘルプしていないかチェック
     unless helper_available?(helper)
-      redirect_to select_task_helper_path(@helper), alert: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
+      redirect_to select_task_helper_path(@helper), danger: "#{@helper.full_name}さんは既に他のタスクをヘルプしています"
       return
     end
 
     # 時間がマッチするかチェック
     unless time_matchable?(@task, helper)
-      redirect_to select_task_user_path(@helper), alert: "#{@helper.full_name}さんの対応可能時間とタスクの必要時間が一致しません"
+      redirect_to select_task_user_path(@helper), danger: "#{@helper.full_name}さんの対応可能時間とタスクの必要時間が一致しません"
       return
     end
 
     # 既存のmatchableチェック
     unless @task.decorate.matchable?
-      redirect_to select_task_user_path(@helper), alert: 'このタスクは既に仲間がいるか、ヘルプ要請されていません'
+      redirect_to select_task_user_path(@helper), danger: 'このタスクは既に仲間がいるか、ヘルプ要請されていません'
       return
     end
 
@@ -170,12 +134,12 @@ class TasksController < ApplicationController
     )
 
     if help_request.save
-      redirect_to @task, notice: "#{@helper.full_name}さんが仲間になりました!"
+      redirect_to @task, success: "#{@helper.full_name}さんが仲間になりました!"
     else
-      redirect_to select_task_helper_path(@helper), alert: 'ヘルパーの追加に失敗しました'
+      redirect_to select_task_helper_path(@helper), danger: 'ヘルパーの追加に失敗しました'
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to help_requests_tasks_path, alert: 'ヘルパーまたはタスクが見つかりません'
+    redirect_to help_requests_tasks_path, danger: 'ヘルパーまたはタスクが見つかりません'
   end
 
   def select_task
@@ -190,7 +154,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy!
-    redirect_to tasks_path, notice: 'タスクを削除しました', status: :see_other
+    redirect_to tasks_path, success: 'タスクを削除しました', status: :see_other
   end
 
   private
@@ -259,7 +223,7 @@ class TasksController < ApplicationController
       end
     end
 
-    redirect_to tasks_path, notice: "#{valid_tasks.size}件のタスクを登録しました"
+    redirect_to tasks_path, success: "#{valid_tasks.size}件のタスクを登録しました"
   rescue ActiveRecord::RecordInvalid => e
     handle_save_error(e, valid_tasks.map { |td| td[:task] })
   rescue => e
@@ -270,18 +234,18 @@ class TasksController < ApplicationController
   def handle_validation_errors(valid_tasks, invalid_tasks)
     # valid_tasksからtaskオブジェクトを取り出す
     @tasks = valid_tasks.map { |td| td[:task] } + invalid_tasks.map { |td| td[:task] }
-    flash.now[:alert] = 'タスクの登録に失敗しました。入力内容を確認してください。'
+    flash.now[:danger] = 'タスクの登録に失敗しました。入力内容を確認してください。'
     render :new, status: :unprocessable_entity
   end
 
   def handle_save_error(error, tasks)
-    flash.now[:alert] = "保存に失敗しました: #{error.message}"
+    flash.now[:danger] = "保存に失敗しました: #{error.message}"
     @tasks = tasks
     render :new, status: :unprocessable_entity
   end
 
   def handle_unexpected_error(error, tasks)
-    flash.now[:alert] = "予期しないエラーが発生しました"
+    flash.now[:danger] = "予期しないエラーが発生しました"
     Rails.logger.error(error)
     @tasks = tasks
     render :new, status: :unprocessable_entity

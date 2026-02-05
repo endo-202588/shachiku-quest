@@ -26,7 +26,7 @@
 
             td.px-4.py-3.text-right
               .inline-flex.items-center.gap-2
-                = link_to "編集", edit_admin_task_path(t),
+                = link_to "編集", edit_admin_task_path(t, return_to: request.fullpath),
                   class: "inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
 
                 = button_to "削除", admin_task_path(t),

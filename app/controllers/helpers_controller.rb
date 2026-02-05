@@ -1,11 +1,11 @@
 class HelpersController < ApplicationController
   def helping
-    return redirect_to help_requests_tasks_path, alert: 'ヘルパーではありません' unless current_user&.helper?
+    return redirect_to help_requests_tasks_path, danger: 'ヘルパーではありません' unless current_user&.helper?
 
     @help_request =
       HelpRequest.includes(task: :user).find_by(helper_id: current_user.id, status: :matched)
 
-    return redirect_to help_requests_tasks_path, alert: '現在ヘルプ中のタスクはありません' unless @help_request
+    return redirect_to help_requests_tasks_path, danger: '現在ヘルプ中のタスクはありません' unless @help_request
 
     @help_request_decorated = @help_request.decorate
     @task = @help_request.task.decorate

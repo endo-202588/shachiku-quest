@@ -1,0 +1,17 @@
+.min-h-screen.w-full.flex.items-center.justify-center.p-4
+  .w-full.max-w-md.mx-auto.space-y-6
+
+    / ========== ステータス登録フォーム ========== /
+    .bg-white.rounded-lg.shadow-xl.p-8
+      .w-full.max-w-xl.mx-auto
+        / 日付をタイトルに表示
+        h1.text-3xl.font-bold.text-center.mb-2.text-purple-600
+          | 新規タグを作成
+
+      / フラッシュメッセージ（既存レコードがある場合に表示）
+      - if flash[:notice]
+          .bg-blue-50.border.border-blue-200.rounded-lg.p-4.mb-4
+            p.text-blue-800.font-bold = flash[:notice]
+
+      / フォームをパーシャルで読み込む
+      = render "form", personality_tag: @personality_tag

@@ -1,23 +1,23 @@
 .container.max-w-5xl.mx-auto.px-4.py-8
   .flex.items-end.justify-between.mb-6
     h1.text-2xl.font-bold.text-gray-900 管理者ダッシュボード
-    = link_to "通常画面へ戻る", users_path, class: "text-sm text-indigo-600 hover:underline"
+    = link_to "勇者一覧へ戻る", users_path, class: "text-sm text-indigo-600 hover:underline"
 
   .grid.grid-cols-1.md:grid-cols-4.gap-4
     .bg-white.rounded-lg.shadow-md.p-5
-      .text-sm.text-gray-500 Users
+      .text-sm.text-gray-500 登録されている勇者
       .text-2xl.font-bold.text-gray-900.mt-1 = @users_count
 
     .bg-white.rounded-lg.shadow-md.p-5
-      .text-sm.text-gray-500 Tasks
+      .text-sm.text-gray-500 現在のタスク
       .text-2xl.font-bold.text-gray-900.mt-1 = @tasks_count
 
     .bg-white.rounded-lg.shadow-md.p-5
-      .text-sm.text-gray-500 HelpRequests
+      .text-sm.text-gray-500 ヘルプ要請済みタスク
       .text-2xl.font-bold.text-gray-900.mt-1 = @help_requests_count
 
     .bg-white.rounded-lg.shadow-md.p-5
-      .text-sm.text-gray-500 HelpMagics
+      .text-sm.text-gray-500 登録されている魔法
       .text-2xl.font-bold.text-gray-900.mt-1 = @help_magics_count
 
   .mt-8.flex.flex-wrap.gap-3
@@ -25,5 +25,5 @@
       class: "inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
     = link_to "タスク管理", admin_tasks_path,
       class: "inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-    = link_to "性格タグ管理", admin_personality_tags_index_path,
+    = link_to "性格タグ管理", admin_personality_tags_path,
       class: "inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"

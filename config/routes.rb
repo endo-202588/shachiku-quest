@@ -70,12 +70,20 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get "personality_tags/index"
-    root to: "dashboard#show"   # /admin → Admin::DashboardController#show
+    root to: "dashboard#show"
 
-    resources :users, only: %i[index edit update destroy]
+    resources :users, only: %i[index edit update destroy] do
+      member do
+        get  :edit_password
+        patch :update_password
+
+        get  :edit_email
+        patch :update_email
+      end
+    end
+    
     resources :tasks, only: %i[index edit update destroy]
-    resources :personality_tags, only: [:index, :destroy]
+    resources :personality_tags, only: %i[index new create edit update destroy]
   end
 
   namespace :manager do

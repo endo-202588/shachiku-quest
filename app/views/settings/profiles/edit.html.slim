@@ -2,49 +2,20 @@
   .bg-white.rounded-lg.shadow-md.p-6
     h1.text-2xl.font-bold.text-gray-800.mb-6 プロフィール編集
 
-    = form_with model: @user,
+    = simple_form_for @user,
         url: settings_profile_path,
         method: :patch,
-        multipart: true,
-        class: "space-y-6" do |f|
+        html: { multipart: true } do |f|
 
-      / アバター
-      .space-y-1 data-controller="avatar"
-        = f.label :avatar, "画像", class: "text-sm font-medium text-gray-700"
-        .flex.items-center.gap-3
-          = f.file_field :avatar, id: "avatar_input", class: "hidden", data: { avatar_target: "input", action: "change->avatar#updateFilename" }
+      = f.error_notification
 
-          = f.label :avatar, "ファイルを選択",
-            for: "avatar_input",
-            class: "cursor-pointer inline-flex items-center px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+      = render "users/profile_fields",
+          f: f,
+          show_avatar: true,
+          show_role: false,
+          current_user: current_user,
+          user: @user
 
-          span.text-sm.text-gray-500 data-avatar-target="filename" 未選択
-
-      / 姓
-      .space-y-1
-        = f.label :last_name, "姓", class: "text-sm font-medium text-gray-700"
-        = f.text_field :last_name, class: "w-full rounded-md border-gray-300 shadow-sm"
-
-      .space-y-1
-        = f.label :last_name_kana, "姓（ふりがな）", class: "block text-sm font-medium text-gray-700"
-        = f.text_field :last_name_kana, class: "block w-full rounded-md border-gray-300 shadow-sm", placeholder: "さとう"
-
-      / 名
-      .space-y-1
-        = f.label :first_name, "名", class: "text-sm font-medium text-gray-700"
-        = f.text_field :first_name, class: "w-full rounded-md border-gray-300 shadow-sm"
-
-      .space-y-1
-        = f.label :first_name_kana, "名（ふりがな）", class: "block text-sm font-medium text-gray-700"
-        = f.text_field :first_name_kana, class: "block w-full rounded-md border-gray-300 shadow-sm", placeholder: "たろう"
-
-      / 部署
-      .space-y-1
-        = f.label :department, "部署", class: "text-sm font-medium text-gray-700"
-        = f.text_field :department, class: "w-full rounded-md border-gray-300 shadow-sm"
-
-      .flex.justify-end.space-x-3
-        = link_to "キャンセル", settings_profile_path,
-          class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
-        = f.submit "更新する",
-          class: "px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+      .flex.justify-end.space-x-3.mt-6
+        = link_to "キャンセル", settings_profile_path, class: "px-4 py-2 border rounded-lg"
+        = f.button :submit, "更新する", class: "px-4 py-2 bg-purple-600 text-white rounded-lg"

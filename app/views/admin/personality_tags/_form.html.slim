@@ -1,0 +1,14 @@
+= simple_form_for [:admin, personality_tag] do |f|
+  .space-y-4
+    = f.input :name,
+      label: "タグ名",
+      placeholder: "例：おだやか / せっかち / ねこ派"
+
+    .flex.items-center.gap-3
+      = f.button :submit,
+        (personality_tag.persisted? ? "更新する" : "作成する"),
+        class: "bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded"
+
+      = link_to "キャンセル",
+        admin_personality_tags_path,
+        class: "text-gray-600 hover:underline"

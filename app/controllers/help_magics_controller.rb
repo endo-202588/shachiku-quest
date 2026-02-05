@@ -25,7 +25,7 @@ class HelpMagicsController < ApplicationController
     @help_magic.assign_attributes(help_magic_params.merge(available_date: Date.current))
 
     if @help_magic.save
-      redirect_to help_requests_tasks_path, notice: '魔法を登録しました'
+      redirect_to help_requests_tasks_path, success: '魔法を登録しました'
     else
       flash.now[:danger] = '魔法を登録できませんでした'
       render :new, status: :unprocessable_entity
@@ -36,9 +36,9 @@ class HelpMagicsController < ApplicationController
     help_magic = current_user.help_magic
 
     if help_magic&.destroy
-      redirect_to help_requests_tasks_path, notice: '魔法を削除（待機解除）しました'
+      redirect_to help_requests_tasks_path, success: '魔法を削除（待機解除）しました'
     else
-      redirect_to help_requests_tasks_path, alert: '魔法を削除できませんでした'
+      redirect_to help_requests_tasks_path, danger: '魔法を削除できませんでした'
     end
   end
 
@@ -46,7 +46,7 @@ class HelpMagicsController < ApplicationController
 
     def set_help_magic
       @help_magic = current_user.help_magic
-      redirect_to dashboard_path, alert: "魔法が見つかりません" unless @help_magic
+      redirect_to dashboard_path, danger: "魔法が見つかりません" unless @help_magic
     end
 
     def help_magic_params

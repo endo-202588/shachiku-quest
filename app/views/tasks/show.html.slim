@@ -3,7 +3,7 @@
     / ヘッダー部分
     .flex.gap-2.mb-2
       - if @task.user_id == current_user&.id
-        = link_to '編集', edit_task_path(@task, return_to: params[:return_to]),
+        = link_to '編集', edit_task_path(@task, return_to: request.fullpath),
           class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition'
 
       = link_to '一覧に戻る', tasks_path,

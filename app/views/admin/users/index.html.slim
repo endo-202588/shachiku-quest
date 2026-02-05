@@ -19,7 +19,7 @@
             td.px-4.py-3 = u.id
             td.px-4.py-3 = (u.respond_to?(:decorate) ? u.decorate.full_name : (u.try(:name) || "-"))
             td.px-4.py-3 = u.email
-            td.px-4.py-3 = (u.respond_to?(:role) ? u.role : "-")
+            td.px-4.py-3 = (u.respond_to?(:role) ? u.role_i18n : "-")
             td.px-4.py-3.text-right.space-x-2
               = link_to "編集", edit_admin_user_path(u),
                 class: "inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"

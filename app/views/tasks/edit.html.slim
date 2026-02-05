@@ -3,4 +3,4 @@
     h1.text-2xl.font-bold.text-indigo-900.mb-6
       | ✏️ タスクを編集
 
-    = render 'form', task: @task, submit_text: "更新する"
+    = render "form", task: @task, submit_text: "更新する", cancel_path: tasks_path, form_scope: @task

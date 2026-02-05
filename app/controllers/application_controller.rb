@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
 
   def require_manager!
     unless current_user&.manager? || current_user&.admin?
-      redirect_to root_path, alert: "権限がありません"
+      redirect_to root_path, danger: "権限がありません"
     end
   end
 

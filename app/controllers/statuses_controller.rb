@@ -37,7 +37,7 @@ class StatusesController < ApplicationController
     selected_date = parse_iso_date(params[:status_date])
 
     unless selected_date
-      redirect_to new_schedule_statuses_path, alert: '日付を選択してください'
+      redirect_to new_schedule_statuses_path, danger: '日付を選択してください'
       return
     end
 
@@ -94,9 +94,9 @@ class StatusesController < ApplicationController
 
   def destroy
     if @status.destroy
-      redirect_to users_path, notice: "ステータスをリセットしました", status: :see_other
+      redirect_to users_path, success: "ステータスをリセットしました", status: :see_other
     else
-      redirect_to users_path, alert: "ステータスのリセットに失敗しました", status: :see_other
+      redirect_to users_path, danger: "ステータスのリセットに失敗しました", status: :see_other
     end
   end
 
@@ -105,7 +105,7 @@ class StatusesController < ApplicationController
   def set_status
     @status = current_user.statuses.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to users_path, alert: "ステータスが見つかりませんでした"
+    redirect_to users_path, danger: "ステータスが見つかりませんでした"
     return
   end
 

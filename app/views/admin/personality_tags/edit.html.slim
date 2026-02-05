@@ -1,0 +1,20 @@
+.min-h-screen.w-full.flex.items-center.justify-center.p-4
+  .w-full.max-w-md.mx-auto.space-y-6
+
+    .bg-white.rounded-lg.shadow-xl.p-8
+      .w-full.max-w-xl.mx-auto
+        h1.text-3xl.font-bold.text-center.mb-2.text-purple-600
+          | タグを編集します
+
+        p.text-center.text-green-600.font-bold.mb-6
+          = "現在：#{@personality_tag.name}"
+
+      - if flash[:notice]
+        .bg-blue-50.border.border-blue-200.rounded-lg.p-4.mb-4
+          p.text-blue-800.font-bold = flash[:notice]
+
+      - if flash[:alert]
+        .bg-red-50.border.border-red-200.rounded-lg.p-4.mb-4
+          p.text-red-800.font-bold = flash[:alert]
+
+      = render "form", personality_tag: @personality_tag

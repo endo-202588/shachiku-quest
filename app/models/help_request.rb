@@ -6,7 +6,11 @@ class HelpRequest < ApplicationRecord
   scope :yesterday_or_before, ->(time) { where("help_requests.updated_at < ?", time.beginning_of_day) }
   scope :matched_only, -> { where(status: :matched) }
 
-  validates :required_time, presence: true
+  validates :required_time, presence: true, if: -> { task&.help_request? }
+  validates :virtue_points,
+    presence: true,
+    numericality: { only_integer: true, greater_than: 0 },
+    if: -> { task&.help_request? }
   validates :status, presence: true
   validates :helper, presence: true, if: -> { matched? || completed? }
 
@@ -58,10 +62,8 @@ class HelpRequest < ApplicationRecord
     return unless will_save_change_to_status?
     return unless open?
 
-    # open に戻る直前の helper を last_helper_id に退避
     self.last_helper_id = helper_id if helper_id.present?
 
-    # open に戻ったら必ずリセット
     self.helper_id = nil
     self.completed_notified_at = nil
     self.completed_read_at = nil if respond_to?(:completed_read_at)

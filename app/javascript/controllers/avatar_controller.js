@@ -3,13 +3,11 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["input", "filename"]
 
-  connect() {
-    this.updateFilename()
-  }
-
-  updateFilename(event) {
-    const input = event?.target || this.inputTarget
-    const file = input.files?.[0]
-    this.filenameTarget.textContent = file ? file.name : "未選択"
+  updateFilename() {
+    const file = this.inputTarget.files?.[0]
+    if (file) {
+      this.filenameTarget.textContent = file.name
+    }
+    // file がない場合は、サーバー側が描いた初期テキストを維持する
   }
 }

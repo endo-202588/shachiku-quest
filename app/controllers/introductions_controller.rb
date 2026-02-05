@@ -1,14 +1,14 @@
 class IntroductionsController < ApplicationController
   before_action :require_login
   before_action :set_user
-  before_action :ensure_self!, only: [:edit, :update]
+  before_action :ensure_self!,  only: [:edit, :update]
+  before_action :require_kana!, only: [:edit, :update]
 
   def show
     @user = User.find(params[:id]).decorate
   end
 
   def edit
-    # 自分のみ編集可
   end
 
   def update
@@ -19,7 +19,7 @@ class IntroductionsController < ApplicationController
         tag = PersonalityTag.find_or_create_by(name: new_tag_name)
 
         unless tag.persisted?
-          flash.now[:alert] = "性格タグを追加できませんでした：#{tag.errors.full_messages.join('、')}"
+          flash.now[:danger] = "性格タグを追加できませんでした：#{tag.errors.full_messages.join('、')}"
           return render :edit, status: :unprocessable_entity
         end
 
@@ -35,9 +35,9 @@ class IntroductionsController < ApplicationController
     end
 
     if @user.update(introduction_params)
-      redirect_to introduction_path(@user), notice: "自己紹介を更新しました"
+      redirect_to introduction_path(@user), success: "自己紹介を更新しました"
     else
-      flash.now[:alert] = "入力内容を確認してください"
+      flash.now[:danger] = "入力内容を確認してください"
       render :edit, status: :unprocessable_entity
     end
   end
@@ -48,10 +48,15 @@ class IntroductionsController < ApplicationController
     @user = User.find(params[:id])
   end
 
-  # 編集・更新は自分だけ
   def ensure_self!
     unless @user == current_user
       redirect_to introduction_path(@user), alert: "他のユーザーの紹介文は編集できません"
+    end
+  end
+
+  def require_kana!
+    if @user.last_name_kana.blank? || @user.first_name_kana.blank?
+      redirect_to edit_settings_profile_path, alert: "自己紹介を編集する前に、氏名（かな）を登録してください"
     end
   end
 
