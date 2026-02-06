@@ -65,8 +65,8 @@ ja:
         cancelled: キャンセル
     help_magic:
       available_time:
-        half_hour: 30分
-        one_hour: 1時間
-        one_and_half_hours: 1時間30分
-        two_hours: 2時間
-        long_time: 2時間以上
+        half_hour: ベハーフ（30分）
+        one_hour: ベホワン（1時間）
+        one_and_half_hours: ベホワンハフ（1時間30分）
+        two_hours: ベホツ（2時間）
+        long_time: ベホロング（2時間以上）

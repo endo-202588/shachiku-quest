@@ -93,6 +93,8 @@ Rails.application.routes.draw do
 
   resources :introductions, only: [:show, :edit, :update]
 
+  resource :ranking, only: [:show]
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
 

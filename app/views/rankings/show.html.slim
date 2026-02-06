@@ -1,0 +1,17 @@
+.container.mx-auto.px-4.py-8.max-w-3xl
+  h1.text-2xl.font-bold.mb-6 徳ポイントランキング（累計）
+
+  .bg-white.rounded-xl.shadow.overflow-hidden
+    table.w-full
+      thead.bg-slate-50
+        tr
+          th.text-left.px-4.py-3 順位
+          th.text-left.px-4.py-3 勇者
+          th.text-right.px-4.py-3 徳ポイント
+
+      tbody.divide-y
+        - @users.each_with_index do |u, i|
+          tr class=(current_user.id == u.id ? "bg-yellow-50" : "")
+            td.px-4.py-3 = i + 1
+            td.px-4.py-3.font-medium = u.full_name rescue u.decorate.full_name
+            td.px-4.py-3.text-right.font-bold = u.total_virtue_points

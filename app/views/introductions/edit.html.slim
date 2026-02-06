@@ -1,6 +1,6 @@
 .container.mx-auto.max-w-3xl.px-4.py-8
   .bg-white.rounded-lg.shadow.p-6
-    h1.text-2xl.font-bold.mb-6 ✏️ 自己紹介を編集
+    h1.text-2xl.font-bold.mb-6 自己紹介を編集
 
     = form_with model: @user, url: introduction_path(current_user), method: :patch, local: true, class: "space-y-6" do |f|
       - if @user.errors.any?

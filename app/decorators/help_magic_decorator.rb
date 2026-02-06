@@ -19,11 +19,26 @@ class HelpMagicDecorator < Draper::Decorator
 
     # enumのキーをラベル化
     label = case object.available_time.to_sym
-            when :half_hour then "30分"
-            when :one_hour then "1時間"
-            when :one_and_half_hours then "1時間30分"
-            when :two_hours then "2時間"
-            when :long_time then "長時間"
+            when :half_hour then "ベハーフ"
+            when :one_hour then "ベホワン"
+            when :one_and_half_hours then "ベホワンハフ"
+            when :two_hours then "ベホツ"
+            when :long_time then "ベホロング"
+            end
+
+    "魔法：#{label}"
+  end
+
+  def header_help_magic_label_with_time
+    return nil if object.available_time.blank?
+
+    # enumのキーをラベル化
+    label = case object.available_time.to_sym
+            when :half_hour then "ベハーフ（30分）"
+            when :one_hour then "ベホワン（1時間）"
+            when :one_and_half_hours then "ベホワンハフ（1時間30分）"
+            when :two_hours then "ベホツ（2時間）"
+            when :long_time then "ベホロング（2時間以上）"
             end
 
     "魔法：#{label}"
@@ -33,13 +48,7 @@ class HelpMagicDecorator < Draper::Decorator
     return nil if object.available_time.blank?
 
     # enumのキーをラベル化
-    label = case object.available_time.to_sym
-            when :half_hour then "30分"
-            when :one_hour then "1時間"
-            when :one_and_half_hours then "1時間30分"
-            when :two_hours then "2時間"
-            when :long_time then "長時間"
-            end
+    label = object.available_time_i18n
 
     "現在登録中の魔法：#{label}"
   end
