@@ -1,0 +1,30 @@
+# Ignore bundler config and installed gems
+/.bundle
+/vendor/bundle/
+
+# Ignore log files
+/log/*
+!/log/.keep
+
+# Ignore temporary files
+/tmp/*
+!/tmp/.keep
+!/tmp/pids/
+/tmp/pids/*
+!/tmp/pids/.keep
+
+# Ignore storage files
+/storage/*
+!/storage/.keep
+
+# Ignore compiled assets
+/public/assets
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+# Ignore other unnecessary files
+*.swp
+.DS_Store
+
+# Ignore local secret files
+/tmp/local_secret.txt
