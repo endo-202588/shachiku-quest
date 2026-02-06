@@ -11,7 +11,7 @@ class Admin::UsersController < Admin::BaseController
   def update
     attrs = user_params.to_h
 
-    if @user.id == current_user.id
+    if @user == current_user
       attrs.delete("role")
     end
 
@@ -80,7 +80,7 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :department, :email, :role)
+    params.require(:user).permit(:first_name, :last_name, :department, :email, :role, :total_virtue_points)
   end
 
   def password_params

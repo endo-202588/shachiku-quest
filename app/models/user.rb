@@ -25,6 +25,9 @@ class User < ApplicationRecord
   validates :last_name_kana, :first_name_kana,
           presence: true,
           format: { with: /\A[ぁ-んー]+\z/, message: "はひらがなで入力してください" }
+  validates :total_virtue_points,
+    numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validate :total_virtue_points_multiple_of_10
 
   enum :role, { general: 0, admin: 1, manager: 2 }
 
@@ -70,5 +73,12 @@ class User < ApplicationRecord
 
   def can_delete_help_magic?
     help_magic.present? && !helping_now?
+  end
+
+  def total_virtue_points_multiple_of_10
+    return if total_virtue_points.nil?
+    return if total_virtue_points % 10 == 0
+
+    errors.add(:total_virtue_points, "は10ポイント単位で入力してください")
   end
 end

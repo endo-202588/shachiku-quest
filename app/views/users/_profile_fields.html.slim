@@ -39,3 +39,10 @@
         collection: role_options,
         include_blank: false,
         label: "権限"
+
+- if show_total_virtue_points
+  = f.input :total_virtue_points,
+      label: "Vp（徳ポイント）",
+      as: :integer,
+      input_html: { step: 10, min: 0 }
+
