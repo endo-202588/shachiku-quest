@@ -28,3 +28,7 @@
 
 # Ignore local secret files
 /tmp/local_secret.txt
+
+# Ignore Rails credentials keys (NEVER commit these)
+config/master.key
+config/credentials/*.key
