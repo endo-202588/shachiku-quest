@@ -168,7 +168,7 @@
 
 ## ER図
 
-（後日追加予定）
+(https://app.diagrams.net/#G1JedrR5ar54FSOJKA57MqmtAuE6QvGfzq#%7B%22pageId%22%3A%22pQffNUjQZHsvLcy2fLF3%22%7D)
 
 ---
 
@@ -200,7 +200,7 @@ Rails初心者ということもあり、まずはカリキュラムで学んだ
 
 **画像・検索機能**
 
-- `carrierwave` + `mini_magick` - 画像アップロード
+- `Active Storage` + `image_processing` - 画像アップロード
 - `ransack` - 検索機能
 
 **ランキング機能（フェーズ2以降）**
