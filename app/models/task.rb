@@ -20,6 +20,14 @@ class Task < ApplicationRecord
   validates :help_request, presence: true, if: :help_request?
   validates_associated :help_request, if: :help_request?
 
+  def self.ransackable_attributes(auth_object = nil)
+    %w[user_id title description]
+  end
+
+    def self.ransackable_associations(auth_object = nil)
+    %w[user]
+  end
+
   private
 
   def cancel_help_request_if_task_no_longer_help_request

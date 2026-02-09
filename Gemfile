@@ -26,6 +26,9 @@ gem 'sorcery', '~> 0.18.0'
 # Form
 gem 'simple_form'
 
+# Search
+gem "ransack", ">= 4.1"
+
 # image
 gem "image_processing", "~> 1.0"
 

@@ -1,8 +1,12 @@
 class Admin::UsersController < Admin::BaseController
   before_action :set_user, only: [:edit, :update, :destroy, :edit_password, :update_password, :edit_email, :update_email]
-  
+
   def index
-    @users = User.order(:id)
+    @q = User.ransack(params[:q])
+    @users = @q.result
+              .order(:id)
+              .includes(avatar_attachment: :blob)
+              .page(params[:page]).per(12)
   end
 
   def edit

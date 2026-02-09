@@ -1,0 +1,31 @@
+- departments = User.where.not(department: [nil, ""]).distinct.order(:department).pluck(:department)
+
+= search_form_for q, url: url, method: :get, html: { class: "w-full" } do |f|
+  .rounded-lg.border.border-slate-200.bg-sky-600/20.p-3.mb-5
+    .flex.flex-col.gap-2
+
+      / ① 部署（未選択OK）
+      .grid.grid-cols-1.sm:grid-cols-3.gap-2
+        .sm:col-span-1
+          .sr-only
+            = f.label :department_eq, "部署で絞り込み"
+
+          = f.select :department_eq,
+              options_for_select(departments, q.department_eq),
+              { include_blank: "部署（すべて）" },
+              class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-300"
+
+        / ② 氏名検索
+        .sm:col-span-2
+          .sr-only
+            = f.label :last_name_or_first_name_cont, "苗字・名前で検索"
+          = f.search_field :last_name_or_first_name_cont,
+              placeholder: "苗字・名前で検索",
+              class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-300"
+
+      .flex.gap-2.justify-end
+        = f.submit "絞り込む",
+            class: "inline-flex items-center justify-center rounded-md bg-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-300 transition"
+
+        = link_to "クリア", url,
+            class: "inline-flex items-center justify-center rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 transition"

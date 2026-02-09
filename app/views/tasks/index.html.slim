@@ -1,4 +1,5 @@
 .container.mx-auto.px-4.py-8
+  = render "search", q: @q, url: tasks_path
   .flex.justify-between.items-center.mb-8
     h1.text-4xl.font-bold.text-sky-900 タスク一覧
     .flex.gap-2

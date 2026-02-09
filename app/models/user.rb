@@ -81,4 +81,12 @@ class User < ApplicationRecord
 
     errors.add(:total_virtue_points, "は10ポイント単位で入力してください")
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[first_name last_name department]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[avatar_attachment avatar_blob]
+  end
 end

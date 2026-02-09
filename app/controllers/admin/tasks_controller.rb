@@ -2,7 +2,11 @@ class Admin::TasksController < Admin::BaseController
   before_action :set_task, only: %i[edit update destroy]
 
   def index
-    @tasks = Task.includes(:user).order(updated_at: :desc)
+    @q = Task.ransack(params[:q])
+    @tasks = @q.result
+            .includes(:user)
+            .order(created_at: :desc)
+            .page(params[:page]).per(20)
   end
 
   def edit

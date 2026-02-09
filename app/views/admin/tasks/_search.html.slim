@@ -1,0 +1,24 @@
+- users = User.order(:last_name, :first_name).pluck(:id, :last_name, :first_name).map { |id, ln, fn| [ "#{ln} #{fn}".strip, id ] }
+
+= search_form_for q, url: url, method: :get, html: { class: "w-full" } do |f|
+  .rounded-lg.border.border-slate-200.bg-white/15.p-3.mb-5
+    .flex.flex-wrap.items-center.gap-2
+
+      / ユーザー（未選択OK）
+      .w-full.sm:w-56
+        = f.select :user_id_eq,
+            options_for_select(users, q.user_id_eq),
+            { include_blank: "ユーザー（すべて）" },
+            class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-300"
+
+      / タイトル・内容
+      .flex-grow.min-w-[220px]
+        = f.search_field :title_or_description_cont,
+            placeholder: "タイトル・内容で検索",
+            class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-300"
+
+      = f.submit "絞り込む",
+          class: "inline-flex items-center justify-center rounded-md bg-slate-200 px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-300 transition shrink-0"
+
+      = link_to "クリア", url,
+          class: "inline-flex items-center justify-center rounded-md border border-slate-200 px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 transition shrink-0"

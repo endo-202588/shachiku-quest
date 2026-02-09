@@ -14,7 +14,9 @@ ja:
     attributes:
       user:
         first_name: 名
+        first_name_kana: 名（ふりがな）
         last_name: 姓
+        last_name_kana: 姓（ふりがな）
         department: 部署
         email: メールアドレス
         password: パスワード

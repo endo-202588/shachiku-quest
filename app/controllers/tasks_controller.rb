@@ -3,11 +3,12 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
   def index
-    @tasks = current_user.tasks
-                       .by_status(params[:status])
-                       .includes(help_request: :helper)
-                       .order(created_at: :desc)
-                       .decorate
+    @q = current_user.tasks.ransack(params[:q])
+    @tasks = @q.result
+              .by_status(params[:status])
+              .includes(help_request: :helper)
+              .order(created_at: :desc)
+              .decorate
   end
 
   def show
@@ -25,6 +26,7 @@ class TasksController < ApplicationController
 
   def new
     @task = current_user.tasks.build(status: :in_progress)
+    @task.build_help_request
   end
 
   def create
@@ -76,6 +78,7 @@ class TasksController < ApplicationController
 
   def edit
     # @task は before_action で設定済み
+    @task.build_help_request if @task.help_request.nil?
   end
 
   def update

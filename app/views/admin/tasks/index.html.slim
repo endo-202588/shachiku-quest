@@ -1,4 +1,5 @@
 .container.max-w-6xl.mx-auto.px-4.py-8
+  = render "search", q: @q, url: admin_tasks_path
   .flex.items-end.justify-between.mb-6
     h1.text-2xl.font-bold.text-gray-900 タスク管理
     = link_to "管理ダッシュボードへ", admin_root_path, class: "text-sm text-indigo-600 hover:underline"
@@ -34,3 +35,6 @@
                   data: { confirm: "本当に削除しますか？" },
                   form_class: "inline-block m-0",
                   class: "inline-flex items-center px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700"
+
+  .mt-8.flex.justify-center
+    = paginate @tasks, params: { q: params[:q] }

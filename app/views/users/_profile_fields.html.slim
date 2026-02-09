@@ -23,11 +23,11 @@
 
       span.text-sm.font-medium.truncate.max-w-xs.min-w-0 class=label_class data-avatar-target="filename" = label_text
 
-= f.input :last_name,        label: "姓"
-= f.input :last_name_kana,   label: "姓（ふりがな）",  input_html: { placeholder: "さとう" }
-= f.input :first_name,       label: "名"
-= f.input :first_name_kana,  label: "名（ふりがな）",  input_html: { placeholder: "たろう" }
-= f.input :department,       label: "部署"
+= f.input :last_name
+= f.input :last_name_kana, input_html: { placeholder: "さとう" }
+= f.input :first_name
+= f.input :first_name_kana, input_html: { placeholder: "たろう" }
+= f.input :department
 
 - if show_role
   - cu = current_user.respond_to?(:object) ? current_user.object : current_user
