@@ -89,4 +89,20 @@ class User < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     %w[avatar_attachment avatar_blob]
   end
+
+  def self.level_for_virtue_points(points)
+    p = points.to_i
+    case p
+    when 0..99   then 1
+    when 100..299 then 2
+    when 300..599 then 3
+    when 600..999 then 4
+    else 5
+    end
+  end
+
+  def recalc_level_from_virtue_points!
+    new_level = self.class.level_for_virtue_points(total_virtue_points)
+    self.level = new_level
+  end
 end

@@ -100,6 +100,9 @@ class HelpRequestsController < ApplicationController
             helper.total_virtue_points_last_added = award
             helper.total_virtue_points_notified_at = Time.current
             helper.total_virtue_points_read_at = nil
+
+            helper.recalc_level_from_virtue_points!
+            
             helper.save!
           end
 
