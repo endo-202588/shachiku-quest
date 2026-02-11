@@ -34,6 +34,10 @@
           = f.submit '冒険の扉を開く',
             class: 'w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition transform hover:scale-105'
 
+        .mt-4.text-center
+          = link_to "パスワードを忘れた方はこちら", new_password_reset_path,
+            class: "text-sm text-indigo-600 hover:text-indigo-800 underline"
+
     .text-center
       p.text-slate-500.text-sm
         | まだ冒険者登録をしていない方は

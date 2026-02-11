@@ -105,4 +105,9 @@ class User < ApplicationRecord
     new_level = self.class.level_for_virtue_points(total_virtue_points)
     self.level = new_level
   end
+
+  def deliver_reset_password_instructions!
+    generate_reset_password_token!
+    UserMailer.reset_password_email(self).deliver_later
+  end
 end

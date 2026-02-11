@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "password_resets/new"
+  get "password_resets/create"
+  get "password_resets/edit"
+  get "password_resets/update"
   get "static_pages/top"
   get "up" => "rails/health#show", as: :rails_health_check
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
@@ -81,7 +85,7 @@ Rails.application.routes.draw do
         patch :update_email
       end
     end
-    
+
     resources :tasks, only: %i[index edit update destroy]
     resources :personality_tags, only: %i[index new create edit update destroy]
   end
@@ -94,6 +98,8 @@ Rails.application.routes.draw do
   resources :introductions, only: [:show, :edit, :update]
 
   resource :ranking, only: [:show]
+
+  resources :password_resets, only: %i[new create edit update]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
