@@ -9,7 +9,7 @@
 /* ドット絵風の枠のスタイル */
 .pixel-border {
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 -8px 0 0 #000000,
     8px -8px 0 0 #000000,
     8px 0 0 0 #000000,
@@ -18,7 +18,7 @@
     -8px 8px 0 0 #000000,
     -8px 0 0 0 #000000,
     -8px -8px 0 0 #000000 !important;
-  
+
   border: none !important;
 }
 
@@ -27,11 +27,11 @@
 
   /* 雲レイヤーを複数重ねる */
   background-image:
-    url("/assets/pixel-clouds.png"),
-    url("/assets/pixel-clouds.png"),
-    url("/assets/pixel-clouds.png"),
-    url("/assets/pixel-clouds.png"),
-    url("/assets/pixel-clouds.png");
+    url("pixel-clouds.png"),
+    url("pixel-clouds.png"),
+    url("pixel-clouds.png"),
+    url("pixel-clouds.png"),
+    url("pixel-clouds.png");
 
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 
@@ -47,17 +47,17 @@
   background-size:
     auto 350px,
     auto 400px,
-    1000 900px,
+    1000px 900px,
     auto 1000px,
-    850 800px;
+    850px 800px;
 
   min-height: 100vh;
 }
 
 .bg-top-page {
   background-image:
-    url("/assets/birds.png"),               /* ① カラス（最前面） */
-    url("/assets/buildings.png"),        /* ② 建物（その下） */
+    url("birds.png"),               /* ① カラス（最前面） */
+    url("buildings.png"),        /* ② 建物（その下） */
     linear-gradient(#4da3ff, #a7eef0);      /* ③ グラデーション（最背面） */
 
   background-repeat:
