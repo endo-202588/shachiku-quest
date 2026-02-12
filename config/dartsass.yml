@@ -1,0 +1,2 @@
+input: app/assets/stylesheets/src/application.scss
+output: app/assets/builds/application.css

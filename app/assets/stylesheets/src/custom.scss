@@ -27,11 +27,11 @@
 
   /* 雲レイヤーを複数重ねる */
   background-image:
-    image-url("pixel-clouds.png"),
-    image-url("pixel-clouds.png"),
-    image-url("pixel-clouds.png"),
-    image-url("pixel-clouds.png"),
-    image-url("pixel-clouds.png");
+    url("/assets/images/pixel-clouds.png"),
+    url("/assets/images/pixel-clouds.png"),
+    url("/assets/images/pixel-clouds.png"),
+    url("/assets/images/pixel-clouds.png"),
+    url("/assets/images/pixel-clouds.png");
 
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 
@@ -56,8 +56,8 @@
 
 .bg-top-page {
   background-image:
-    image-url("birds.png"),               /* ① カラス（最前面） */
-    image-url("buildings.png"),        /* ② 建物（その下） */
+    url("/assets/images/birds.png"),               /* ① カラス（最前面） */
+    url("/assets/images/buildings.png"),        /* ② 建物（その下） */
     linear-gradient(#4da3ff, #a7eef0);      /* ③ グラデーション（最背面） */
 
   background-repeat:

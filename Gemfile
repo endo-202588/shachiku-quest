@@ -9,6 +9,7 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "bootsnap", require: false
 gem 'dartsass-rails'
+gem "sassc"
 
 # Frontend
 gem "importmap-rails"
