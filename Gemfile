@@ -8,7 +8,7 @@ gem "sprockets-rails"
 gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "bootsnap", require: false
-gem "sassc-rails"
+gem 'dartsass-rails'
 
 # Frontend
 gem "importmap-rails"
