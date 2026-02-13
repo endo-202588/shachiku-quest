@@ -1,34 +1,43 @@
-# Ignore bundler config and installed gems
+# Ignore bundler config.
 /.bundle
-/vendor/bundle/
 
-# Ignore log files
+# Ignore installed gems
+/vendor/bundle
+
+# Ignore all environment files (except templates).
+/.env*
+!/.env*.erb
+
+# Ignore all logfiles and tempfiles.
 /log/*
-!/log/.keep
-
-# Ignore temporary files
 /tmp/*
+!/log/.keep
 !/tmp/.keep
-!/tmp/pids/
+
+# Ignore pidfiles, but keep the directory.
 /tmp/pids/*
+!/tmp/pids/
 !/tmp/pids/.keep
 
-# Ignore storage files
+# Ignore storage (uploaded files in development and any SQLite databases).
 /storage/*
 !/storage/.keep
+/tmp/storage/*
+!/tmp/storage/
+!/tmp/storage/.keep
 
 # Ignore compiled assets
 /public/assets
 /app/assets/builds/*
 !/app/assets/builds/.keep
 
-# Ignore other unnecessary files
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+/config/credentials/*.key
+
+# Editor / OS junk
 *.swp
 .DS_Store
 
-# Ignore local secret files
+# Local-only secret files (if you really use it)
 /tmp/local_secret.txt
-
-# Ignore Rails credentials keys (NEVER commit these)
-config/master.key
-config/credentials/*.key
