@@ -1,0 +1,85 @@
+.container.mx-auto.max-w-4xl.px-4.py-10
+  .bg-white.rounded-xl.shadow.p-6.md:p-10
+    h1.text-3xl.font-extrabold.text-sky-900.mb-2
+      | 社畜クエストの使い方
+    .div
+      p.text-slate-600.mb-3
+        | 社畜クエストは、"お仕事助け合い"を目的とした、楽しむ業務管理アプリです。
+        ul.list-disc.pl-6.text-slate-700.space-y-2.m-3
+          li 今自分が抱えているタスクを書き出して視覚化する
+          li 大変な時はお手伝いを頼む
+          li 自分が手の空いた時は誰かを手伝ってみる…
+      p.text-slate-600.mb-8
+        | 助けたり助けてもらったりが可能。それだけで気持ちに余裕が生まれませんか？
+
+    .space-y-8
+
+      section
+        h2.text-xl.font-bold.text-slate-800.mb-3
+          | 1. まずは「今日のステータス」を登録
+        ul.list-disc.pl-6.text-slate-700.space-y-2
+          li
+            | その日の状態（例：平和・忙しい・疲れ気味）を登録します。
+          li
+            | メモがあれば一言添えると、周りが状況を把握しやすくなります。
+        .mt-3.p-4.rounded-lg.bg-slate-50.text-sm.text-slate-700
+          | ポイント：ステータスは「その日限り」の情報。毎日更新すると精度が上がります。
+
+      section
+        h2.text-xl.font-bold.text-slate-800.mb-3
+          | 2. 今日作業予定のタスクを登録する（通常タスク / ヘルプ要請）
+        ul.list-disc.pl-6.text-slate-700.space-y-2
+          li
+            | 通常タスク：自分で通常通り行うタスクです。
+          li
+            | ヘルプ要請：誰かにお手伝いしてもらいたいときに作成します（必要時間・付与される徳ポイントを設定）。
+          li
+            | 徳ポイントをためよう！：お手伝いをすると「徳ポイント」がもらえます。徳を積むとレベルアップ + いいことがあるかも？
+        .mt-3.p-4.rounded-lg.bg-amber-50.text-sm.text-amber-900
+          | ヘルプ要請は「必要時間」と「徳ポイント」の入力が必須になります。
+
+      section
+        h2.text-xl.font-bold.text-slate-800.mb-3
+          | 3. シャチークの給湯室でヘルパーを探す / ヘルパーになる
+        ul.list-disc.pl-6.text-slate-700.space-y-2
+          li
+            | 「魔法（お手伝いできる時間）」を登録するとヘルパーとして参加できます。
+          li
+            | ヘルプ要請を出した人は、ヘルパーを仲間にして依頼できます。
+          li
+            | ヘルパーから助けたいタスクや仲間を選んで応募することもできます。
+          li
+            | マッチしたら、必要に応じてやり取りして進めます。
+
+      section
+        h2.text-xl.font-bold.text-slate-800.mb-3
+          | 4. 完了したら「徳ポイント」が加算される
+        ul.list-disc.pl-6.text-slate-700.space-y-2
+          li
+            | ヘルプが完了すると、ヘルパーに徳ポイントが加算されます。
+          li
+            | ランキングで、最近の活躍が見えるようになります。
+
+      section
+        h2.text-xl.font-bold.text-slate-800.mb-3
+          | よくある質問
+        details.rounded-lg.border.border-slate-200.p-4.mb-3
+          summary.font-bold.text-slate-800.cursor-pointer
+            | Q. ヘルプ要請はキャンセルできますか？
+          p.mt-3.text-slate-700
+            | マッチング前ならできます。状況が変わったら通常タスクに切り替えましょう。
+        details.rounded-lg.border.border-slate-200.p-4
+          summary.font-bold.text-slate-800.cursor-pointer
+            | Q. スタッフ管理は誰が見られますか？
+          p.mt-3.text-slate-700
+            | 管理職 / 管理者 のみ表示されます。
+
+    .mt-10.flex.justify-center
+      - if current_user
+        = link_to users_path,
+          class: "inline-flex items-center px-6 py-3 rounded-lg bg-sky-700 hover:bg-sky-600 text-white font-bold transition" do
+          | 勇者一覧へ
+      - else
+        = link_to login_path,
+          class: "inline-flex items-center px-6 py-3 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-bold transition" do
+          | ログイン画面へ

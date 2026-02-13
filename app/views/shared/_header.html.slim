@@ -47,6 +47,12 @@ header.bg-sky-700.shadow-lg
           / メニュー本体
           .absolute.right-0.mt-1.w-64.bg-white.rounded-lg.shadow-lg.border.border-slate-200.hidden.z-50.overflow-hidden.divide-y.divide-slate-200 data-dropdown-target="menu"
 
+            = link_to guide_path,
+              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+              svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
+              span アプリの使い方
+
             / ▼ ランキング
             = link_to ranking_path,
               class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
