@@ -10,6 +10,9 @@ application.register("avatar", AvatarController)
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 
+import HeaderMenuController from "./header_menu_controller"
+application.register("header-menu", HeaderMenuController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

@@ -1,93 +1,132 @@
-header.bg-sky-700.shadow-lg
+header.bg-sky-700.shadow-lg data-controller="header-menu"
   .container.mx-auto.px-4
     .flex.justify-between.items-center.h-16
       / ロゴ・アプリ名
-      .flex.items-center.gap-6.mr-4
+      .flex.items-center.gap-3.min-w-0
         = link_to users_path, class: 'text-white text-xl font-bold hover:text-indigo-200 transition' do
           | 社畜クエスト
 
         / ユーザー名
-        .text-white.text-sm.flex.items-center.gap-1
+        .flex.text-white.text-xs.md:text-sm.items-center.gap-1
           svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5"
             path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd"
           = "#{current_user.decorate.full_name}さん"
 
         - if @header_help_magic.present?
-          span.bg-yellow-300.text-sky-900.text-sm.font-bold.px-3.py-1.rounded-full.ml-2.flex.items-center.gap-1
+          span.hidden.md:flex.bg-yellow-300.text-sky-900.text-sm.font-bold.px-3.py-1.rounded-full.ml-2.items-center.gap-1
             svg.h-5.w-5.fill-current.text-sky-900 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
               path d="M295.4 37L310.2 73.8L347 88.6C350 89.8 352 92.8 352 96C352 99.2 350 102.2 347 103.4L310.2 118.2L295.4 155C294.2 158 291.2 160 288 160C284.8 160 281.8 158 280.6 155L265.8 118.2L229 103.4C226 102.2 224 99.2 224 96C224 92.8 226 89.8 229 88.6L265.8 73.8L280.6 37C281.8 34 284.8 32 288 32C291.2 32 294.2 34 295.4 37zM142.7 105.7L164.2 155.8L214.3 177.3C220.2 179.8 224 185.6 224 192C224 198.4 220.2 204.2 214.3 206.7L164.2 228.2L142.7 278.3C140.2 284.2 134.4 288 128 288C121.6 288 115.8 284.2 113.3 278.3L91.8 228.2L41.7 206.7C35.8 204.2 32 198.4 32 192C32 185.6 35.8 179.8 41.7 177.3L91.8 155.8L113.3 105.7C115.8 99.8 121.6 96 128 96C134.4 96 140.2 99.8 142.7 105.7zM496 368C502.4 368 508.2 371.8 510.7 377.7L532.2 427.8L582.3 449.3C588.2 451.8 592 457.6 592 464C592 470.4 588.2 476.2 582.3 478.7L532.2 500.2L510.7 550.3C508.2 556.2 502.4 560 496 560C489.6 560 483.8 556.2 481.3 550.3L459.8 500.2L409.7 478.7C403.8 476.2 400 470.4 400 464C400 457.6 403.8 451.8 409.7 449.3L459.8 427.8L481.3 377.7C483.8 371.8 489.6 368 496 368zM492 64C503 64 513.6 68.4 521.5 76.2L563.8 118.5C571.6 126.4 576 137 576 148C576 159 571.6 169.6 563.8 177.5L475.6 265.7L374.3 164.4L462.5 76.2C470.4 68.4 481 64 492 64zM76.2 462.5L340.4 198.3L441.7 299.6L177.5 563.8C169.6 571.6 159 576 148 576C137 576 126.4 571.6 118.5 563.8L76.2 521.5C68.4 513.6 64 503 64 492C64 481 68.4 470.4 76.2 462.5z"
             = @header_help_magic.header_help_magic_label
 
-      .flex.items-center.gap-4
-        = link_to help_requests_tasks_path,
-          class: "inline-flex items-center gap-1 bg-amber-300 hover:bg-amber-500 text-sky-700 text-sm font-bold px-3 py-1 rounded-full transition shadow" do
-          svg.h-5.w-5.fill-current.text-sky-700 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
-            path d="M184 48C170.7 48 160 58.7 160 72C160 110.9 183.4 131.4 199.1 145.1L200.2 146.1C216.5 160.4 224 167.9 224 184C224 197.3 234.7 208 248 208C261.3 208 272 197.3 272 184C272 145.1 248.6 124.6 232.9 110.9L231.8 109.9C215.5 95.7 208 88.1 208 72C208 58.7 197.3 48 184 48zM128 256C110.3 256 96 270.3 96 288L96 480C96 533 139 576 192 576L384 576C425.8 576 461.4 549.3 474.5 512L480 512C550.7 512 608 454.7 608 384C608 313.3 550.7 256 480 256L128 256zM480 448L480 320C515.3 320 544 348.7 544 384C544 419.3 515.3 448 480 448zM320 72C320 58.7 309.3 48 296 48C282.7 48 272 58.7 272 72C272 110.9 295.4 131.4 311.1 145.1L312.2 146.1C328.5 160.4 336 167.9 336 184C336 197.3 346.7 208 360 208C373.3 208 384 197.3 384 184C384 145.1 360.6 124.6 344.9 110.9L343.8 109.9C327.5 95.7 320 88.1 320 72z"
-          span シャチークの給湯室
+      .flex.items-center.gap-3.shrink-0
+        .hidden.md:flex.items-center.gap-4
+          = link_to help_requests_tasks_path,
+            class: "inline-flex items-center gap-1 bg-amber-300 hover:bg-amber-500 text-sky-700 text-sm font-bold px-3 py-1 rounded-full transition shadow" do
+            svg.h-5.w-5.fill-current.text-sky-700 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+              path d="M184 48C170.7 48 160 58.7 160 72C160 110.9 183.4 131.4 199.1 145.1L200.2 146.1C216.5 160.4 224 167.9 224 184C224 197.3 234.7 208 248 208C261.3 208 272 197.3 272 184C272 145.1 248.6 124.6 232.9 110.9L231.8 109.9C215.5 95.7 208 88.1 208 72C208 58.7 197.3 48 184 48zM128 256C110.3 256 96 270.3 96 288L96 480C96 533 139 576 192 576L384 576C425.8 576 461.4 549.3 474.5 512L480 512C550.7 512 608 454.7 608 384C608 313.3 550.7 256 480 256L128 256zM480 448L480 320C515.3 320 544 348.7 544 384C544 419.3 515.3 448 480 448zM320 72C320 58.7 309.3 48 296 48C282.7 48 272 58.7 272 72C272 110.9 295.4 131.4 311.1 145.1L312.2 146.1C328.5 160.4 336 167.9 336 184C336 197.3 346.7 208 360 208C373.3 208 384 197.3 384 184C384 145.1 360.6 124.6 344.9 110.9L343.8 109.9C327.5 95.7 320 88.1 320 72z"
+            span シャチークの給湯室
 
-        - if @header_help_request.present?
-          = link_to helping_helpers_path,
-            class: 'inline-flex.items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold px-3 py-1 rounded-full transition' do
-            span 🧹
-            span ヘルプ中のタスク
+          - if @header_help_request.present?
+            = link_to helping_helpers_path,
+              class: 'inline-flex.items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold px-3 py-1 rounded-full transition' do
+              span 🧹
+              span ヘルプ中のタスク
 
-        / ▼ ダッシュボード
-        = link_to dashboard_path,
-          class: "inline-flex items-center gap-1 text-white transition text-sm font-bold" do
-          svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-            path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
-          span ダッシュボード
-
-        .relative data-controller="dropdown"
-          button.inline-flex.items-center.gap-1.leading-none.text-white.transition.text-sm.font-bold.py-1.px-2.cursor-pointer.hover:text-indigo-200 type="button" data-action="click->dropdown#toggle"
+          / ▼ ダッシュボード
+          = link_to dashboard_path,
+            class: "inline-flex items-center gap-1 text-white transition text-sm font-bold" do
             svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-              path fill-rule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clip-rule="evenodd"
-            span メニュー
+              path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+            span ダッシュボード
 
-          / メニュー本体
-          .absolute.right-0.mt-1.w-64.bg-white.rounded-lg.shadow-lg.border.border-slate-200.hidden.z-50.overflow-hidden.divide-y.divide-slate-200 data-dropdown-target="menu"
-
-            = link_to guide_path,
-              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+          .relative data-controller="dropdown"
+            button.inline-flex.items-center.gap-1.leading-none.text-white.transition.text-sm.font-bold.py-1.px-2.cursor-pointer.hover:text-indigo-200 type="button" data-action="click->dropdown#toggle"
               svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
-              span アプリの使い方
+                path fill-rule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clip-rule="evenodd"
+              span メニュー
 
-            / ▼ ランキング
-            = link_to ranking_path,
-              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
-              svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 640 640" fill="currentColor"
-                /! Font Awesome Free v7.1.0
-                path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"
-              span 徳ポイントランキング
+            / メニュー本体
+            .absolute.right-0.mt-1.w-64.bg-white.rounded-lg.shadow-lg.border.border-slate-200.hidden.z-50.overflow-hidden.divide-y.divide-slate-200 data-dropdown-target="menu"
 
-            / ▼ ここに「設定アイコン」を追加！
-            = link_to settings_profile_path,
-              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
-              svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"
-              span 設定
-
-            / スタッフ管理（manager / admin のみ表示）
-            - if current_user&.manager? || current_user&.admin?
-              = link_to manager_staff_conditions_path,
+              = link_to guide_path,
                 class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
                 svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                  path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
-                span スタッフ管理
+                  path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
+                span アプリの使い方
 
-            / 管理（admin だけ表示）
-            - if current_user.admin?
-              = link_to admin_root_path,
+              / ▼ ランキング
+              = link_to ranking_path,
+                class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+                svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 640 640" fill="currentColor"
+                  /! Font Awesome Free v7.1.0
+                  path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"
+                span 徳ポイントランキング
+
+              / ▼ ここに「設定アイコン」を追加！
+              = link_to settings_profile_path,
                 class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
                 svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                  path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"
-                span 管理
+                  path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"
+                span 設定
+
+              / スタッフ管理（manager / admin のみ表示）
+              - if current_user&.manager? || current_user&.admin?
+                = link_to manager_staff_conditions_path,
+                  class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+                  svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                    path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                  span スタッフ管理
+
+              / 管理（admin だけ表示）
+              - if current_user.admin?
+                = link_to admin_root_path,
+                  class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+                  svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                    path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"
+                  span 管理
 
         = button_to logout_path,
           method: :delete,
-          class: "inline-flex items-center gap-1 bg-white text-sky-700 hover:bg-sky-100 font-bold py-1 px-2 rounded transition duration-200" do
+          class: "hidden md:inline-flex items-center gap-1 bg-white text-sky-700 hover:bg-sky-100 font-bold py-1 px-2 rounded transition duration-200" do
           svg.h-6.w-6 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
             path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
           span ログアウト
+
+        / スマホ用：ハンバーガー
+        button.md:hidden.inline-flex.items-center.justify-center.text-white.p-2.rounded.hover:bg-white/15.transition type="button" data-action="click->header-menu#toggle"
+          svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"
+            path fill-rule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clip-rule="evenodd"
+
+    / スマホ用メニュー本体（縦）
+    .md:hidden.hidden.mt-2.pt-3.pb-4.space-y-2.border-t.border-white/15 data-header-menu-target="panel"
+      = link_to help_requests_tasks_path, class: "block bg-amber-300 hover:bg-amber-500 text-sky-800 font-bold px-4 py-3 rounded-lg shadow transition" do
+        | シャチークの給湯室
+
+      - if @header_help_request.present?
+        = link_to helping_helpers_path, class: "block bg-green-500 hover:bg-green-400 text-white font-bold px-4 py-3 rounded-lg transition" do
+          | ヘルプ中のタスク
+
+      = link_to dashboard_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+        | ダッシュボード
+
+      = link_to guide_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+        | アプリの使い方
+
+      = link_to ranking_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+        | 徳ポイントランキング
+
+      = link_to settings_profile_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+        | 設定
+
+      - if current_user&.manager? || current_user&.admin?
+        = link_to manager_staff_conditions_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+          | スタッフ管理
+
+      - if current_user.admin?
+        = link_to admin_root_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+          | 管理
+
+      = button_to logout_path, method: :delete,
+        class: "w-full text-left bg-white text-sky-800 font-bold px-4 py-3 rounded-lg hover:bg-sky-100 transition" do
+        | ログアウト
 
