@@ -31,43 +31,52 @@ header.bg-sky-700.shadow-lg
             span 🧹
             span ヘルプ中のタスク
 
-        / ▼ ランキング
-        = link_to ranking_path,
-          class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
-          svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 640 640" fill="currentColor"
-            /! Font Awesome Free v7.1.0
-            path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"
-          span 徳ポイントランキング
-
         / ▼ ダッシュボード
         = link_to dashboard_path,
-          class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
+          class: "inline-flex items-center gap-1 text-white transition text-sm font-bold" do
           svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
             path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
           span ダッシュボード
 
-        / ▼ ここに「設定アイコン」を追加！
-        = link_to settings_profile_path,
-          class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
-          svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-            path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"
-          span 設定
-
-        / 👥 スタッフ管理（manager / admin のみ表示）
-        - if current_user&.manager? || current_user&.admin?
-          = link_to manager_staff_conditions_path,
-            class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
+        .relative data-controller="dropdown"
+          button.inline-flex.items-center.gap-1.leading-none.text-white.transition.text-sm.font-bold.py-1.px-2.cursor-pointer.hover:text-indigo-200 type="button" data-action="click->dropdown#toggle"
             svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-              path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
-            span スタッフ管理
+              path fill-rule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 110-2z" clip-rule="evenodd"
+            span メニュー
 
-        / 🛡 管理（admin だけ表示）
-        - if current_user.admin?
-          = link_to admin_root_path,
-            class: "inline-flex items-center gap-1 text-white hover:text-indigo-200 transition text-sm font-bold" do
-            svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-              path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"
-            span 管理
+          / メニュー本体
+          .absolute.right-0.mt-1.w-64.bg-white.rounded-lg.shadow-lg.border.border-slate-200.hidden.z-50.overflow-hidden.divide-y.divide-slate-200 data-dropdown-target="menu"
+
+            / ▼ ランキング
+            = link_to ranking_path,
+              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+              svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 640 640" fill="currentColor"
+                /! Font Awesome Free v7.1.0
+                path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"
+              span 徳ポイントランキング
+
+            / ▼ ここに「設定アイコン」を追加！
+            = link_to settings_profile_path,
+              class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+              svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"
+              span 設定
+
+            / スタッフ管理（manager / admin のみ表示）
+            - if current_user&.manager? || current_user&.admin?
+              = link_to manager_staff_conditions_path,
+                class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+                svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                  path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
+                span スタッフ管理
+
+            / 管理（admin だけ表示）
+            - if current_user.admin?
+              = link_to admin_root_path,
+                class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:bg-slate-100 text-sm font-bold" do
+                svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                  path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"
+                span 管理
 
         = button_to logout_path,
           method: :delete,
