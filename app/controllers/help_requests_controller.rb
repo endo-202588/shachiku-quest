@@ -21,7 +21,7 @@ class HelpRequestsController < ApplicationController
     task_owner = @help_request.task.user_id
     me = current_user&.id
 
-    unless task_owner == me
+    unless task_owner == me || @help_request.helper_id == me
       redirect_to help_requests_tasks_path, danger: '権限がありません'
       return
     end
@@ -102,7 +102,7 @@ class HelpRequestsController < ApplicationController
             helper.total_virtue_points_read_at = nil
 
             helper.recalc_level_from_virtue_points!
-            
+
             helper.save!
           end
 
@@ -183,6 +183,7 @@ class HelpRequestsController < ApplicationController
       end
 
       redirect_to help_requests_tasks_path, success: "#{@help_request.helper.decorate.full_name}さんが仲間になりました!"
+
     rescue ActiveRecord::RecordInvalid => e
       redirect_to help_requests_tasks_path, danger: "応募に失敗しました: #{e.record.errors.full_messages.join(', ')}"
     rescue StandardError => e

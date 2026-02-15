@@ -15,6 +15,7 @@ class HelpRequest < ApplicationRecord
   validates :helper, presence: true, if: -> { matched? || completed? }
 
   after_update :add_points_to_helper, if: :saved_change_to_status?
+  after_commit :notify_matched, on: [:create, :update]
 
   enum :status, {
     open: 0,
@@ -37,6 +38,7 @@ class HelpRequest < ApplicationRecord
     ActiveRecord::Base.transaction do
       matched_only
         .where("matched_on < ?", today)
+        .where(completed_notified_at: nil)
         .find_each(&:reset_to_open!)
 
       HelpMagic.where("available_date < ?", today).delete_all
@@ -51,7 +53,8 @@ class HelpRequest < ApplicationRecord
       last_helper_id: prev_helper_id,
       helper_id: nil,
       matched_on: nil,
-      completed_notified_at: nil
+      completed_notified_at: nil,
+      matched_notified_at: nil
     }
 
     attrs[:completed_read_at] = nil if has_attribute?(:completed_read_at)
@@ -83,5 +86,21 @@ class HelpRequest < ApplicationRecord
     return unless completed?
 
     helper&.increment!(:total_virtue_points, virtue_points.to_i)
+  end
+
+  def notify_matched
+    return unless saved_change_to_status?
+    return unless matched?
+
+    # 必須情報
+    return if helper_id.blank? || task_id.blank?
+
+    # 送信済みなら送らない（※openに戻すとnilになる想定）
+    return if matched_notified_at.present?
+
+    # 先に刻印（競合対策）
+    update_column(:matched_notified_at, Time.current)
+
+    HelpRequestMailer.matched_notify(id).deliver_later
   end
 end

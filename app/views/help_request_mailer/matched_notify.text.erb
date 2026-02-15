@@ -1,0 +1,19 @@
+ヘルプ要請タスクのマッチングが成立しました。
+
+依頼者はヘルパーにヘルプをお願いしてください。
+ヘルパーは依頼者からお仕事を引き継いでください。
+
+------------------------------
+タスク名: <%= @task.title %>
+
+依頼者: <%= @owner.decorate.full_name.presence || @owner.last_name %>
+依頼者メール: <%= @owner.email %>
+
+ヘルパー: <%= @helper.decorate.full_name.presence || @helper.last_name %>
+ヘルパーメール: <%= @helper.email %>
+
+必要時間: <%= @help_request.respond_to?(:required_time_i18n) ? @help_request.required_time_i18n : @help_request.required_time %>
+------------------------------
+
+タスク詳細:
+<%= task_url(@task) %>

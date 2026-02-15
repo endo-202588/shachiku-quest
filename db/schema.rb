@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_11_154112) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_14_160702) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -74,6 +74,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_11_154112) do
     t.text "helper_message"
     t.integer "virtue_points", default: 10, null: false
     t.date "matched_on"
+    t.datetime "matched_notified_at"
     t.index ["helper_id"], name: "index_help_requests_on_helper_id"
     t.index ["last_helper_id"], name: "index_help_requests_on_last_helper_id"
     t.index ["status"], name: "index_help_requests_on_status"
