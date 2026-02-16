@@ -3,6 +3,9 @@
 発注者（<%= @owner.decorate.full_name rescue @owner.name %>）です。
 完了通知を確認しました。お手伝いありがとうございました！
 
+送信日時:
+<%= Time.current.strftime("%Y年%m月%d日 %H:%M") %>（日本時間）
+
 タスク: <%= @task.title %>
 
 詳細はこちら:

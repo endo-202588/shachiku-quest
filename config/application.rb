@@ -22,7 +22,7 @@ module App
     # in config/environments, which are processed later.
     #
     config.time_zone = "Tokyo"
-    config.active_record.default_timezone = :local
+    config.active_record.default_timezone = :utc
     # config.eager_load_paths << Rails.root.join("extras")
 
     # デフォルトの言語を日本語に設定
