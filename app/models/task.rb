@@ -4,7 +4,7 @@ class Task < ApplicationRecord
   has_one :helper, through: :help_request, source: :helper
   accepts_nested_attributes_for :help_request, update_only: true
 
-  enum status: {
+  enum :status, {
     in_progress: 0,
     help_request: 1,
     complete: 2
