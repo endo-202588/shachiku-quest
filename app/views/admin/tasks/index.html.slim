@@ -21,7 +21,7 @@
             td.px-4.py-3
               .font-medium.text-gray-900.truncate = t.title
               - if t.respond_to?(:status) && t.status.present?
-                .text-xs.text-gray-500 = t.status
+                .text-xs.text-gray-500 = t.status_i18n
             td.px-4.py-3 = t.user&.decorate&.full_name || t.user&.email || "-"
             td.px-4.py-3 = l(t.updated_at, format: :short)
 
