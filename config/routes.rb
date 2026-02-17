@@ -99,6 +99,8 @@ Rails.application.routes.draw do
 
   get "guide", to: "guides#show", as: :guide
 
+  post "/admin/bootstrap", to: "admin/bootstrap#create"
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
 
