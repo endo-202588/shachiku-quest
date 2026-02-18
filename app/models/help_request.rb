@@ -2,6 +2,7 @@ class HelpRequest < ApplicationRecord
   belongs_to :task
   belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
   belongs_to :last_helper, class_name: "User", optional: true
+  has_many :help_request_messages, dependent: :destroy
 
   scope :yesterday_or_before, ->(time) { where("help_requests.updated_at < ?", time.beginning_of_day) }
   scope :matched_only, -> { where(status: :matched) }
@@ -101,6 +102,28 @@ class HelpRequest < ApplicationRecord
     # 先に刻印（競合対策）
     update_column(:matched_notified_at, Time.current)
 
-    HelpRequestMailer.matched_notify(id).deliver_later
+    owner = task.user
+    helper = self.helper
+    return if owner.nil? || helper.nil?
+
+    body = "マッチが成立しました。アプリ内で連絡してください。"
+
+    # 依頼主宛
+    HelpRequestMessage.create!(
+      help_request: self,
+      sender: nil,          # システム
+      recipient: owner,
+      message_type: :matched,
+      body: body
+    )
+
+    # ヘルパー宛
+    HelpRequestMessage.create!(
+      help_request: self,
+      sender: nil,          # システム
+      recipient: helper,
+      message_type: :matched,
+      body: body
+    )
   end
 end

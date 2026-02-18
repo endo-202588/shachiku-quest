@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  help_request: one
+  sender: one
+  recipient: one
+  message_type: 1
+  body: MyText
+  read_at: 2026-02-18 04:30:52
+
+two:
+  help_request: two
+  sender: two
+  recipient: two
+  message_type: 1
+  body: MyText
+  read_at: 2026-02-18 04:30:52

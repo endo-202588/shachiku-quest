@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :set_header_help_request
   before_action :set_header_help_magic
   before_action :daily_reset
+  before_action :set_unread_message_count
 
   add_flash_types :success, :danger
 
@@ -36,6 +37,11 @@ class ApplicationController < ActionController::Base
     unless current_user&.manager? || current_user&.admin?
       redirect_to root_path, danger: "権限がありません"
     end
+  end
+
+  def set_unread_message_count
+    return unless current_user
+    @unread_message_count = current_user.received_help_request_messages.unread.count
   end
 
   def daily_reset

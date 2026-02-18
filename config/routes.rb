@@ -99,6 +99,8 @@ Rails.application.routes.draw do
 
   get "guide", to: "guides#show", as: :guide
 
+  resources :messages, only: [:index, :show]
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
 

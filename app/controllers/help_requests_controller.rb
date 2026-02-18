@@ -27,7 +27,7 @@ class HelpRequestsController < ApplicationController
     end
 
     if @help_request.completed_notified_at.present? && @help_request.completed_read_at.nil?
-      @help_request.update!(completed_read_at: Time.current)
+      @help_request.update_column(:completed_read_at, Time.current)
     end
 
     @help_request_decorated = @help_request.decorate
@@ -112,7 +112,17 @@ class HelpRequestsController < ApplicationController
         end
 
         # transaction 成功後に送る
-        HelpRequestMailer.owner_thanks(@help_request.id).deliver_later
+        helper = @help_request.helper
+
+        if helper
+          HelpRequestMessage.create!(
+            help_request: @help_request,
+            sender: current_user,     # 依頼主（ステータスを完了にした人）
+            recipient: helper,        # ヘルパー
+            message_type: :thanks,
+            body: "ありがとうございました！徳ポイントを付与しました。"
+          )
+        end
 
         redirect_to task_path(@help_request.task), success: 'ステータスを更新しました'
         return
@@ -204,7 +214,16 @@ class HelpRequestsController < ApplicationController
 
     # ここで helper_message と notified_at を同時に保存
     if @help_request.update(complete_notify_params.merge(completed_notified_at: Time.current))
-      HelpRequestMailer.completed_notify(@help_request.id).deliver_later
+      owner = @help_request.task.user
+
+      HelpRequestMessage.create(
+        help_request: @help_request,
+        sender: current_user,          # ヘルパー（完了通知を押した人）
+        recipient: owner,              # 依頼主
+        message_type: :completed,
+        body: (@help_request.helper_message.presence || "完了しました。ご確認ください。")
+      )
+
       redirect_to help_requests_tasks_path, success: '完了を通知しました！'
     else
       flash.now[:danger] = @help_request.errors.full_messages.join(', ')

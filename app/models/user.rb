@@ -14,6 +14,15 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many :user_personality_tags, dependent: :destroy
   has_many :personality_tags, through: :user_personality_tags
+  has_many :sent_help_request_messages,
+  class_name: "HelpRequestMessage",
+  foreign_key: :sender_id,
+  dependent: :nullify
+
+  has_many :received_help_request_messages,
+    class_name: "HelpRequestMessage",
+    foreign_key: :recipient_id,
+    dependent: :destroy
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_14_160702) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_18_043052) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,6 +58,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_14_160702) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "available_date"], name: "index_help_magics_on_user_id_and_available_date"
     t.index ["user_id"], name: "index_help_magics_on_user_id"
+  end
+
+  create_table "help_request_messages", force: :cascade do |t|
+    t.bigint "help_request_id", null: false
+    t.bigint "sender_id"
+    t.bigint "recipient_id", null: false
+    t.integer "message_type", null: false
+    t.text "body", null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["help_request_id", "created_at"], name: "index_help_request_messages_on_help_request_id_and_created_at"
+    t.index ["help_request_id"], name: "index_help_request_messages_on_help_request_id"
+    t.index ["recipient_id", "read_at"], name: "index_help_request_messages_on_recipient_id_and_read_at"
+    t.index ["recipient_id"], name: "index_help_request_messages_on_recipient_id"
+    t.index ["sender_id"], name: "index_help_request_messages_on_sender_id"
   end
 
   create_table "help_requests", force: :cascade do |t|
@@ -154,6 +170,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_14_160702) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "help_magics", "users"
+  add_foreign_key "help_request_messages", "help_requests"
+  add_foreign_key "help_request_messages", "users", column: "recipient_id"
+  add_foreign_key "help_request_messages", "users", column: "sender_id"
   add_foreign_key "help_requests", "tasks"
   add_foreign_key "help_requests", "users", column: "helper_id"
   add_foreign_key "statuses", "users"

@@ -27,10 +27,17 @@ class HelpRequestDecorator < Draper::Decorator
     object.helper.decorate.full_name
   end
 
-  def helper_message
-    return h.content_tag(:span, 'なし', class: 'text-gray-400') unless object.helper_message.present?
+  def message_or_none(value)
+    return h.content_tag(:span, 'なし', class: 'text-gray-400') unless value.present?
+    h.simple_format(h.h(value))
+  end
 
-    object&.helper_message
+  def request_message
+    message_or_none(object.request_message)
+  end
+
+  def helper_message
+    message_or_none(object.helper_message)
   end
 
   # ステータス変更ボタン（タスク所有者のみ）

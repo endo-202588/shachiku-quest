@@ -9,5 +9,5 @@
     = render "shared/label_value_row", label: "必要な時間", value: hr.required_time_display
     = render "shared/label_value_row", label: "付与される徳", value: hr.virtue_points
     = render "shared/label_value_row", label: "ヘルパー", value: hr.helper_name
-    = render "shared/label_value_row", label: "ヘルパーへのメッセージ", value: (hr.request_message.presence || "—")
-    = render "shared/label_value_row", label: "完了メッセージ", value: (hr.helper_message.presence || "—")
+    = render "shared/label_value_row", label: "ヘルパーへのメッセージ", value: hr.request_message
+    = render "shared/label_value_row", label: "完了メッセージ", value: hr.helper_message
