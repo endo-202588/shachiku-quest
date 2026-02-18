@@ -19,8 +19,6 @@ class MessagesController < ApplicationController
       redirect_to messages_path, danger: "このメッセージの詳細を表示する権限がありません"
       return
     end
-
-    redirect_to help_request_path(hr)
   end
 
   def create
