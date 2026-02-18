@@ -1,0 +1,18 @@
+- conversation = help_request.conversation || help_request.create_conversation!
+- messages = conversation.messages.includes(:sender).order(:created_at)
+- message  ||= conversation.messages.new
+
+- messages_dom_id = "chat_messages_help_request_#{help_request.id}"
+- empty_dom_id    = "chat_empty_help_request_#{help_request.id}"
+- form_dom_id     = "chat_form_help_request_#{help_request.id}"
+
+div id=messages_dom_id class="max-h-80 overflow-y-auto pr-2" data-controller="chat-scroll"
+  - if messages.empty?
+    div id=empty_dom_id class="bg-white rounded-lg shadow p-6"
+      p class="text-gray-600" まだメッセージはありません。
+  - else
+    - messages.each do |msg|
+      = render partial: "messages/message", locals: { message: msg }
+
+div id=form_dom_id class="mt-4"
+  = render "messages/form", help_request: help_request, message: message, form_dom_id: form_dom_id

@@ -1,23 +1,22 @@
-class HelpRequestMessagesController < ApplicationController
+class HelpRequestChatsController < ApplicationController
   before_action :require_login
-
-  before_action :set_help_request, only: [:create]
-  before_action :authorize_conversation_member!, only: [:create]
+  before_action :set_help_request
+  before_action :authorize_conversation_member!
 
   def index
-    @messages = current_user
-      .received_help_request_messages
-      .includes(help_request: :task, sender: {})
-      .order(created_at: :desc)
+    conversation = @help_request.conversation || @help_request.create_conversation!
+    @messages = conversation.messages.includes(:sender).order(:created_at)
+    @message  = conversation.messages.new # フォーム用
   end
 
+  # show を使わず index に寄せてもOK（好み）
   def show
-    @message = current_user
-      .received_help_request_messages
-      .includes(help_request: :task, sender: {})
-      .find(params[:id])
+    conversation = @help_request.conversation || @help_request.create_conversation!
+    @messages = conversation.messages.includes(:sender).order(:created_at)
 
-    @message.read!
+    @shown_message = conversation.messages.find(params[:id])
+    @shown_message.read! if @shown_message.respond_to?(:read!)
+    @message = conversation.messages.new
   end
 
   def create
@@ -28,9 +27,11 @@ class HelpRequestMessagesController < ApplicationController
     @message.message_type = :user
 
     if @message.save
+      @new_message = conversation.messages.new
+
       respond_to do |format|
         format.turbo_stream
-        format.html { redirect_to help_request_path(@help_request), success: "送信しました" }
+        format.html { redirect_to help_request_help_request_chats_path(@help_request), success: "送信しました" }
       end
     else
       respond_to do |format|
@@ -42,7 +43,7 @@ class HelpRequestMessagesController < ApplicationController
             locals: { help_request: @help_request, message: @message }
           )
         end
-        format.html { redirect_to help_request_path(@help_request), danger: @message.errors.full_messages.join(", ") }
+        format.html { redirect_to help_request_help_request_chats_path(@help_request), danger: @message.errors.full_messages.join(", ") }
       end
     end
   end

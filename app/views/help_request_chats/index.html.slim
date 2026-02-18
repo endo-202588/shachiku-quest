@@ -1,0 +1,21 @@
+- messages_dom_id = "chat_messages_help_request_#{@help_request.id}"
+- empty_dom_id    = "chat_empty_help_request_#{@help_request.id}"
+- form_dom_id     = "chat_form_help_request_#{@help_request.id}"
+
+.container.max-w-3xl.mx-auto.px-4.py-6
+  h1.text-2xl.font-bold.mb-2 チャット
+
+  - if @help_request.completed? || @help_request.cancelled?
+    .mb-4.text-xs.text-gray-500
+      | このヘルプ要請はすでにクローズしています
+
+  div id=messages_dom_id class="max-h-200 overflow-y-auto pr-2" data-controller="chat-scroll"
+    - if @messages.empty?
+      div id=empty_dom_id class="bg-white rounded-lg shadow p-6"
+        p class="text-gray-600" メッセージはまだありません。
+    - else
+      - @messages.each do |message|
+        = render partial: "messages/message", locals: { message: message }
+
+  div id=form_dom_id class="mt-4"
+    = render "messages/form", help_request: @help_request, message: @message, form_dom_id: form_dom_id

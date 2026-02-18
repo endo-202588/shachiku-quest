@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
 
   def set_unread_message_count
     return unless current_user
-    @unread_message_count = current_user.received_help_request_messages.unread.count
+    @unread_message_count = current_user.received_help_request_chats.unread.count
   end
 
   def daily_reset

@@ -1,7 +1,7 @@
-module HelpRequestMessages
+module HelpRequestChat
   class CreateService
     def self.call!(help_request:, recipient:, message_type:, body:, sender: nil)
-      HelpRequestMessage.create!(
+      HelpRequestChat.create!(
         help_request: help_request,
         recipient: recipient,
         sender: sender,

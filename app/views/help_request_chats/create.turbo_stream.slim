@@ -8,4 +8,7 @@
   = render partial: "messages/message", locals: { message: @message }
 
 = turbo_stream.replace form_dom_id do
-  = render "help_request_chats/form", help_request: @help_request, message: Message.new
+  = render "messages/form",
+      help_request: @help_request,
+      message: @new_message,
+      form_dom_id: form_dom_id

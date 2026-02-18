@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       post :complete_notify
     end
 
-    resources :help_request_messages, only: [:create]
+    resources :help_request_chats, only: [:index, :create, :show]
   end
 
   resource :help_magic, only: %i[new create edit update destroy]
@@ -101,7 +101,6 @@ Rails.application.routes.draw do
 
   get "guide", to: "guides#show", as: :guide
 
-  resources :help_request_messages, only: [:index, :show]
   resources :messages, only: [:index, :show]
 
   if Rails.env.development?
