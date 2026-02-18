@@ -1,0 +1,12 @@
+/ app/views/messages/create.turbo_stream.slim
+
+/ 「まだメッセージはありません」表示があれば消す
+= turbo_stream.remove "chat_empty"
+
+/ メッセージを末尾に追加
+= turbo_stream.append "chat_messages" do
+  = render "messages/message", message: @message
+
+/ フォームを空に戻す
+= turbo_stream.replace "chat_form" do
+  = render "messages/form", help_request: @help_request, message: Message.new

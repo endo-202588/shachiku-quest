@@ -1,0 +1,10 @@
+.p-3.rounded.border id=("message_#{message.id}")
+  .text-xs.text-gray-500.mb-1
+    - if message.system?
+      | システム
+    - else
+      = message.sender&.decorate&.full_name || message.sender&.name || "ユーザー"
+    |  ・
+    = message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+
+  .whitespace-pre-wrap = message.body

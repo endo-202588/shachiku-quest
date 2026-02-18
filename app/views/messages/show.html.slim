@@ -1,0 +1,27 @@
+.container.max-w-2xl.mx-auto.px-4.py-6
+  h1.text-xl.font-bold.mb-4 メッセージ詳細
+
+  .bg-white.rounded-lg.shadow.p-6.space-y-4
+    .text-sm.text-gray-500
+      = l(@message.created_at, format: :long)
+
+    .text-base.text-gray-800.whitespace-pre-wrap
+      = @message.body
+
+    - hr = @message.help_request
+    - if hr
+      - owner = hr.task&.user_id == current_user.id
+      - helper_can = hr.matched? && hr.helper_id == current_user.id
+
+      - if owner || helper_can
+        = link_to "関連タスクを見る",
+                  help_request_path(hr),
+                  class: "inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+      - else
+        .text-sm.text-gray-400.mt-4
+          | この依頼はすでにクローズしています
+
+      .mt-6.text-center
+        = link_to "一覧へ戻る",
+                  messages_path,
+                  class: "text-sm text-gray-500 hover:underline"
