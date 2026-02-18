@@ -10,7 +10,7 @@
       | この画面ではチャットを表示できません。
   - else
     / メッセージ一覧
-    #chat_messages.space-y-2.mb-4
+    #chat_messages.space-y-2.mb-4.max-h-80.overflow-y-auto.pr-4 data-controller="chat-scroll"
       - if messages.present?
         - messages.each do |m|
           = render "messages/message", message: m

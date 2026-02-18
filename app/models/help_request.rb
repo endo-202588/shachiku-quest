@@ -3,6 +3,7 @@ class HelpRequest < ApplicationRecord
   belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
   belongs_to :last_helper, class_name: "User", optional: true
   has_many :help_request_messages, dependent: :destroy
+  has_one :conversation, dependent: :destroy
 
   scope :yesterday_or_before, ->(time) { where("help_requests.updated_at < ?", time.beginning_of_day) }
   scope :matched_only, -> { where(status: :matched) }

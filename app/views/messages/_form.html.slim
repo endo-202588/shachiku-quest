@@ -1,5 +1,5 @@
 #chat_form
-  = form_with model: [help_request, message], url: help_request_messages_path(help_request), method: :post do |f|
+  = form_with model: [help_request, message], url: help_request_help_request_messages_path(help_request) do |f|
     .space-y-2
       = f.text_area :body, rows: 3, required: true, class: "w-full rounded border-gray-300", autofocus: true
       = f.submit "送信", class: "px-4 py-2 bg-sky-700 hover:bg-sky-600 text-white rounded"

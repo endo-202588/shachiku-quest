@@ -1,10 +1,17 @@
-.p-3.rounded.border id=("message_#{message.id}")
-  .text-xs.text-gray-500.mb-1
-    - if message.system?
-      | システム
-    - else
-      = message.sender&.decorate&.full_name || message.sender&.name || "ユーザー"
-    |  ・
-    = message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+- mine = (message.sender_id == current_user.id)
 
-  .whitespace-pre-wrap = message.body
+.flex.mb-4 class=(mine ? "justify-end" : "justify-start")
+  .max-w-xl
+    .text-xs.text-gray-500.mb-1 class=(mine ? "text-right" : "text-left")
+      - if message.system?
+        | システム
+      - else
+        = message.sender&.decorate&.full_name || message.sender&.name || "ユーザー"
+      | ・
+      = message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+
+    .px-4.py-3.rounded-2xl.shadow-sm.break-words.whitespace-pre-wrap(
+      id="message_#{message.id}"
+      class=(mine ? "bg-sky-600 text-white" : "bg-gray-100 text-gray-900")
+    )
+      = message.body
