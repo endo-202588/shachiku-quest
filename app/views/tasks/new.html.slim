@@ -49,14 +49,6 @@
                   option value="long_time" 2時間以上
 
               .flex.flex-col.hidden
-                label.text-sm.font-medium.text-gray-700.mb-1 ヘルパーへのメッセージ(任意)
-                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][request_message]" rows="3" placeholder="例: 簡単です / とても困ってます…助けてください！"
-
-              .flex.flex-col
-                label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
-                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
-
-              .flex.flex-col.hidden
                 label.text-sm.font-medium.text-gray-700.mb-1 付与ポイント
                 select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][virtue_points]"
                   option value="" 選択してください
@@ -65,6 +57,14 @@
                   option value="30" 30
                   option value="40" 40
                   option value="50" 50
+
+              .flex.flex-col.hidden
+                label.text-sm.font-medium.text-gray-700.mb-1 ヘルパーへのメッセージ(任意)
+                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][request_message]" rows="3" placeholder="例: 簡単です / とても困ってます…助けてください！"
+
+              .flex.flex-col
+                label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
+                textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
 
               .text-right
                 button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ▶ 削除
@@ -100,6 +100,16 @@
             option value="two_hours" 2時間
             option value="long_time" 2時間以上
 
+          .flex.flex-col.hidden
+            label.text-sm.font-medium.text-gray-700.mb-1 付与ポイント
+            select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][virtue_points]"
+              option value="" 選択してください
+              option value="10" 10
+              option value="20" 20
+              option value="30" 30
+              option value="40" 40
+              option value="50" 50
+
         .flex.flex-col.hidden
           label.text-sm.font-medium.text-gray-700.mb-1 ヘルパーへのメッセージ(任意)
           textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][request_message]" rows="3" placeholder="例: 簡単です / とても困ってます…助けてください！"
@@ -107,16 +117,6 @@
         .flex.flex-col
           label.text-sm.font-medium.text-gray-700.mb-1 内容(任意)
           textarea.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][description]" rows="3" placeholder="タスクの詳細を入力(任意)"
-
-        .flex.flex-col.hidden
-          label.text-sm.font-medium.text-gray-700.mb-1 付与ポイント
-          select.px-4.py-2.border.border-gray-300.rounded-lg.focus:ring-2.focus:ring-purple-500.focus:border-transparent name="tasks[][virtue_points]"
-            option value="" 選択してください
-            option value="10" 10
-            option value="20" 20
-            option value="30" 30
-            option value="40" 40
-            option value="50" 50
 
         .text-right
           button.bg-red-500.text-white.px-3.py-2.rounded-lg.hover:bg-red-600.transition type="button" data-action="click->task-fields#remove" ▶ 削除
