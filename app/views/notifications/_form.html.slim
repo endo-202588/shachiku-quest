@@ -1,8 +1,0 @@
-- form_dom_id ||= "chat_form_help_request_#{help_request.id}"
-
-div id=form_dom_id
-  = form_with model: message,
-      url: help_request_notifications_path(help_request),
-      data: { turbo_stream: true } do |f|
-    = f.text_area :body, class: "w-full rounded-md border border-gray-300 px-3 py-2"
-    = f.submit "送信", class: "mt-2 inline-flex items-center rounded-md bg-sky-700 px-4 py-2 text-white font-bold hover:bg-sky-600"

@@ -15,12 +15,19 @@ class TasksController < ApplicationController
     @task = @task.decorate
     @help_request = @task.help_request&.decorate
 
+    # ✅ 未読の既読処理（条件はそのままでOK）
     if @help_request.present? &&
       @task.user_id == current_user&.id &&
       @help_request.completed_notified_at.present? &&
       @help_request.completed_read_at.nil?
-
       @help_request.update_column(:completed_read_at, Time.current)
+    end
+
+    # ✅ チャット表示用のデータは「help_request があれば常に」用意する
+    if @help_request.present?
+      conversation = @help_request.conversation || @help_request.create_conversation!
+      @chat_messages = conversation.messages.includes(:sender).order(:created_at)
+      @chat_message  = conversation.messages.new
     end
   end
 

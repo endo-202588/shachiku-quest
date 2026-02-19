@@ -26,9 +26,9 @@ class HelpRequestsController < ApplicationController
       return
     end
 
-    conversation = @help_request.conversation
-    @messages = conversation ? conversation.messages.includes(:sender).order(:created_at) : []
-    @new_message = Message.new
+    conversation = @help_request.conversation || @help_request.create_conversation!
+    @chat_messages = conversation.messages.includes(:sender).order(:created_at)
+    @chat_message  = conversation.messages.new
 
     if @help_request.completed_notified_at.present? && @help_request.completed_read_at.nil?
       @help_request.update_column(:completed_read_at, Time.current)
