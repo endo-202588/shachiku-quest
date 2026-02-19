@@ -1,4 +1,4 @@
-module Notification
+module Notifications
   class CreateService
     def self.call!(help_request:, recipient:, message_type:, body:, sender: nil)
       Notification.create!(
