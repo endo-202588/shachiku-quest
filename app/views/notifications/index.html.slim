@@ -9,7 +9,7 @@
       - @messages.each do |m|
         - unread = m.read_at.nil?
 
-        = link_to message_path(m), class: "block bg-white rounded-lg shadow p-4 border #{unread ? 'border-blue-500' : 'border-transparent'} hover:shadow-md transition" do
+        = link_to notification_path(m), class: "block bg-white rounded-lg shadow p-4 border #{unread ? 'border-blue-500' : 'border-transparent'} hover:shadow-md transition" do
           .flex.items-center.justify-between.gap-3
             .font-semibold class=(unread ? "text-gray-900" : "text-gray-700")
               = m.message_type_label

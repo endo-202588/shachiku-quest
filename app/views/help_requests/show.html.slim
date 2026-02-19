@@ -44,7 +44,7 @@
             span.text-sm.text-gray-600 ヘルパー:
             = @help_request_decorated.helper_name
 
-          = render "help_request_chats/thread", help_request: @help_request
+          = render "chats/thread", help_request: @help_request
 
       / ▼ここが今回の主役：ヘルパーがmatched中なら「完了通知」
       - if @help_request_decorated.matched? && @help_request_decorated.helper_id == current_user&.id

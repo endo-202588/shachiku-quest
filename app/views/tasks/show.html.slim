@@ -33,7 +33,7 @@
       - if @task.help_request? && @help_request.present? && @help_request.matched?
         .mt-4
           = link_to "チャットを見る",
-              help_request_help_request_chats_path(@help_request),
+              help_request_notifications_path(@help_request),
               class: "inline-flex items-center rounded-md bg-sky-700 px-4 py-2 text-white font-bold hover:bg-sky-600 transition"
 
       / ステータス変更ボタン

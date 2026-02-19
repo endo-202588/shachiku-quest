@@ -1,22 +1,22 @@
-class MessagesController < ApplicationController
+class NotificationsController < ApplicationController
   before_action :require_login
 
   def index
     @messages = current_user
-      .received_help_request_chats
+      .received_notifications
       .includes(:help_request, :sender)
       .order(created_at: :desc)
   end
 
   def show
-    @message = current_user.received_help_request_chats.find(params[:id])
+    @message = current_user.received_notifications.find(params[:id])
     @message.read!
 
     hr = @message.help_request
     me = current_user.id
 
     unless hr && (hr.task.user_id == me || hr.helper_id == me)
-      redirect_to messages_path, danger: "このメッセージの詳細を表示する権限がありません"
+      redirect_to notifications_path, danger: "このメッセージの詳細を表示する権限がありません"
       return
     end
   end

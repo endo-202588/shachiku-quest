@@ -2,7 +2,7 @@ class HelpRequest < ApplicationRecord
   belongs_to :task
   belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
   belongs_to :last_helper, class_name: "User", optional: true
-  has_many :help_request_chats, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_one :conversation, dependent: :destroy
 
   scope :yesterday_or_before, ->(time) { where("help_requests.updated_at < ?", time.beginning_of_day) }
@@ -110,7 +110,7 @@ class HelpRequest < ApplicationRecord
     body = "マッチが成立しました。アプリ内で連絡してください。"
 
     # 依頼主宛
-    HelpRequestChat.create!(
+    Notification.create!(
       help_request: self,
       sender: nil,          # システム
       recipient: owner,
@@ -119,7 +119,7 @@ class HelpRequest < ApplicationRecord
     )
 
     # ヘルパー宛
-    HelpRequestChat.create!(
+    Notification.create!(
       help_request: self,
       sender: nil,          # システム
       recipient: helper,

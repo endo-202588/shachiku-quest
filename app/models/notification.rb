@@ -1,4 +1,4 @@
-class HelpRequestChat < ApplicationRecord
+class Notification < ApplicationRecord
   belongs_to :help_request
   belongs_to :sender, class_name: "User", optional: true
   belongs_to :recipient, class_name: "User"

@@ -119,7 +119,7 @@ class HelpRequestsController < ApplicationController
         helper = @help_request.helper
 
         if helper
-          HelpRequestChat.create!(
+          Notification.create!(
             help_request: @help_request,
             sender: current_user,     # 依頼主（ステータスを完了にした人）
             recipient: helper,        # ヘルパー
@@ -220,7 +220,7 @@ class HelpRequestsController < ApplicationController
     if @help_request.update(complete_notify_params.merge(completed_notified_at: Time.current))
       owner = @help_request.task.user
 
-      HelpRequestChat.create(
+      Notification.create(
         help_request: @help_request,
         sender: current_user,          # ヘルパー（完了通知を押した人）
         recipient: owner,              # 依頼主
