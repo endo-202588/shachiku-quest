@@ -1,11 +1,10 @@
 class NotificationsController < ApplicationController
-  before_action :require_login
-
   def index
     @messages = current_user
       .received_notifications
       .includes(:help_request, :sender)
       .order(created_at: :desc)
+      .page(params[:page]).per(15)
   end
 
   def show
@@ -16,7 +15,7 @@ class NotificationsController < ApplicationController
     me = current_user.id
 
     unless hr && (hr.task.user_id == me || hr.helper_id == me)
-      redirect_to notifications_path, danger: "このメッセージの詳細を表示する権限がありません"
+      redirect_to notifications_path, danger: "すでにクローズされました"
       return
     end
   end

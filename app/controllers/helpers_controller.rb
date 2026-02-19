@@ -10,6 +10,11 @@ class HelpersController < ApplicationController
     @help_request_decorated = @help_request.decorate
     @task = @help_request.task.decorate
 
+    # ✅ ここを追加（チャット表示用）
+    conversation = @help_request.conversation || @help_request.create_conversation!
+    @chat_messages = conversation.messages.includes(:sender).order(:created_at)
+    @chat_message  = conversation.messages.new
+
     render 'help_requests/show'
   end
 

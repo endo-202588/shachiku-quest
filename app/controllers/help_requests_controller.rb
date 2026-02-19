@@ -93,6 +93,8 @@ class HelpRequestsController < ApplicationController
         @help_request.transaction do
           @help_request.update!(status: :completed)
 
+          @help_request.conversation&.destroy!
+
           helper = @help_request.helper
           raise ActiveRecord::RecordInvalid.new(@help_request) if helper.nil?
 
