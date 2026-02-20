@@ -1,4 +1,4 @@
-- if logged_in? && !(controller_name == "users" && action_name == "index") && !(controller_name == "dashboard" && action_name == "show")
+- if logged_in? && !hide_footer_nav?
   .container.mx-auto.px-4
     .flex.items-center.justify-center.gap-6.text-m.font-semibold.text-gray-700
       = link_to "▶ 勇者一覧へ", users_path, class: "hover:underline"
