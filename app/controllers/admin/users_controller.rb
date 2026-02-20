@@ -84,7 +84,26 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :department, :email, :role, :total_virtue_points)
+    # まずは安全な項目だけ strong parameters で許可
+    permitted = params.require(:user).permit(
+      :first_name,
+      :last_name,
+      :department,
+      :email
+    )
+
+    # 管理者だけが役割と徳ポイントを更新できるようにする
+    if current_user&.admin?
+      if params[:user].key?(:role)
+        permitted[:role] = params[:user][:role]
+      end
+
+      if params[:user].key?(:total_virtue_points)
+        permitted[:total_virtue_points] = params[:user][:total_virtue_points]
+      end
+    end
+
+    permitted
   end
 
   def password_params
