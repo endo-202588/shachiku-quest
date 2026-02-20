@@ -1,16 +1,21 @@
 class HelpersController < ApplicationController
   def helping
-    return redirect_to help_requests_tasks_path, danger: 'ヘルパーではありません' unless current_user&.helper?
+    return redirect_to help_requests_tasks_path, danger: "ヘルパーではありません" unless current_user&.helper?
 
     @help_request =
       HelpRequest.includes(task: :user).find_by(helper_id: current_user.id, status: :matched)
 
-    return redirect_to help_requests_tasks_path, danger: '現在ヘルプ中のタスクはありません' unless @help_request
+    return redirect_to help_requests_tasks_path, danger: "現在ヘルプ中のタスクはありません" unless @help_request
 
     @help_request_decorated = @help_request.decorate
     @task = @help_request.task.decorate
 
-    render 'help_requests/show'
+    # ✅ ここを追加（チャット表示用）
+    conversation = @help_request.conversation || @help_request.create_conversation!
+    @chat_messages = conversation.messages.includes(:sender).order(:created_at)
+    @chat_message  = conversation.messages.new
+
+    render "help_requests/show"
   end
 
   def select_task

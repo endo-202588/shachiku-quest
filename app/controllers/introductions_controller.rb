@@ -1,8 +1,8 @@
 class IntroductionsController < ApplicationController
   before_action :require_login
   before_action :set_user
-  before_action :ensure_self!,  only: [:edit, :update]
-  before_action :require_kana!, only: [:edit, :update]
+  before_action :ensure_self!,  only: [ :edit, :update ]
+  before_action :require_kana!, only: [ :edit, :update ]
 
   def show
     @user = User.find(params[:id]).decorate

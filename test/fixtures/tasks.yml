@@ -5,11 +5,9 @@ one:
   title: MyString
   description: MyText
   status: 1
-  required_time: 1
 
 two:
   user: two
   title: MyString
   description: MyText
   status: 1
-  required_time: 1

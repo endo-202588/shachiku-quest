@@ -8,13 +8,13 @@ class Admin::PersonalityTagsController < Admin::BaseController
   def new
     @personality_tag = PersonalityTag.new
   end
-  
+
   def create
     @personality_tag = PersonalityTag.new(personality_tag_params)
     if @personality_tag.save
-      redirect_to admin_personality_tags_path, success: 'タグの登録が完了しました'
+      redirect_to admin_personality_tags_path, success: "タグの登録が完了しました"
     else
-      flash.now[:danger] = 'タグの登録に失敗しました'
+      flash.now[:danger] = "タグの登録に失敗しました"
       render :new, status: :unprocessable_entity
     end
   end

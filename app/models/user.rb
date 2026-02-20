@@ -3,17 +3,26 @@ class User < ApplicationRecord
 
   has_many :statuses, dependent: :destroy
   has_many :tasks, dependent: :destroy
-  has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
-  has_many :help_request_tasks, -> { where(status: 'help_request') }, class_name: 'Task'
+  has_many :in_progress_tasks, -> { where(status: "in_progress") }, class_name: "Task"
+  has_many :help_request_tasks, -> { where(status: "help_request") }, class_name: "Task"
   has_one :help_magic, dependent: :destroy
   has_many :received_help_requests,
-         class_name: 'HelpRequest',
-         foreign_key: 'helper_id',
+         class_name: "HelpRequest",
+         foreign_key: "helper_id",
          dependent: :nullify
   has_many :help_requests, through: :tasks
   has_one_attached :avatar
   has_many :user_personality_tags, dependent: :destroy
   has_many :personality_tags, through: :user_personality_tags
+  has_many :sent_notifications,
+  class_name: "Notification",
+  foreign_key: :sender_id,
+  dependent: :nullify
+
+  has_many :received_notifications,
+    class_name: "Notification",
+    foreign_key: :recipient_id,
+    dependent: :destroy
 
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }

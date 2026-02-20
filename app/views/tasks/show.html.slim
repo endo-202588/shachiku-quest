@@ -30,6 +30,13 @@
       - if @task.help_request?
         = render "help_request_detail", task: @task, help_request: @help_request
 
+      - if @task.help_request? && @help_request.present? && @help_request.matched?
+        .mt-4
+          = render "chats/thread",
+              help_request: @help_request,
+              messages: @chat_messages,
+              message: @chat_message
+
       / ステータス変更ボタン
       - if @task.help_request? && @help_request.present? && @task.user_id == current_user&.id && !@help_request.open?
         .mt-4.space-y-2

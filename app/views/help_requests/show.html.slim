@@ -44,6 +44,12 @@
             span.text-sm.text-gray-600 ヘルパー:
             = @help_request_decorated.helper_name
 
+          - if @help_request.matched?
+            = render "chats/thread",
+                help_request: @help_request,
+                messages: @chat_messages,
+                message: @chat_message
+
       / ▼ここが今回の主役：ヘルパーがmatched中なら「完了通知」
       - if @help_request_decorated.matched? && @help_request_decorated.helper_id == current_user&.id
         .mt-6.pt-4.border-t
@@ -67,6 +73,6 @@
                 = f.submit 'クローズする', class: 'px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm'
               = form_with url: update_status_help_request_path(@help_request_decorated, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
                 = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'
-          - when 'closed'
+          - when 'completed'
             = form_with url: update_status_help_request_path(@help_request_decorated, status: :open), method: :patch, local: true, data: { turbo: false } do |f|
               = f.submit 'オープンに戻す', class: 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm'

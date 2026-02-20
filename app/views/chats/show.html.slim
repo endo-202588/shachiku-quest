@@ -1,0 +1,33 @@
+- hr = @message.help_request
+- owner = hr && (hr.task.user_id == current_user.id)
+- helper_can = hr && (hr.helper_id.present? && hr.helper_id == current_user.id)
+
+.container.max-w-2xl.mx-auto.px-4.py-8
+  h1.text-xl.font-bold 通知詳細
+
+  .bg-white.rounded-lg.shadow.p-6.mt-4
+    .text-xs.text-gray-500
+      = @message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+
+    .mt-2.font-bold.text-gray-900
+      = @message.message_type_label
+
+    .mt-4.text-gray-800.whitespace-pre-wrap
+      = @message.body
+
+    - if hr
+      - if owner || helper_can
+        = link_to "関連タスクを見る",
+                  help_request_path(hr),
+                  class: "inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500"
+      - else
+        .text-sm.text-gray-400.mt-4
+          | この依頼はすでにクローズしています
+    - else
+      .text-sm.text-gray-400.mt-4
+        | 関連する依頼が見つかりませんでした
+
+    .mt-6.text-center
+      = link_to "一覧へ戻る",
+                help_request_notifications_path,
+                class: "text-sm text-gray-500 hover:underline"

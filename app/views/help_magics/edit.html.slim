@@ -20,7 +20,5 @@
           class: "block w-full rounded-md border-gray-300 shadow-sm"
 
       .flex.justify-end.gap-2.pt-2
-        = link_to "キャンセル",
-          (params[:return_to].presence || dashboard_path),
-          class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+        = link_to "キャンセル", safe_return_path(dashboard_path), class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
         = f.submit "更新する", class: "px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"

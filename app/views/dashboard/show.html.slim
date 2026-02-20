@@ -97,11 +97,15 @@
 
             .text-sm.text-gray-600.flex.flex-wrap.items-center.gap-2
               span.text-gray-500 ヘルプ要請ステータス：
-              == @helping_request.decorate.status_badge
+              = sanitize(@helping_request.decorate.status_badge,
+                        tags: %w[span div p i],
+                        attributes: %w[class])
 
             .text-sm.text-gray-600.flex.flex-wrap.items-center.gap-2
               span.text-gray-500 必要時間：
-              == task.required_time_with_icon
+              = sanitize(task.required_time_with_icon,
+                        tags: %w[span div p i],
+                        attributes: %w[class])
 
             = link_to "詳細", helping_helpers_path,
               class: "inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"

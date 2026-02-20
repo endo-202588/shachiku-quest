@@ -8,6 +8,6 @@ class CreateHelpMagics < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :help_magics, [:user_id, :available_date]
+    add_index :help_magics, [ :user_id, :available_date ]
   end
 end

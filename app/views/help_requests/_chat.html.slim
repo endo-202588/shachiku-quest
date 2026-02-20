@@ -1,0 +1,21 @@
+- help_request ||= @help_request
+- messages ||= []
+- new_message ||= (@new_message || Message.new)
+
+.mt-6.bg-white.rounded-lg.shadow.p-4
+  h2.text-lg.font-bold.mb-3 連絡チャット
+
+  - if help_request.nil?
+    .text-gray-500
+      | この画面ではチャットを表示できません。
+  - else
+    / メッセージ一覧
+    #chat_messages.space-y-2.mb-4.max-h-80.overflow-y-auto.pr-4 data-controller="chat-scroll"
+      - if messages.present?
+        - messages.each do |m|
+          = render "messages/message", message: m
+      - else
+        .text-gray-500#chat_empty まだメッセージはありません。
+
+    / 送信フォーム
+    = render "messages/form", help_request: help_request, message: new_message

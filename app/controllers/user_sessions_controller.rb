@@ -16,13 +16,13 @@ class UserSessionsController < ApplicationController
         redirect_to new_status_path
       end
     else
-      flash.now[:danger] = '魔法の鍵が合いません...メールアドレスかパスワードが間違っています'
+      flash.now[:danger] = "魔法の鍵が合いません...メールアドレスかパスワードが間違っています"
       render :new, status: :unprocessable_entity
     end
   end
 
   def destroy
     logout
-    redirect_to root_path, success: '冒険を終えて帰還しました。またのお越しをお待ちしております!'
+    redirect_to root_path, success: "冒険を終えて帰還しました。またのお越しをお待ちしております!"
   end
 end

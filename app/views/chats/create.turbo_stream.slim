@@ -1,0 +1,14 @@
+- messages_dom_id = "chat_messages_help_request_#{@help_request.id}"
+- empty_dom_id    = "chat_empty_help_request_#{@help_request.id}"
+- form_dom_id     = "chat_form_help_request_#{@help_request.id}"
+
+= turbo_stream.remove empty_dom_id
+
+= turbo_stream.append messages_dom_id do
+  = render partial: "chats/message", locals: { message: @message }
+
+= turbo_stream.replace form_dom_id do
+  = render "chats/form",
+      help_request: @help_request,
+      message: @new_message,
+      form_dom_id: form_dom_id

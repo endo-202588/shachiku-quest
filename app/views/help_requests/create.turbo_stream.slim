@@ -1,0 +1,9 @@
+= turbo_stream.remove "chat_empty"
+
+= turbo_stream.append "chat_messages" do
+  = render partial: "messages/message", locals: { message: @message }
+
+= turbo_stream.replace "chat_form" do
+  = render "messages/form",
+      help_request: @help_request,
+      message: @new_message

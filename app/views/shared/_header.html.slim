@@ -2,7 +2,7 @@ header.bg-sky-700.shadow-lg data-controller="header-menu"
   .container.mx-auto.px-4
     .flex.justify-between.items-center.h-16
       / ロゴ・アプリ名
-      .flex.items-center.gap-3.min-w-0
+      .flex.items-center.gap-3.min-w-0.shrink-0.mr-5
         = link_to users_path, class: 'text-white text-xl font-bold hover:text-indigo-200 transition' do
           | 社畜クエスト
 
@@ -31,6 +31,17 @@ header.bg-sky-700.shadow-lg data-controller="header-menu"
               class: 'inline-flex.items-center gap-2 bg-green-500 hover:bg-green-400 text-white text-sm font-bold px-3 py-1 rounded-full transition' do
               span 🧹
               span ヘルプ中のタスク
+
+          = link_to notifications_path,
+            class: "relative inline-flex items-center gap-1 text-white transition text-sm font-bold pr-6" do
+            svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+              path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
+              path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
+            span メッセージ
+            - if @unread_message_count.to_i > 0
+              span.absolute.-top-2.-right-1.flex.items-center.justify-center.w-6.h-6.rounded-full.bg-red-600.text-white.text-xs.font-bold.leading-tight
+                = (@unread_message_count > 99 ? "99+" : @unread_message_count)
+
 
           / ▼ ダッシュボード
           = link_to dashboard_path,
@@ -105,6 +116,12 @@ header.bg-sky-700.shadow-lg data-controller="header-menu"
       - if @header_help_request.present?
         = link_to helping_helpers_path, class: "block bg-green-500 hover:bg-green-400 text-white font-bold px-4 py-3 rounded-lg transition" do
           | ヘルプ中のタスク
+
+      = link_to notifications_path, class: "flex items-center justify-between text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
+            span メッセージ
+            - if @unread_message_count.to_i > 0
+              span.flex.items-center.justify-center.w-6.h-6.rounded-full.bg-red-600.text-white.text-xs.font-bold.leading-tight
+                = (@unread_message_count > 99 ? "99+" : @unread_message_count)
 
       = link_to dashboard_path, class: "block text-white font-bold px-4 py-3 rounded-lg hover:bg-white/15 transition" do
         | ダッシュボード

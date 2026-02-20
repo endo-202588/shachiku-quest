@@ -21,10 +21,10 @@ gem "rails-i18n", "~> 7.0"
 gem "slim-rails"
 
 # Authentication
-gem 'sorcery', '~> 0.18.0'
+gem "sorcery", "~> 0.18.0"
 
 # Form
-gem 'simple_form'
+gem "simple_form"
 
 # Search
 gem "ransack", ">= 4.1"
@@ -33,8 +33,8 @@ gem "ransack", ">= 4.1"
 gem "image_processing", "~> 1.0"
 
 # Others
-gem 'draper'
-gem 'enum_help', '0.0.19'
+gem "draper"
+gem "enum_help", "0.0.19"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "kaminari"
 
@@ -47,11 +47,12 @@ end
 
 group :development do
   gem "web-console"
-  gem 'letter_opener_web'
-  gem 'whenever', require: false
+  gem "letter_opener_web"
+  gem "whenever", require: false
 end
 
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "minitest", "~> 5.25"
 end

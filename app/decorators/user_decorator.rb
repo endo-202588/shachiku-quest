@@ -3,12 +3,12 @@ class UserDecorator < Draper::Decorator
 
   # ステータスの色定義
   STATUS_COLORS = {
-    'peaceful' => 'bg-green-100 text-green-800',
-    'tired' => 'bg-yellow-100 text-yellow-800',
-    'busy' => 'bg-orange-100 text-orange-800',
-    'very_busy' => 'bg-red-100 text-red-800',
-    'overloaded' => 'bg-purple-100 text-purple-800',
-    'day_off' => 'bg-blue-100 text-blue-800'
+    "peaceful" => "bg-green-100 text-green-800",
+    "tired" => "bg-yellow-100 text-yellow-800",
+    "busy" => "bg-orange-100 text-orange-800",
+    "very_busy" => "bg-red-100 text-red-800",
+    "overloaded" => "bg-purple-100 text-purple-800",
+    "day_off" => "bg-blue-100 text-blue-800"
   }.freeze
 
   # =====================================
@@ -100,7 +100,7 @@ class UserDecorator < Draper::Decorator
   def virtue_rank_badge
     h.content_tag(
       :span,
-      'Lv.' + virtue_rank,
+      "Lv." + virtue_rank,
       class: "text-sm font-bold bg-sky-100 text-sky-800 px-2 py-1 rounded-full"
     )
   end
@@ -151,7 +151,7 @@ class UserDecorator < Draper::Decorator
       <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM464 416C464 441.2 444.6 461.8 420 463.8L420 368.1C444.6 370.1 464 390.8 464 415.9zM340 368L380 368L380 464L340 464L340 368zM260 464L260 368L300 368L300 464L260 464zM220 368.2L220 463.9C195.4 461.9 176 441.2 176 416.1C176 391 195.4 370.3 220 368.3zM208 272C208 254.3 222.3 240 240 240C257.7 240 272 254.3 272 272C272 289.7 257.7 304 240 304C222.3 304 208 289.7 208 272zM400 240C417.7 240 432 254.3 432 272C432 289.7 417.7 304 400 304C382.3 304 368 289.7 368 272C368 254.3 382.3 240 400 240z"/></svg>
     SVG
 
-    day_off: <<~SVG,
+    day_off: <<~SVG
       <svg class="w-5 h-5 inline-block mr-1 align-middle" fill="currentColor" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM229.4 385.9C249.8 413.9 282.8 432 320 432C357.2 432 390.2 413.9 410.6 385.9C418.4 375.2 433.4 372.8 444.1 380.6C454.8 388.4 457.2 403.4 449.4 414.1C420.3 454 373.2 480 320 480C266.8 480 219.7 454 190.6 414.1C182.8 403.4 185.2 388.4 195.9 380.6C206.6 372.8 221.6 375.2 229.4 385.9zM240 244C224.5 244 212 256.5 212 272L212 280C212 291 203 300 192 300C181 300 172 291 172 280L172 272C172 234.4 202.4 204 240 204C277.6 204 308 234.4 308 272L308 280C308 291 299 300 288 300C277 300 268 291 268 280L268 272C268 256.5 255.5 244 240 244zM372 272L372 280C372 291 363 300 352 300C341 300 332 291 332 280L332 272C332 234.4 362.4 204 400 204C437.6 204 468 234.4 468 272L468 280C468 291 459 300 448 300C437 300 428 291 428 280L428 272C428 256.5 415.5 244 400 244C384.5 244 372 256.5 372 272z"/></svg>
     SVG
   }.freeze
@@ -188,7 +188,7 @@ class UserDecorator < Draper::Decorator
     end
   end
 
-    # 編集・リセットボタン(自分のステータスのみ)
+  # 編集・リセットボタン(自分のステータスのみ)
   def status_action_buttons_html(current_user)
     return "" unless current_user == object
 
@@ -206,7 +206,7 @@ class UserDecorator < Draper::Decorator
 
   # 今日のステータスのメモを取得
   def today_status_memo
-    today_status&.memo&.presence || '未設定'
+    today_status&.memo&.presence || "未設定"
   end
 
   # メモが存在するかチェック
@@ -246,7 +246,7 @@ class UserDecorator < Draper::Decorator
     return unless today_status
 
     h.link_to h.edit_status_path(today_status),
-      class: 'text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1' do
+      class: "text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1" do
       h.raw <<~HTML
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -261,9 +261,8 @@ class UserDecorator < Draper::Decorator
 
       h.button_to h.status_path(today_status),
       method: :delete,
-      data: { turbo_method: :delete, turbo_confirm: '本当にリセットしますか?' },
-      class: 'text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1' do
-
+      data: { turbo_method: :delete, turbo_confirm: "本当にリセットしますか?" },
+      class: "text-gray-500 text-sm hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center gap-1" do
       h.raw <<~HTML
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -288,11 +287,11 @@ class UserDecorator < Draper::Decorator
     # HPの割合で色を変える
     text_color = if hp >= 70
                    "text-green-600"
-                 elsif hp >= 40
+    elsif hp >= 40
                    "text-yellow-600"
-                 else
+    else
                    "text-red-600"
-                 end
+    end
 
     h.content_tag(:div, class: "flex items-center gap-2") do
       heart_svg = <<~SVG
@@ -320,11 +319,11 @@ class UserDecorator < Draper::Decorator
     # HPの割合で色を変える
     bar_color = if percentage >= 70
                   "bg-green-500"
-                elsif percentage >= 40
+    elsif percentage >= 40
                   "bg-yellow-500"
-                else
+    else
                   "bg-red-500"
-                end
+    end
 
     <<~HTML.html_safe
       <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mt-2">
@@ -356,14 +355,14 @@ class UserDecorator < Draper::Decorator
     return nil if in_progress_tasks.empty?
 
     h.content_tag :span, "#{in_progress_tasks.size}件",
-      class: 'text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full'
+      class: "text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full"
   end
 
   # 進行中のタスクセクション全体
   def in_progress_tasks_section(current_user)
     return nil if in_progress_tasks.empty?
 
-    h.content_tag :div, class: 'mt-4 pt-4 border-t border-gray-200' do
+    h.content_tag :div, class: "mt-4 pt-4 border-t border-gray-200" do
       h.concat in_progress_tasks_header
       h.concat in_progress_tasks_list(current_user)
     end
@@ -373,9 +372,9 @@ class UserDecorator < Draper::Decorator
   def tasks_index_link
     return nil unless h.current_user == object
 
-    h.content_tag :div, class: 'mt-3' do
-      h.link_to '▶︎ タスク一覧を見る', h.tasks_path,
-        class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
+    h.content_tag :div, class: "mt-3" do
+      h.link_to "▶︎ タスク一覧を見る", h.tasks_path,
+        class: "bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full"
     end
   end
 
@@ -386,8 +385,8 @@ class UserDecorator < Draper::Decorator
   def available_time_with_icon
     return nil unless help_magic&.available_time  # 直接アクセス可能
 
-    h.content_tag :span, class: 'flex items-center gap-1' do
-      h.concat h.content_tag(:span, '⏰')
+    h.content_tag :span, class: "flex items-center gap-1" do
+      h.concat h.content_tag(:span, "⏰")
       h.concat help_magic.available_time_i18n
     end
   end
@@ -448,7 +447,7 @@ class UserDecorator < Draper::Decorator
   end
 
   def in_progress_tasks_header
-    h.content_tag :div, class: 'flex items-center justify-between mb-2' do
+    h.content_tag :div, class: "flex items-center justify-between mb-2" do
       h.concat(
         h.content_tag(:span, class: "flex items-center gap-1 text-sm font-medium text-gray-600") do
           h.raw(task_icon_svg) + " 本日のタスク"
@@ -460,7 +459,7 @@ class UserDecorator < Draper::Decorator
 
   # タスクリスト
   def in_progress_tasks_list(current_user)
-    h.content_tag :ol, class: 'list-decimal list-inside space-y-1 text-sm text-gray-700' do
+    h.content_tag :ol, class: "list-decimal list-inside space-y-1 text-sm text-gray-700" do
       in_progress_tasks.each do |task|
         h.concat task.decorate.list_item_with_actions(current_user, object)
       end

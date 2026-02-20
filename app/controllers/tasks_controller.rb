@@ -1,6 +1,6 @@
 require "set"
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @q = current_user.tasks.ransack(params[:q])
@@ -15,12 +15,19 @@ class TasksController < ApplicationController
     @task = @task.decorate
     @help_request = @task.help_request&.decorate
 
+    # ✅ 未読の既読処理（条件はそのままでOK）
     if @help_request.present? &&
       @task.user_id == current_user&.id &&
       @help_request.completed_notified_at.present? &&
       @help_request.completed_read_at.nil?
-
       @help_request.update_column(:completed_read_at, Time.current)
+    end
+
+    # ✅ チャット表示用のデータは「help_request があれば常に」用意する
+    if @help_request.present?
+      conversation = @help_request.conversation || @help_request.create_conversation!
+      @chat_messages = conversation.messages.includes(:sender).order(:created_at)
+      @chat_message  = conversation.messages.new
     end
   end
 
@@ -33,7 +40,7 @@ class TasksController < ApplicationController
     tasks_attributes = params[:tasks] || []
 
     if tasks_attributes.empty?
-      redirect_to new_task_path, danger: 'タスクが入力されていません'
+      redirect_to new_task_path, danger: "タスクが入力されていません"
       return
     end
 
@@ -52,7 +59,7 @@ class TasksController < ApplicationController
 
     @helpers = User.includes(:help_magic)
                   .joins(:help_magic)
-                  .where('help_magics.available_date >= ?', Date.today)
+                  .where("help_magics.available_date >= ?", Date.today)
                   .distinct
                   .order(:last_name, :first_name)
 
@@ -108,7 +115,7 @@ class TasksController < ApplicationController
     @helper = helper.decorate
 
     if @task.user_id == helper.id
-      redirect_to select_task_helper_path(@helper), danger: '自分のタスクに自分を仲間として追加できません'
+      redirect_to select_task_helper_path(@helper), danger: "自分のタスクに自分を仲間として追加できません"
       return
     end
 
@@ -126,7 +133,7 @@ class TasksController < ApplicationController
 
     # 既存のmatchableチェック
     unless @task.decorate.matchable?
-      redirect_to select_task_user_path(@helper), danger: 'このタスクは既に仲間がいるか、ヘルプ要請されていません'
+      redirect_to select_task_user_path(@helper), danger: "このタスクは既に仲間がいるか、ヘルプ要請されていません"
       return
     end
 
@@ -141,10 +148,10 @@ class TasksController < ApplicationController
     if help_request.save
       redirect_to @task, success: "#{@helper.full_name}さんが仲間になりました!"
     else
-      redirect_to select_task_helper_path(@helper), danger: 'ヘルパーの追加に失敗しました'
+      redirect_to select_task_helper_path(@helper), danger: "ヘルパーの追加に失敗しました"
     end
   rescue ActiveRecord::RecordNotFound
-    redirect_to help_requests_tasks_path, danger: 'ヘルパーまたはタスクが見つかりません'
+    redirect_to help_requests_tasks_path, danger: "ヘルパーまたはタスクが見つかりません"
   end
 
   def select_task
@@ -159,7 +166,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy!
-    redirect_to tasks_path, success: 'タスクを削除しました', status: :see_other
+    redirect_to tasks_path, success: "タスクを削除しました", status: :see_other
   end
 
   private
@@ -192,12 +199,12 @@ class TasksController < ApplicationController
 
     if task.help_request?
       unless valid_required_time?(permitted_attr[:required_time])
-        task.errors.add(:required_time, 'はヘルプ要請時に必須です。有効な時間を選択してください。')
+        task.errors.add(:required_time, "はヘルプ要請時に必須です。有効な時間を選択してください。")
         return { task: task, valid: false }
       end
 
       if permitted_attr[:virtue_points].blank?
-        task.errors.add(:base, '付与ポイントを選択してください')
+        task.errors.add(:base, "付与ポイントを選択してください")
         return { task: task, valid: false }
       end
 
@@ -239,7 +246,7 @@ class TasksController < ApplicationController
   def handle_validation_errors(valid_tasks, invalid_tasks)
     # valid_tasksからtaskオブジェクトを取り出す
     @tasks = valid_tasks.map { |td| td[:task] } + invalid_tasks.map { |td| td[:task] }
-    flash.now[:danger] = 'タスクの登録に失敗しました。入力内容を確認してください。'
+    flash.now[:danger] = "タスクの登録に失敗しました。入力内容を確認してください。"
     render :new, status: :unprocessable_entity
   end
 
@@ -279,7 +286,7 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(
       :title, :description, :status,
-      help_request_attributes: [:id, :required_time, :request_message, :virtue_points]
+      help_request_attributes: [ :id, :required_time, :request_message, :virtue_points ]
     )
   end
 end
