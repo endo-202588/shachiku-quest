@@ -34,7 +34,7 @@ gem "image_processing", "~> 1.0"
 
 # Others
 gem "draper"
-gem "enum_help", "0.0.19"
+gem "enum_help", "0.0.20"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "kaminari"
 
