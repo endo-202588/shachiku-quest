@@ -29,9 +29,9 @@ module App
     config.i18n.default_locale = :ja
 
     # 利用可能な言語を設定
-    config.i18n.available_locales = [:ja, :en]
+    config.i18n.available_locales = [ :ja, :en ]
 
     # 翻訳ファイルのパスを追加
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
   end
 end

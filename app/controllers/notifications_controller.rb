@@ -16,7 +16,7 @@ class NotificationsController < ApplicationController
 
     unless hr && (hr.task.user_id == me || hr.helper_id == me)
       redirect_to notifications_path, danger: "すでにクローズされました"
-      return
+      nil
     end
   end
 

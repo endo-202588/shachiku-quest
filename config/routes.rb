@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-  root 'static_pages#top'
+  root "static_pages#top"
 
   get "dashboard", to: "dashboard#show"
 
@@ -14,9 +14,9 @@ Rails.application.routes.draw do
   end
 
   # ログイン・ログアウト(後で実装)
-  get 'login', to: 'user_sessions#new'
-  post 'login', to: 'user_sessions#create'
-  delete 'logout', to: 'user_sessions#destroy'
+  get "login", to: "user_sessions#new"
+  post "login", to: "user_sessions#create"
+  delete "logout", to: "user_sessions#destroy"
 
   # ステータス関連
   resources :statuses, only: %i[index new create edit update destroy] do
@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       post :complete_notify
     end
 
-    resource :chat, only: [:show, :create], controller: "chats"
+    resource :chat, only: [ :show, :create ], controller: "chats"
   end
 
   resource :help_magic, only: %i[new create edit update destroy]
@@ -79,7 +79,7 @@ Rails.application.routes.draw do
         get  :edit_password
         patch :update_password
 
-        get  :edit_email
+        get :edit_email
         patch :update_email
       end
     end
@@ -90,18 +90,18 @@ Rails.application.routes.draw do
 
   namespace :manager do
     get "staff_conditions/index"
-    resources :staff_conditions, only: [:index]
+    resources :staff_conditions, only: [ :index ]
   end
 
-  resources :introductions, only: [:show, :edit, :update]
+  resources :introductions, only: [ :show, :edit, :update ]
 
-  resource :ranking, only: [:show]
+  resource :ranking, only: [ :show ]
 
   resources :password_resets, only: %i[new create edit update]
 
   get "guide", to: "guides#show", as: :guide
 
-  resources :notifications, only: [:index, :show]
+  resources :notifications, only: [ :index, :show ]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

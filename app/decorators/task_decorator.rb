@@ -7,8 +7,8 @@ class TaskDecorator < Draper::Decorator
 
   # ステータスの色定義
   STATUS_COLORS = {
-    'in_progress' => 'bg-blue-100 text-blue-800',           # 自分で行うタスク
-    'help_request' => 'bg-yellow-100 text-yellow-800' # ヘルプ要請タスク
+    "in_progress" => "bg-blue-100 text-blue-800",           # 自分で行うタスク
+    "help_request" => "bg-yellow-100 text-yellow-800" # ヘルプ要請タスク
   }.freeze
 
   # ステータスバッジ
@@ -23,7 +23,7 @@ class TaskDecorator < Draper::Decorator
 
   # タスクのリスト項目(アクションボタン付き)
   def list_item_with_actions(current_user, task_owner)
-    h.content_tag :li, class: 'flex items-center justify-between gap-2' do
+    h.content_tag :li, class: "flex items-center justify-between gap-2" do
       h.concat task_title_span
       h.concat action_buttons(current_user, task_owner) if show_actions?(current_user, task_owner)
     end
@@ -31,7 +31,7 @@ class TaskDecorator < Draper::Decorator
 
   # タスクタイトル
   def task_title_span
-    h.content_tag :span, title, class: 'truncate flex-1'
+    h.content_tag :span, title, class: "truncate flex-1"
   end
 
   # アクションボタンを表示するか判定
@@ -43,7 +43,7 @@ class TaskDecorator < Draper::Decorator
   def action_buttons(current_user, task_owner)
     return nil unless show_actions?(current_user, task_owner)
 
-    h.content_tag :div, class: 'flex gap-1' do
+    h.content_tag :div, class: "flex gap-1" do
       h.concat edit_button
       h.concat delete_button
     end
@@ -52,7 +52,7 @@ class TaskDecorator < Draper::Decorator
   # 編集ボタン
   def edit_button
     h.link_to h.edit_task_path(object),
-      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
+      class: "text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center" do
       h.raw <<~HTML
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -64,9 +64,8 @@ class TaskDecorator < Draper::Decorator
   # 削除ボタン
   def delete_button
     h.link_to h.task_path(object),
-      data: { turbo_method: :delete, turbo_confirm: '本当に削除しますか?' },
-      class: 'text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center' do
-
+      data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか?" },
+      class: "text-gray-500 text-xs hover:text-gray-900 px-2 py-1 rounded transition inline-flex items-center justify-center" do
       h.raw <<~HTML
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,20 +91,20 @@ class TaskDecorator < Draper::Decorator
   def required_time_with_icon
     return nil unless help_request?
     return nil unless object.help_request&.required_time
-    h.content_tag :span, class: 'flex items-center gap-1' do
-      h.concat h.content_tag(:span, '⏰')
+    h.content_tag :span, class: "flex items-center gap-1" do
+      h.concat h.content_tag(:span, "⏰")
       h.concat required_time_text
     end
   end
 
   # マッチング可能かどうかを判定
   def matchable?
-    help_request? && object.help_request&.status == 'open'
+    help_request? && object.help_request&.status == "open"
   end
 
   # マッチング済みかどうかを判定
   def matched?
-    help_request? && object.help_request&.status == 'matched'
+    help_request? && object.help_request&.status == "matched"
   end
 
   def help_request_status_text
@@ -117,10 +116,10 @@ class TaskDecorator < Draper::Decorator
 
   # ステータスの色定義
   HELP_REQUEST_STATUS_COLORS = {
-    'open' => 'bg-blue-100 text-blue-800',
-    'matched' => 'bg-green-100 text-green-800',
-    'completed' => 'bg-gray-100 text-black',
-    'cancelled' => 'bg-gray-100 text-black'
+    "open" => "bg-blue-100 text-blue-800",
+    "matched" => "bg-green-100 text-green-800",
+    "completed" => "bg-gray-100 text-black",
+    "cancelled" => "bg-gray-100 text-black"
   }.freeze
 
   def help_request_status_html
@@ -132,20 +131,20 @@ class TaskDecorator < Draper::Decorator
   def help_request_status_icon
     return nil unless help_request?
     return nil unless object.help_request&.status
-    h.content_tag :span, class: 'flex items-center gap-1' do
-      h.concat h.content_tag(:span, '⏰')
+    h.content_tag :span, class: "flex items-center gap-1" do
+      h.concat h.content_tag(:span, "⏰")
       h.concat help_request_status_text
     end
   end
 
   # 作成日時のフォーマット
   def formatted_created_at
-    object.created_at.strftime('%Y年%m月%d日 %H:%M')
+    object.created_at.strftime("%Y年%m月%d日 %H:%M")
   end
 
   # 更新日時のフォーマット
   def formatted_updated_at
-    object.updated_at.strftime('%Y年%m月%d日 %H:%M')
+    object.updated_at.strftime("%Y年%m月%d日 %H:%M")
   end
 
   # ヘルプ完了通知

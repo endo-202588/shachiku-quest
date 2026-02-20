@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:edit, :update, :destroy, :edit_password, :update_password, :edit_email, :update_email]
+  before_action :set_user, only: [ :edit, :update, :destroy, :edit_password, :update_password, :edit_email, :update_email ]
 
   def index
     @q = User.ransack(params[:q])

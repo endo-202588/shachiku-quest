@@ -45,7 +45,7 @@ class Admin::TasksController < Admin::BaseController
   def task_params
     params.require(:task).permit(
       :title, :description, :status,
-      help_request_attributes: [:id, :required_time, :request_message, :virtue_points]
+      help_request_attributes: [ :id, :required_time, :request_message, :virtue_points ]
     )
   end
 end

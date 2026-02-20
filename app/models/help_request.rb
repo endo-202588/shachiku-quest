@@ -1,6 +1,6 @@
 class HelpRequest < ApplicationRecord
   belongs_to :task
-  belongs_to :helper, class_name: 'User', foreign_key: 'helper_id', optional: true
+  belongs_to :helper, class_name: "User", foreign_key: "helper_id", optional: true
   belongs_to :last_helper, class_name: "User", optional: true
   has_many :notifications, dependent: :destroy
   has_one :conversation, dependent: :destroy
@@ -17,7 +17,7 @@ class HelpRequest < ApplicationRecord
   validates :helper, presence: true, if: -> { matched? || completed? }
 
   after_update :add_points_to_helper, if: :saved_change_to_status?
-  after_commit :notify_matched, on: [:create, :update]
+  after_commit :notify_matched, on: [ :create, :update ]
 
   enum :status, {
     open: 0,

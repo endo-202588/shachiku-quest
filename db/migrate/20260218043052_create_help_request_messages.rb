@@ -13,7 +13,7 @@ class CreateHelpRequestMessages < ActiveRecord::Migration[7.2]
       t.timestamps
     end
 
-    add_index :help_request_messages, [:recipient_id, :read_at]
-    add_index :help_request_messages, [:help_request_id, :created_at]
+    add_index :help_request_messages, [ :recipient_id, :read_at ]
+    add_index :help_request_messages, [ :help_request_id, :created_at ]
   end
 end

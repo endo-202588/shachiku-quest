@@ -11,7 +11,7 @@ class ChatsController < ApplicationController
 
   def create
     return head :forbidden unless @help_request.matched?
-    
+
     conversation = @help_request.conversation || @help_request.create_conversation!
 
     @message = conversation.messages.new(message_params)

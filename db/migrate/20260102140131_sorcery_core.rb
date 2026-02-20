@@ -11,7 +11,7 @@ class SorceryCore < ActiveRecord::Migration[7.2]
       t.integer :level,           default: 0, null: false
       t.integer :total_virtue_points, default: 0, null: false
 
-      t.timestamps                null: false
+      t.timestamps null: false
     end
   end
 end

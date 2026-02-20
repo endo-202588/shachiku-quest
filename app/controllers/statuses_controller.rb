@@ -1,8 +1,8 @@
 class StatusesController < ApplicationController
-  before_action :set_status, only: [:edit, :update, :destroy]
+  before_action :set_status, only: [ :edit, :update, :destroy ]
 
   # ステータス登録関連のアクションでは本日のステータスチェックをスキップ
-  skip_before_action :check_today_status, only: [:index, :new, :create, :new_schedule, :create_schedule, :complete, :edit, :update]
+  skip_before_action :check_today_status, only: [ :index, :new, :create, :new_schedule, :create_schedule, :complete, :edit, :update ]
 
   def index
     base = current_user.statuses.order(status_date: :desc)
@@ -37,7 +37,7 @@ class StatusesController < ApplicationController
     selected_date = parse_iso_date(params[:status_date])
 
     unless selected_date
-      redirect_to new_schedule_statuses_path, danger: '日付を選択してください'
+      redirect_to new_schedule_statuses_path, danger: "日付を選択してください"
       return
     end
 
@@ -61,7 +61,7 @@ class StatusesController < ApplicationController
       redirect_to redirect_path, success: message
     else
       @target_date = @status.status_date
-      flash.now[:danger] = 'ステータスの登録に失敗しました'
+      flash.now[:danger] = "ステータスの登録に失敗しました"
 
       if @status.status_date != Date.today
         render :new_schedule, status: :unprocessable_entity
@@ -81,13 +81,13 @@ class StatusesController < ApplicationController
 
   def update
     if @status.update(status_params)
-      date_text = @status.status_date.strftime('%Y年%m月%d日')
+      date_text = @status.status_date.strftime("%Y年%m月%d日")
       redirect_back_or_to params[:return_to],
         fallback_location: users_path,
         success: "#{date_text}のステータスを更新しました"
     else
       @target_date = @status.status_date
-      flash.now[:danger] = 'ステータスの更新に失敗しました'
+      flash.now[:danger] = "ステータスの更新に失敗しました"
       render :edit, status: :unprocessable_entity
     end
   end
@@ -106,7 +106,7 @@ class StatusesController < ApplicationController
     @status = current_user.statuses.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to users_path, danger: "ステータスが見つかりませんでした"
-    return
+    nil
   end
 
   def status_params
@@ -115,16 +115,16 @@ class StatusesController < ApplicationController
 
   # リダイレクト先とメッセージを決定するヘルパーメソッド(修正版)
   def determine_redirect_after_save(status)
-    date_text = status.status_date.strftime('%Y年%m月%d日')
+    date_text = status.status_date.strftime("%Y年%m月%d日")
 
     if status.status_date == Date.current
       # 今日のステータスを登録した場合 → タスク登録へ
-      [new_task_path, 'ステータスを登録しました！続けて今日のタスクを登録しましょう']
+      [ new_task_path, "ステータスを登録しました！続けて今日のタスクを登録しましょう" ]
       # [users_path, 'ステータスを登録しました!']
     else
       # 未来や過去のステータスを登録した場合 → 本日のステータス登録へ
       message = "#{date_text}のステータスを登録しました。本日のステータスも登録しましょう!"
-      [new_status_path, message]
+      [ new_status_path, message ]
     end
   end
 

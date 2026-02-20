@@ -62,6 +62,5 @@ class Settings::EmailsController < ApplicationController
 
     false
   end
-end
-
+  end
 end

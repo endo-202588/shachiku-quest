@@ -3,12 +3,12 @@ class User < ApplicationRecord
 
   has_many :statuses, dependent: :destroy
   has_many :tasks, dependent: :destroy
-  has_many :in_progress_tasks, -> { where(status: 'in_progress') }, class_name: 'Task'
-  has_many :help_request_tasks, -> { where(status: 'help_request') }, class_name: 'Task'
+  has_many :in_progress_tasks, -> { where(status: "in_progress") }, class_name: "Task"
+  has_many :help_request_tasks, -> { where(status: "help_request") }, class_name: "Task"
   has_one :help_magic, dependent: :destroy
   has_many :received_help_requests,
-         class_name: 'HelpRequest',
-         foreign_key: 'helper_id',
+         class_name: "HelpRequest",
+         foreign_key: "helper_id",
          dependent: :nullify
   has_many :help_requests, through: :tasks
   has_one_attached :avatar

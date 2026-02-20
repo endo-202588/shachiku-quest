@@ -9,5 +9,4 @@ class Manager::StaffConditionDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
-
 end

@@ -10,6 +10,6 @@ class CreateStatuses < ActiveRecord::Migration[7.2]
     end
 
     # 同じユーザーが同じ日付に複数のステータスを登録できないようにする
-    add_index :statuses, [:user_id, :status_date], unique: true
+    add_index :statuses, [ :user_id, :status_date ], unique: true
   end
 end
