@@ -34,12 +34,13 @@
                   - if badge
                     p == badge
 
-              = link_to "詳細", task_path(task.object, return_to: request.fullpath),
+              = link_to "詳細", task_path(task.object),
                 class: "shrink-0 inline-flex items-center px-3 py-1 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm"
 
         .div.mt-4
-          = link_to "▶︎ タスク一覧へ", tasks_path,
-          class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
+          = link_to "▶︎ タスク一覧へ",
+                    tasks_path(return_to: dashboard_path),
+                    class: 'bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 px-4 rounded text-sm block text-center w-full'
       - else
         p.text-gray-600.text-sm タスクがありません。
         .mt-4

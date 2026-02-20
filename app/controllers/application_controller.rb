@@ -10,8 +10,6 @@ class ApplicationController < ActionController::Base
 
   add_flash_types :success, :danger
 
-  helper_method :safe_return_path
-
   private
 
   def not_authenticated
@@ -49,24 +47,5 @@ class ApplicationController < ActionController::Base
   def daily_reset
     return unless logged_in? # Sorcery 想定（違うならここだけ調整）
     ::DailyResetService.call
-  end
-
-  def safe_return_path(fallback)
-    raw = params[:return_to].to_s
-
-    # 値が空ならフォールバック
-    return fallback if raw.blank?
-
-    # 先頭が "/" でない（相対パスじゃない）なら却下
-    return fallback unless raw.start_with?("/")
-
-    # "//evil.com" みたいな形式は却下
-    return fallback if raw.start_with?("//")
-
-    # "javascript:..." などのスキームっぽいものも念のため弾く
-    return fallback if raw.strip =~ /\Ajavascript:/i
-
-    # 上記を全部クリアしたものだけ、そのままパスとして使う
-    raw
   end
 end

@@ -68,4 +68,4 @@
   / ボタン
   .flex.gap-3.mt-6
     = f.button :submit, submit_text, class: "flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition cursor-pointer"
-    = link_to "キャンセル", safe_return_path(cancel_path), class: "text-gray-600 hover:text-gray-800"
+    = link_to "キャンセル", tasks_path(cancel_path), class: "text-gray-600 hover:text-gray-800"
