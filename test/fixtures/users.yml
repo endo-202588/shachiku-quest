@@ -4,8 +4,20 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+one:
+  email: one@example.com
+  first_name: "太郎"
+  first_name_kana: "たろう"
+  last_name: "テスト"
+  last_name_kana: "てすと"
+  department: "開発部"
+  role: admin
+
+two:
+  email: two@example.com
+  first_name: "花子"
+  first_name_kana: "はなこ"
+  last_name: "テスト"
+  last_name_kana: "てすと"
+  department: "総務部"
+  role: general

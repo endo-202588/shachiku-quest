@@ -3,9 +3,11 @@
 one:
   task: one
   helper: one
-  status: 1
+  status: matched
+  required_time: 1
 
 two:
   task: two
   helper: two
-  status: 1
+  status: matched
+  required_time: 1
