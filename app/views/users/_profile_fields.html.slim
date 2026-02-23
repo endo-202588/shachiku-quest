@@ -32,7 +32,8 @@
 - if show_role
   - cu = current_user.respond_to?(:object) ? current_user.object : current_user
   - if cu && u && u.id != cu.id
-    - role_options = User.roles.keys.map { |k| [User.roles_i18n[k].presence || k, k] }
+    - order = ["general", "manager", "admin"]  # ← 希望の順
+    - role_options = order.map { |k| [User.roles_i18n[k].presence || k, k] }
 
     = f.input :role,
         as: :select,
