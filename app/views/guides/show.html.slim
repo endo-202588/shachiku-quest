@@ -73,6 +73,11 @@
             | Q. スタッフ管理は誰が見られますか？
           p.mt-3.text-slate-700
             | 管理職 / 管理者 のみ表示されます。
+        details.rounded-lg.border.border-slate-200.p-4
+          summary.font-bold.text-slate-800.cursor-pointer
+            | Q. スタッフ管理で何が見られますか？
+          p.mt-3.text-slate-700
+            | スタッフの、今日を含む直近30日間のステータス（忙しさ）の変化がわかります。
 
     .mt-10.flex.justify-center
       - if current_user

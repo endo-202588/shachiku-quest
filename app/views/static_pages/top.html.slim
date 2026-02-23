@@ -11,10 +11,10 @@
 
     / 本日の日付
     .mt-10.inline-block.rounded-lg.px-6.py-4.border.border-yellow-300.bg-white/70.backdrop-blur-sm
-      p.text-yellow-700.text-lg
-        span.mr-2 📅
-        span.font-bold.text-yellow-600
-          = l(Date.current, format: :long)
+      p.flex.w-full.items-center.gap-1.font-bold.text-yellow-600
+        svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        = l(Date.current, format: :long)
 
     / 冒険に出かけるボタン
     - path = current_user ? users_path : login_path
@@ -28,12 +28,12 @@
 
 
     / 補足説明
-    p.text-slate-500.mt-8.text-sm
+    p.text-slate-500.mt-3.text-sm
       | ※ログインして冒険へ出かけましょう
 
-    .mt-10.flex.justify-center
+    .mt-6.flex.justify-center
       = link_to guide_path,
-        class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:text-slate-100 text-sm font-bold" do
+        class: "flex w-full items-center gap-2 px-4 py-2 text-slate-700 hover:text-slate-100 text-m font-bold" do
         svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
           path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"
         span このアプリの使い方
