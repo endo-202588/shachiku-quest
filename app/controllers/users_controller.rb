@@ -17,7 +17,13 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     @user.role = :general
     if @user.save
-      redirect_to users_path, success: "勇者登録が完了しました"
+      auto_login(@user)
+
+      if @user.today_status.present?
+        redirect_to users_path, success: "冒険者登録が完了しました！"
+      else
+        redirect_to new_status_path, success: "冒険者登録が完了しました！今日の状態を教えてください。"
+      end
     else
       flash.now[:danger] = "勇者登録に失敗しました"
       render :new, status: :unprocessable_entity
