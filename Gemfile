@@ -39,6 +39,10 @@ gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "kaminari"
 
 group :development, :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
+
   gem "debug", platforms: %i[ mri mingw mswin x64_mingw ], require: "debug/prelude"
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
