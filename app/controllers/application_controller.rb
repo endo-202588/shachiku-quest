@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-
   before_action :require_login
   before_action :check_today_status
   before_action :set_header_help_request
