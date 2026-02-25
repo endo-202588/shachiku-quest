@@ -27,10 +27,14 @@ class User < ApplicationRecord
   validates :first_name, presence: true, length: { maximum: 255 }
   validates :last_name, presence: true, length: { maximum: 255 }
   validates :department, presence: true
-  validates :email, presence: true, uniqueness: true
-  validates :password, length: { minimum: 3 }, if: -> { new_record? || changes[:crypted_password] }
-  validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }
-  validates :password_confirmation, presence: true, if: -> { new_record? || changes[:crypted_password] }
+  validates :email,
+    presence: true,
+    uniqueness: { case_sensitive: false }
+  with_options if: -> { new_record? || changes[:crypted_password] } do
+    validates :password, length: { minimum: 4 }
+    validates :password, confirmation: true
+    validates :password_confirmation, presence: true
+  end
   validates :last_name_kana, :first_name_kana,
           presence: true,
           format: { with: /\A[ぁ-んー]+\z/, message: "はひらがなで入力してください" }
