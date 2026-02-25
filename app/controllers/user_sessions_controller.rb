@@ -1,5 +1,6 @@
 class UserSessionsController < ApplicationController
   skip_before_action :require_login, only: %i[new create]
+  skip_before_action :check_today_status, only: %i[new create destroy]
 
   def new
   end

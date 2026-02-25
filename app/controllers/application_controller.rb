@@ -1,11 +1,9 @@
 class ApplicationController < ActionController::Base
-  allow_browser versions: :modern
-
   before_action :require_login
   before_action :check_today_status
   before_action :set_header_help_request
   before_action :set_header_help_magic
-  before_action :daily_reset
+  before_action :daily_reset, unless: -> { Rails.env.test? }
   before_action :set_unread_message_count
 
   add_flash_types :success, :danger
