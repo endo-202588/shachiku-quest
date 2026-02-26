@@ -38,11 +38,27 @@ class HelpRequest < ApplicationRecord
     today = now.to_date
 
     ActiveRecord::Base.transaction do
-      matched_only
-        .where("matched_on < ?", today)
-        .where(completed_notified_at: nil)
-        .find_each(&:reset_to_open!)
+      # 昨日以前にマッチしているヘルプリクエストを対象にする
+      scope = matched_only.where("matched_on < ?", today)
 
+      # ① ヘルパーが完了通知していない matched は open に戻す
+      scope.where(completed_notified_at: nil)
+          .find_each(&:reset_to_open!)
+
+      # ② ヘルパーが完了通知している matched はシステム側で completed にする
+      scope.where.not(completed_notified_at: nil)
+          .includes(task: :user) # 依頼者も一緒に読み込んでおくと効率◎（任意）
+          .find_each do |help_request|
+            requester = help_request.task&.user
+
+            # ✅ 依頼者を completed_by に渡し、通知も送る
+            help_request.complete!(
+              completed_by: requester,
+              send_thanks_notification: true
+            )
+          end
+
+      # ③ 期限切れの HelpMagic は削除（これまで通り）
       HelpMagic.where("available_date < ?", today).delete_all
     end
   end
@@ -63,6 +79,53 @@ class HelpRequest < ApplicationRecord
     attrs[:helper_message]    = nil if has_attribute?(:helper_message)
 
     update!(attrs)
+  end
+
+  def complete!(completed_by: nil, send_thanks_notification: true)
+    transaction do
+      # ステータスを completed に更新
+      update!(status: :completed)
+
+      # チャット履歴を削除
+      conversation&.destroy!
+
+      # ヘルパーがいないのは異常
+      helper = self.helper
+      raise ActiveRecord::RecordInvalid.new(self) if helper.nil?
+
+      # 徳ポイント（virtue_points）が未設定や 0 以下なら 1 ポイント付与
+      award = virtue_points.to_i
+      award = 1 if award <= 0
+
+      helper.with_lock do
+        helper.total_virtue_points = helper.total_virtue_points.to_i + award
+        helper.total_virtue_points_last_added = award
+        helper.total_virtue_points_notified_at = Time.current
+        helper.total_virtue_points_read_at = nil
+
+        helper.recalc_level_from_virtue_points!
+
+        helper.save!
+      end
+
+      # ヘルプ魔法を削除
+      hm = helper.help_magic
+      Rails.logger.info "HelpMagic already nil: user_id=#{helper.id}" if hm.nil?
+      hm&.destroy!
+    end
+
+    # ===== トランザクション完了後に「ありがとう」通知 =====
+    helper = self.helper
+
+    if send_thanks_notification && completed_by && helper
+      Notification.create!(
+        help_request: self,
+        sender: completed_by, # 依頼主など「完了操作をした人」
+        recipient: helper,    # ヘルパー
+        message_type: :thanks,
+        body: "ありがとうございました！徳ポイントを付与しました。"
+      )
+    end
   end
 
   def cancel_due_to_task_change!

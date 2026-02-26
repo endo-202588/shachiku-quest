@@ -23,6 +23,11 @@
           .col-start-1.row-start-1.z-10.whitespace-pre-wrap(
             data-typewriter-fixed-target="out"
           )
+  .mb-6
+    h4.font-bold.mb-2 【注意】
+    ul class="list-disc list-inside" style="padding-left: 20px;"
+      li.mb-1 助け合いはその日のみです。翌日になるとマッチング中でも自動的にマッチングは解除されます。
+      li 完了通知済みのヘルプ要請タスクは、発注者が完了にしなかった場合でも翌日自動的に完了となり、徳ポイントがヘルパーに付与されます。
 
   .mb-3
     - if current_user.help_magic.present?
