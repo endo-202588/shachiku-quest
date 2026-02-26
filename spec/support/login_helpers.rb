@@ -1,8 +1,8 @@
 module LoginHelpers
-  def log_in(user)
+  def log_in(user, password: "password")
     post login_path, params: {
       email: user.email,
-      password: "password"
+      password: password
     }
   end
 end

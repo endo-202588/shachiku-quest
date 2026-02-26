@@ -3,14 +3,6 @@ require "rails_helper"
 RSpec.describe "Statuses", type: :request do
   let(:user) { create(:user, password: "password", password_confirmation: "password") }
 
-  # ログイン用の簡易ヘルパー（このファイルだけで完結させる）
-  def login_as(user, password: "password")
-    post login_path, params: {
-      email: user.email,
-      password: password
-    }
-  end
-
   describe "GET /statuses/new" do
     context "when not logged in" do
       it "redirects to login page" do
@@ -23,7 +15,7 @@ RSpec.describe "Statuses", type: :request do
 
     context "when logged in" do
       before do
-        login_as(user)
+        log_in(user)
       end
 
       it "returns http success" do
@@ -60,7 +52,7 @@ RSpec.describe "Statuses", type: :request do
 
     context "when logged in" do
       before do
-        login_as(user)
+        log_in(user)
       end
 
       it "creates a status for current_user and redirects" do
