@@ -41,11 +41,13 @@ class HelpRequestsController < ApplicationController
   def update_status
     new_status = params[:status].to_s
 
+    # ====== 権限チェック ======
     unless @help_request.task.user_id == current_user&.id
       redirect_to task_path(@help_request.task), danger: "権限がありません"
       return
     end
 
+    # ====== ステータス文字列の妥当性チェック ======
     unless HelpRequest.statuses.key?(new_status)
       redirect_to task_path(@help_request.task), danger: "無効なステータスです"
       return
@@ -80,6 +82,7 @@ class HelpRequestsController < ApplicationController
       end
     end
 
+    # ====== cancelled への遷移ガード ======
     if new_status == "cancelled"
       unless @help_request.open?
         redirect_to task_path(@help_request.task), danger: "キャンセルできるのは募集中（open）のみです"
@@ -87,53 +90,17 @@ class HelpRequestsController < ApplicationController
       end
     end
 
-    # ====== 更新 ======
+    # ====== 更新本体 ======
     begin
       if new_status == "completed"
-        @help_request.transaction do
-          @help_request.update!(status: :completed)
-
-          @help_request.conversation&.destroy!
-
-          helper = @help_request.helper
-          raise ActiveRecord::RecordInvalid.new(@help_request) if helper.nil?
-
-          award = @help_request.virtue_points.to_i
-          award = 1 if award <= 0
-
-          helper.with_lock do
-            helper.total_virtue_points = helper.total_virtue_points.to_i + award
-            helper.total_virtue_points_last_added = award
-            helper.total_virtue_points_notified_at = Time.current
-            helper.total_virtue_points_read_at = nil
-
-            helper.recalc_level_from_virtue_points!
-
-            helper.save!
-          end
-
-          hm = helper.help_magic
-          Rails.logger.info "HelpMagic already nil: user_id=#{helper.id}" if hm.nil?
-          hm&.destroy!
-        end
-
-        # transaction 成功後に送る
-        helper = @help_request.helper
-
-        if helper
-          Notification.create!(
-            help_request: @help_request,
-            sender: current_user,     # 依頼主（ステータスを完了にした人）
-            recipient: helper,        # ヘルパー
-            message_type: :thanks,
-            body: "ありがとうございました！徳ポイントを付与しました。"
-          )
-        end
+        # ✅ ここでモデルの共通処理を呼び出す
+        @help_request.complete!(completed_by: current_user, send_thanks_notification: true)
 
         redirect_to task_path(@help_request.task), success: "ステータスを更新しました"
         return
       end
 
+      # completed 以外（open / cancelled / matched など）の単純なステータス更新
       @help_request.update!(status: new_status)
       redirect_to task_path(@help_request.task), success: "ステータスを更新しました"
 
