@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Sessions", type: :request do
-  let(:user) { create(:user, password: "password") }
+  let(:user) { create(:user, password: "password", password_confirmation: "password") }
 
   describe "POST /login" do
     it "logs in with correct credentials" do
