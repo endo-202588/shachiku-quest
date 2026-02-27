@@ -12,7 +12,6 @@ RSpec.describe "Login", type: :system do
 
       expect(page).to have_current_path(new_status_path)
       expect(page).to have_content("ステータス")
-      end
     end
   end
 end
