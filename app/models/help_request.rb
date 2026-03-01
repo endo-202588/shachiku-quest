@@ -17,6 +17,7 @@ class HelpRequest < ApplicationRecord
   validates :helper, presence: true, if: -> { matched? || completed? }
 
   after_update :add_points_to_helper, if: :saved_change_to_status?
+  after_update :destroy_conversation_if_unmatched
   after_commit :notify_matched, on: [ :create, :update ]
 
   enum :status, {
@@ -37,30 +38,27 @@ class HelpRequest < ApplicationRecord
   def self.reset_yesterday_matched_all!(now: Time.zone.now)
     today = now.to_date
 
-    ActiveRecord::Base.transaction do
-      # 昨日以前にマッチしているヘルプリクエストを対象にする
-      scope = matched_only.where("matched_on < ?", today)
+    # 昨日以前にマッチしているヘルプリクエストを対象にする
+    scope = matched_only.where("matched_on < ?", today)
 
-      # ① ヘルパーが完了通知していない matched は open に戻す
-      scope.where(completed_notified_at: nil)
-          .find_each(&:reset_to_open!)
+    # ① ヘルパーが完了通知していない matched は open に戻す
+    scope.where(completed_notified_at: nil)
+        .find_each(&:reset_to_open!)
 
-      # ② ヘルパーが完了通知している matched はシステム側で completed にする
-      scope.where.not(completed_notified_at: nil)
-          .includes(task: :user) # 依頼者も一緒に読み込んでおくと効率◎（任意）
-          .find_each do |help_request|
-            requester = help_request.task&.user
+    # ② ヘルパーが完了通知している matched はシステム側で completed にする
+    scope.where.not(completed_notified_at: nil)
+        .includes(task: :user)
+        .find_each do |help_request|
+      requester = help_request.task&.user
 
-            # ✅ 依頼者を completed_by に渡し、通知も送る
-            help_request.complete!(
-              completed_by: requester,
-              send_thanks_notification: true
-            )
-          end
-
-      # ③ 期限切れの HelpMagic は削除（これまで通り）
-      HelpMagic.where("available_date < ?", today).delete_all
+      help_request.complete!(
+        completed_by: requester,
+        send_thanks_notification: true
+      )
     end
+
+    # ③ 期限切れの HelpMagic は削除
+    HelpMagic.where("available_date < ?", today).delete_all
   end
 
   def reset_to_open!
@@ -85,9 +83,6 @@ class HelpRequest < ApplicationRecord
     transaction do
       # ステータスを completed に更新
       update!(status: :completed)
-
-      # チャット履歴を削除
-      conversation&.destroy!
 
       # ヘルパーがいないのは異常
       helper = self.helper
@@ -189,5 +184,14 @@ class HelpRequest < ApplicationRecord
       message_type: :matched,
       body: body
     )
+  end
+
+  def destroy_conversation_if_unmatched
+    return unless saved_change_to_status?
+
+    # matched 以外になったら削除
+    unless matched?
+      conversation&.destroy!
+    end
   end
 end
