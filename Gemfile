@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.2.10"
+ruby "3.3.5"
 
 # Core
 gem "rails", "~> 7.2.3"
@@ -58,5 +58,5 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
-  gem "minitest", "~> 5.25"
+  gem "webdrivers"
 end

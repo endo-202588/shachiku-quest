@@ -29,6 +29,7 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
       RAILS_ENV: development
+      SELENIUM_DRIVER_URL: http://chrome:4444/wd/hub
   cron:
     build:
       context: .
@@ -51,6 +52,12 @@ services:
       DATABASE_USER: postgres
       DATABASE_PASSWORD: password
       RAILS_ENV: development
+      SELENIUM_DRIVER_URL: http://chrome:4444
+  chrome:
+    image: selenium/standalone-chromium:latest
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
 
 volumes:
   postgres_data:

@@ -165,7 +165,7 @@ class HelpRequestsController < ApplicationController
         )
       end
 
-      redirect_to help_requests_tasks_path, success: "#{@help_request.helper.decorate.full_name}さんが仲間になりました!"
+      redirect_to help_requests_tasks_path, success: "#{@help_request.helper.decorate.full_name}さんが仲間になりました！"
 
     rescue ActiveRecord::RecordInvalid => e
       redirect_to help_requests_tasks_path, danger: "応募に失敗しました: #{e.record.errors.full_messages.join(', ')}"
