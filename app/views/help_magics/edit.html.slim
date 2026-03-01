@@ -3,7 +3,7 @@
     h1.text-xl.font-bold.text-gray-800.mb-4 🔮 魔法を編集
 
     = form_with model: @help_magic, url: help_magic_path, method: :patch, local: true, class: "space-y-4" do |f|
-    
+
       = hidden_field_tag :return_to, params[:return_to]
 
       - if @help_magic.errors.any?
@@ -20,5 +20,7 @@
           class: "block w-full rounded-md border-gray-300 shadow-sm"
 
       .flex.justify-end.gap-2.pt-2
-        = link_to "キャンセル", safe_return_path(dashboard_path), class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+        = link_to "キャンセル",
+                  (request.referer || dashboard_path),
+                  class: "px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
         = f.submit "更新する", class: "px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
