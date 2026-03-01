@@ -11,7 +11,7 @@ class Status < ApplicationRecord
     day_off: 100
   }.freeze
 
-  enum status_type: {
+  enum :status_type, {
     peaceful: 0,
     tired: 1,
     busy: 2,
