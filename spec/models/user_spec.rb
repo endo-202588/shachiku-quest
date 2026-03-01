@@ -46,4 +46,42 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
     end
   end
+
+  describe "dependent destroy" do
+    it "destroys associated statuses when destroyed" do
+      user = create(:user)
+      create(:status, user: user)
+
+      expect { user.destroy }.to change { Status.count }.by(-1)
+    end
+
+    it "destroys associated tasks when destroyed" do
+      user = create(:user)
+      create(:task, user: user)
+
+      expect { user.destroy }.to change { Task.count }.by(-1)
+    end
+
+    it "nullifies helper_id of received help_requests when destroyed" do
+      helper = create(:user)
+      requester = create(:user)
+      task = create(:task, user: requester)
+
+      hr = create(:help_request, task: task, helper: helper)
+
+      helper.destroy
+      hr.reload
+
+      expect(hr.helper_id).to be_nil
+    end
+
+    it "destroys received_notifications when destroyed" do
+      user = create(:user)
+      sender = create(:user)
+
+      create(:notification, recipient: user, sender: sender)
+
+      expect { user.destroy }.to change { Notification.count }.by(-1)
+    end
+  end
 end
