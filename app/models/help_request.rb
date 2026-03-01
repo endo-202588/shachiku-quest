@@ -49,7 +49,6 @@ class HelpRequest < ApplicationRecord
     scope.where.not(completed_notified_at: nil)
         .includes(task: :user)
         .find_each do |help_request|
-
       requester = help_request.task&.user
 
       help_request.complete!(
