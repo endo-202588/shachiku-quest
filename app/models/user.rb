@@ -31,7 +31,7 @@ class User < ApplicationRecord
     presence: true,
     uniqueness: { case_sensitive: false }
   with_options if: -> { new_record? || changes[:crypted_password] } do
-    validates :password, length: { minimum: 4 }
+    validates :password, length: { minimum: 8 }
     validates :password, confirmation: true
     validates :password_confirmation, presence: true
   end
