@@ -29,19 +29,19 @@ RSpec.describe User, type: :model do
       expect(user.errors[:password]).to be_present
     end
 
-    it "is invalid when password is shorter than 4 characters" do
+    it "is invalid when password is shorter than 8 characters" do
       user = build(:user,
-                  password: "abc",
-                  password_confirmation: "abc")
+                  password: "short",
+                  password_confirmation: "short")
       user.valid?
 
       expect(user.errors[:password]).to be_present
     end
 
-    it "is valid when password is 4 characters or more" do
+    it "is valid when password is 8 characters or more" do
       user = build(:user)
-      user.password = "abcd"
-      user.password_confirmation = "abcd"
+      user.password = "password"
+      user.password_confirmation = "password"
 
       expect(user).to be_valid
     end
