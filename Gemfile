@@ -32,16 +32,21 @@ gem "simple_form"
 # Search
 gem "ransack", ">= 4.1"
 
-# image
-gem "image_processing", "~> 1.0"
-gem "cloudinary"
+# Image
 gem "activestorage-cloudinary-service"
+gem "cloudinary"
+gem "image_processing", "~> 1.0"
+
+# Pagination
+gem "kaminari"
+
+# Security
+gem "rack-attack"
 
 # Others
 gem "draper"
 gem "enum_help", "0.0.19"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
-gem "kaminari"
 
 group :development, :test do
   gem "rspec-rails"
