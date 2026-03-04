@@ -3,6 +3,9 @@ class UserSessionsController < ApplicationController
   skip_before_action :check_today_status, only: %i[new create destroy]
 
   def new
+    if session.delete(:throttled)
+      flash.now[:alert] = "ログイン試行回数が多すぎます。しばらく待ってから再度お試しください。"
+    end
   end
 
   def create
