@@ -1,10 +1,8 @@
-## アプリタイトル
-
-社畜クエスト　〜デスクの上の大冒険〜
+# 社畜クエスト　〜デスクの上の大冒険〜
 
 ## アプリURL
 
-https://shachiku-quest.net
+👉 https://shachiku-quest.net
 
 テスト用アカウント
 
@@ -191,60 +189,215 @@ https://shachiku-quest.net
 
 ## 画面遷移図
 
-(https://www.figma.com/design/LrOc9gGwgXuV8dBQLVUmlU/shachiku-quest?node-id=0-1&p=f&t=b8abre81qEyZ5VsM-0)
+[Figmaで画面遷移図を見る](https://www.figma.com/design/LrOc9gGwgXuV8dBQLVUmlU/shachiku-quest?node-id=0-1&p=f&t=b8abre81qEyZ5VsM-0)
 
 ---
 
 ## ER図
 
-(https://app.diagrams.net/#G1JedrR5ar54FSOJKA57MqmtAuE6QvGfzq#%7B%22pageId%22%3A%22pQffNUjQZHsvLcy2fLF3%22%7D)
+[ER図を見る](https://app.diagrams.net/#G1JedrR5ar54FSOJKA57MqmtAuE6QvGfzq#%7B%22pageId%22%3A%22pQffNUjQZHsvLcy2fLF3%22%7D)
+
+---
+
+## アーキテクチャ設計
+
+本アプリでは、RailsのMVC構造を基本としつつ、責務の分離を意識した設計を行っています。
+
+### Service Object
+
+業務ロジックをControllerやModelに肥大化させないため、Service Objectを導入しています。
+
+例：
+
+- `DailyResetService`
+  - ヘルプ依頼を日次でリセットする処理を担当
+  - cron / whenever により自動実行
+
+これにより、Controllerはリクエスト処理に集中し、ビジネスロジックの再利用性を高めています。
+
+---
+
+### 状態管理（State管理）
+
+ヘルプ依頼は以下の状態遷移で管理されています。
+
+open → matched → completed
+↓
+cancelled
+
+これにより、ヘルプ依頼の進行状況を明確に管理しています。
+
+---
+
+### 通知システム
+
+ヘルプ依頼の重要なイベントで通知が生成されます。
+
+- マッチング成立
+- ヘルプ完了
+- ヘルプ要請クローズ
+
+通知モデルを独立させることで、将来的な拡張（メール通知など）にも対応しやすい設計にしています。
+
+---
+
+### チャット機能
+
+ヘルプ依頼ごとにチャットを作成し、ユーザー間のコミュニケーションを可能にしています。
+
+HelpRequest
+↓
+Conversation
+↓
+Message
+
+という構造にすることで、ヘルプ依頼ごとに独立した会話を管理できます。
+
+---
+
+### 定期処理（cron）
+
+日次で実行される処理は `whenever` を利用し、cronで管理しています。
+
+例：
+
+- ヘルプ依頼の自動リセット
+- マッチング状態の整理
+
+---
+
+### 認証設計
+
+認証には `Sorcery` を利用し、以下のログイン方法を提供しています。
+
+- メールアドレス + パスワード
+- Google OAuthログイン
+
+Googleログインユーザーは初回ログイン時に仮ユーザーを作成し、プロフィール登録後にアプリを利用可能にしています。
+
+---
+
+## セキュリティ対策
+
+- Sorceryによる認証
+- Google OAuthログイン
+- パスワード8文字以上のバリデーション
+- Rack::Attackによるログイン試行制限（Brute Force対策）
+- Brakemanによる静的セキュリティチェック
+- CSRF対策（Rails標準機能）
+
+---
+
+## インフラ構成
+
+本アプリはDockerを用いて開発環境を構築し、Renderを利用してデプロイしています。
+
+### 構成概要
+
+```
+User
+  ↓
+Render (Rails)
+  ↓
+PostgreSQL
+  ↓
+Cloudinary
+```
+
+---
+
+### 開発環境
+
+開発環境はDockerを利用し、以下のコンテナで構成しています。
+
+- web（Railsアプリケーション）
+- db（PostgreSQL）
+- cron（wheneverによる定期処理）
+
+これにより、環境差異の少ない開発環境を構築しています。
+
+---
+
+### デプロイ
+
+アプリケーションは Render にデプロイしています。
+
+- Render Web Service
+- PostgreSQL
+- 自動デプロイ（GitHub連携）
+
+GitHubへpushすると自動でデプロイが実行されます。
+
+---
+
+### 画像ストレージ
+
+ユーザーアイコンなどの画像は Cloudinary を利用して管理しています。
+
+Railsの Active Storage と連携し、クラウドストレージに保存しています。
+
+---
+
+### 定期処理
+
+日次処理は `whenever` を利用してcronで実行しています。
+
+主な処理：
+
+- ヘルプ依頼のリセット
+- マッチング状態の整理
 
 ---
 
 ## 使用する技術スタック
 
-Rails初心者ということもあり、まずはカリキュラムで学んだ技術でできることを中心に、復習の意味を込めて作りたいと思います。
+### バックエンド
 
-### フレームワーク
-
-- Ruby 3.2.x
+- Ruby 3.3.x
 - Rails 7.2.x
+
+### フロントエンド
+
+- Turbo
+- Stimulus
 - Tailwind CSS
+- Importmap
 
 ### データベース
 
 - PostgreSQL
 
-### デプロイ先
+### インフラ
 
 - Render
+- Cloudinary
+- Docker
 
-### 使用ライブラリ
+### 認証
 
-**認証・基本機能**
+- Sorcery
+- OmniAuth
+- Google OAuth2
 
-- `sorcery` - 認証機能
-- `omniauth` - OAuth認証
-- `omniauth-google-oauth2` - Googleログイン
-- `kaminari` - ページネーション
-- `rails-i18n` - 日本語化
-- `dotenv-rails` - 環境変数管理
+### 検索・UI
 
-**画像・検索機能**
+- Ransack
+- Kaminari
 
-- `Active Storage` + `image_processing` - 画像アップロード
-- `ransack` - 検索機能
+### 画像管理
 
-**ランキング機能（フェーズ2以降）**
+- Active Storage
+- image_processing
+- Cloudinary
 
-- `redis` + `redis-rails` - ランキング機能
+### テスト
 
----
+- RSpec
+- Capybara
+- FactoryBot
 
-## 技術的な工夫
+### CI / 静的解析
 
-- ヘルプ依頼を1日単位でリセットする `DailyResetService` を実装し、サービスクラスとして責務を分離
-- Google OAuthログインユーザーはプロフィール未入力の場合、編集画面へ自動誘導
-- 業務量をステータスコードとして可視化し、チーム全体の状況を一覧で確認可能
-- ヘルプ依頼は「依頼 → マッチング → 完了」の状態遷移で管理
-- DailyResetService を cron / whenever により日次実行し、ヘルプ依頼の状態を自動リセット
+- GitHub Actions
+- RuboCop
+- Brakeman
