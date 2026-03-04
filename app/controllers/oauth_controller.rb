@@ -81,7 +81,7 @@ class OauthController < ApplicationController
 
   # 日本語スペース/英語スペースどちらもそれっぽく分割
   def split_name_for_jp(full_name)
-    return ["", ""] if full_name.blank?
+    return [ "", "" ] if full_name.blank?
 
     if full_name.include?("　") # 全角スペース
       full_name.split("　", 2)
@@ -89,7 +89,7 @@ class OauthController < ApplicationController
       full_name.split(" ", 2)
     else
       # 分割できない場合は姓に入れておく（あとでプロフィールで直す想定）
-      [full_name, ""]
+      [ full_name, "" ]
     end
   end
 end
