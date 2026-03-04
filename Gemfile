@@ -22,6 +22,9 @@ gem "slim-rails"
 
 # Authentication
 gem "sorcery", "~> 0.18.0"
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
 # Form
 gem "simple_form"
@@ -31,6 +34,8 @@ gem "ransack", ">= 4.1"
 
 # image
 gem "image_processing", "~> 1.0"
+gem "cloudinary"
+gem "activestorage-cloudinary-service"
 
 # Others
 gem "draper"

@@ -123,4 +123,12 @@ class User < ApplicationRecord
     generate_reset_password_token!
     UserMailer.reset_password_email(self).deliver_later
   end
+
+  def oauth_user?
+    provider.present? && uid.present?
+  end
+
+  def google_user?
+    provider == "google_oauth2"
+  end
 end
