@@ -103,6 +103,10 @@ Rails.application.routes.draw do
 
   resources :notifications, only: [ :index, :show ]
 
+  post "/auth/:provider", to: "oauth#passthru", as: :oauth_passthru
+  get  "/auth/:provider/callback", to: "oauth#callback"
+  get  "/auth/failure", to: "oauth#failure"
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
 
