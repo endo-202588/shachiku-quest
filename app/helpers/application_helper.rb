@@ -4,7 +4,8 @@ module ApplicationHelper
   end
 
   def hide_footer_nav?
-    (controller_path == "users" && action_name == "index") ||
-    (controller_path == "dashboard" && action_name == "show")
+    top_page? ||
+      (controller_path == "users" && action_name == "index") ||
+      (controller_path == "dashboard" && action_name == "show")
   end
 end
