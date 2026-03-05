@@ -16,12 +16,14 @@
               class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-sky-300"
 
         / ② 氏名検索
-        .sm:col-span-2
+        .sm:col-span-2.relative data-controller="autocomplete" data-autocomplete-url="/users/autocomplete"
           .sr-only
             = f.label :last_name_or_first_name_cont, "苗字・名前で検索"
           = f.search_field :last_name_or_first_name_cont,
               placeholder: "苗字・名前で検索",
+              data: { autocomplete_target: "input", action: "input->autocomplete#search" },
               class: "w-full rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-300"
+          div.mt-1.w-full.bg-white.rounded-md.shadow.max-h-48.overflow-y-auto data-autocomplete-target="results"
 
       .flex.gap-2.justify-end
         = f.submit "絞り込む",

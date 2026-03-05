@@ -35,6 +35,24 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
+  def autocomplete
+    keyword = params[:q].to_s.strip
+
+    users = User
+              .where("last_name ILIKE :q OR first_name ILIKE :q",
+                    q: "%#{keyword}%")
+              .limit(5)
+
+    render json: users.map { |u|
+      {
+        id: u.id,
+        last_name: u.last_name,
+        first_name: u.first_name,
+        name: "#{u.last_name} #{u.first_name}"
+      }
+    }
+  end
+
   private
 
   def user_params
