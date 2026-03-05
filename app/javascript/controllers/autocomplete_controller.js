@@ -23,7 +23,7 @@ export default class extends Controller {
           div.className = "px-3 py-1 hover:bg-sky-100 cursor-pointer"
 
           div.addEventListener("click", () => {
-            this.inputTarget.value = item.name || item.title
+            this.inputTarget.value = item.last_name || item.title
             this.resultsTarget.innerHTML = ""
 
             this.inputTarget.form.requestSubmit()
