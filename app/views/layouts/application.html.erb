@@ -28,17 +28,19 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="<%= top_page? ? 'bg-top-page' : 'bg-pixel-sky' %>">
+  <body class="<%= top_page? ? 'bg-top-page' : 'bg-pixel-sky' %> flex flex-col min-h-screen">
     <%# ログイン済みの場合のみヘッダーを表示 %>
     <% if logged_in? %>
       <%= render 'shared/header' %>
     <% end %>
     <%= render 'shared/flash_messages' %>
 
-    <main class="container mx-auto px-5 flex">
+    <main class="container mx-auto px-5 flex flex-grow">
       <%= yield %>
     </main>
-    <%= render 'shared/global_footer_nav' %>
-    <div class="h-5"></div>
+    <% if logged_in? && !hide_footer_nav? %>
+      <%= render 'shared/global_footer_nav' %>
+    <% end %>
+    <%= render 'shared/site_footer' %>
   </body>
 </html>

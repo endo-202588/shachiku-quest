@@ -169,6 +169,22 @@ class TasksController < ApplicationController
     redirect_to tasks_path, success: "タスクを削除しました", status: :see_other
   end
 
+  def autocomplete
+    keyword = params[:q].to_s.strip
+    return render json: [] if keyword.blank?
+
+    tasks = Task
+              .where("title ILIKE :q OR description ILIKE :q", q: "%#{keyword}%")
+              .limit(5)
+
+    render json: tasks.map { |t|
+      {
+        id: t.id,
+        title: t.title
+      }
+    }
+  end
+
   private
 
   def validate_and_prepare_tasks(tasks_attributes)

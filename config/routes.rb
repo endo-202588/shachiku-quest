@@ -6,11 +6,15 @@ Rails.application.routes.draw do
 
   root "static_pages#top"
 
+  get "terms", to: "static_pages#terms"
+  get "privacy", to: "static_pages#privacy"
+
   get "dashboard", to: "dashboard#show"
 
   # ユーザー登録
   resources :users, only: %i[new create index] do
     patch :read_total_virtue_points, on: :collection
+    get :autocomplete, on: :collection
   end
 
   # ログイン・ログアウト(後で実装)
@@ -35,6 +39,7 @@ Rails.application.routes.draw do
 
     collection do
       get :help_requests
+      get :autocomplete
     end
   end
 
