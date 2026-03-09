@@ -9,7 +9,9 @@ class Rack::Attack
   end
 
   self.throttled_responder = lambda do |req|
-    req.env["rack.session"][:throttled] = true
+    if req.env["rack.session"]
+      req.env["rack.session"][:throttled] = true
+    end
 
     [
       302,
