@@ -10,6 +10,6 @@ Rails.application.config.sorcery.configure do |config|
     user.reset_password_mailer = UserMailer
     user.reset_password_email_method_name = :reset_password_email
     user.reset_password_time_between_emails = 60
-    user.reset_password_expiration_period = 2.hours.to_i
+    user.reset_password_expiration_period = 2.hours
   end
 end
