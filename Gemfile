@@ -42,6 +42,7 @@ gem "kaminari"
 
 # Security
 gem "rack-attack"
+gem "redis"
 
 # Others
 gem "draper"
