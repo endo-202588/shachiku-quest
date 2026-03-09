@@ -550,6 +550,7 @@ DEPENDENCIES
   rails-i18n (~> 7.0)
   ransack (>= 4.1)
   redis
+  redis-client
   rspec-rails
   rubocop-rails-omakase
   selenium-webdriver

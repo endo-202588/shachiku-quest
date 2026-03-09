@@ -43,6 +43,7 @@ gem "kaminari"
 # Security
 gem "rack-attack"
 gem "redis"
+gem "redis-client"
 
 # Others
 gem "draper"
