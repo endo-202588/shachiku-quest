@@ -106,4 +106,8 @@ Rails.application.configure do
     host: "shachiku-quest.net",
     protocol: "https"
   }
+
+  config.cache_store = :redis_cache_store, {
+    url: ENV["REDIS_URL"]
+  }
 end
