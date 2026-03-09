@@ -107,7 +107,11 @@ Rails.application.configure do
     protocol: "https"
   }
 
-  config.cache_store = :redis_cache_store, {
-    url: ENV["REDIS_URL"]
-  }
+  if ENV["REDIS_URL"].present?
+    config.cache_store = :redis_cache_store, {
+      url: ENV["REDIS_URL"]
+    }
+  else
+    config.cache_store = :memory_store
+  end
 end
