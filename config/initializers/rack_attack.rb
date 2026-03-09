@@ -1,8 +1,8 @@
 class Rack::Attack
-  Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+  Rack::Attack.cache.store = Rails.cache
 
   throttle("logins/ip_email", limit: 5, period: 60.seconds) do |req|
-    if req.post? && req.path.start_with?("/login")
+    if req.post? && req.path == "/login"
       email = req.params["email"]&.downcase&.strip || ""
       "#{req.ip}:#{email}"
     end
