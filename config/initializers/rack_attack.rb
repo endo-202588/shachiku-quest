@@ -1,4 +1,6 @@
 class Rack::Attack
+  Rails.logger.info "Rack::Attack loaded"
+
   Rack::Attack.cache.store = Rails.cache
 
   throttle("logins/ip_email", limit: 5, period: 60.seconds) do |req|
