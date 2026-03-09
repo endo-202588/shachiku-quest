@@ -28,8 +28,15 @@
 
 
     / 補足説明
-    p.text-slate-500.mt-4.text-sm
+    p.text-slate-500.mt-3.text-sm
       | ※ログインして冒険へ出かけましょう
+
+    .text-center
+      p.text-slate-700.text-base.mt-6
+        | まだ勇者登録をしていない方は
+        = link_to 'こちら', new_user_path,
+          class: 'ml-1 font-bold text-indigo-600 hover:text-indigo-800 underline'
+        | から登録できます
 
     .mt-6.flex.justify-center
       = link_to guide_path,
