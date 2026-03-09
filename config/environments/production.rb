@@ -108,7 +108,7 @@ Rails.application.configure do
   }
 
   config.cache_store = if ENV["REDIS_URL"].present?
-    [:redis_cache_store, { url: ENV["REDIS_URL"] }]
+    [ :redis_cache_store, { url: ENV["REDIS_URL"] } ]
   else
     :memory_store
   end
