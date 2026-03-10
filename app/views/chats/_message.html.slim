@@ -1,17 +1,52 @@
 - mine = (message.sender_id == current_user.id)
 
-.flex.mb-4 class=(mine ? "justify-end" : "justify-start")
-  .max-w-xl
-    .text-xs.text-gray-500.mb-1 class=(mine ? "text-right" : "text-left")
-      - if message.system?
-        | システム
-      - else
-        = message.sender&.decorate&.full_name || message.sender&.name || "ユーザー"
-      | ・
-      = message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+div id="message_#{message.id}" data-controller="message-edit"
+  .flex.mb-4 class=(mine ? "justify-end" : "justify-start")
+    .max-w-xl
 
-    .px-4.py-3.rounded-2xl.shadow-sm.break-words.whitespace-pre-wrap(
-      id="message_#{message.id}"
-      class=(mine ? "bg-sky-600 text-white" : "bg-gray-100 text-gray-900")
-    )
-      = message.body
+      .text-xs.text-gray-500.mb-1 class=(mine ? "text-right" : "text-left")
+        - if message.system?
+          | システム
+        - else
+          = message.sender&.decorate&.full_name || message.sender&.name || "ユーザー"
+        | ・
+        = message.created_at.in_time_zone("Asia/Tokyo").strftime("%Y/%m/%d %H:%M")
+
+      .px-4.py-3.rounded-2xl.shadow-sm.break-words.whitespace-pre-wrap(
+        class=(mine ? "bg-sky-600 text-white" : "bg-gray-100 text-gray-900")
+      )
+        = message.body
+
+      / 編集フォーム
+      .hidden data-message-edit-target="form"
+        = form_with url: update_message_help_request_chat_path(@help_request),
+            method: :patch,
+            class: "mt-1" do
+
+          = hidden_field_tag :id, message.id
+
+          = text_area_tag :body, message.body,
+              class: "w-full text-sm border rounded px-2 py-1"
+
+          .mt-1
+            = submit_tag "更新",
+                class: "text-xs bg-sky-600 text-white px-2 py-1 rounded"
+
+            span.ml-2.text-xs.cursor-pointer.text-gray-500(
+              data-action="click->message-edit#cancel"
+            ) キャンセル
+
+      - if mine && !message.system?
+        .flex.items-center.gap-3.mt-1 class=(mine ? "justify-end" : "justify-start")
+
+          span.cursor-pointer.text-blue-600.text-xs.underline(
+            data-action="click->message-edit#edit"
+          ) 編集
+
+          = button_to "削除",
+              destroy_message_help_request_chat_path(@help_request),
+              method: :delete,
+              params: { id: message.id },
+              data: { turbo_confirm: "本当に削除しますか？" },
+              class: "underline text-red-500 cursor-pointer text-xs",
+              form_class: "inline"
