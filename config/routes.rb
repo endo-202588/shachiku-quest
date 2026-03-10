@@ -51,7 +51,7 @@ Rails.application.routes.draw do
       post :complete_notify
     end
 
-    resource :chat, only: [:show, :create] do
+    resource :chat, only: [ :show, :create ] do
       patch  :update_message
       delete :destroy_message
     end
