@@ -40,6 +40,33 @@ class ChatsController < ApplicationController
     end
   end
 
+  def update_message
+    @message = Message.find(params[:id])
+
+    return head :forbidden unless @message.sender_id == current_user.id
+    return head :forbidden if @message.system?
+
+    if @message.update(body: params[:body])
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to help_request_chat_path(@help_request) }
+      end
+    else
+      redirect_to help_request_chat_path(@help_request), danger: "更新できませんでした"
+    end
+  end
+
+  def destroy_message
+    message = @help_request.conversation.messages.find(params[:id])
+
+    return head :forbidden unless message.sender_id == current_user.id
+    return head :forbidden if message.system?
+
+    message.destroy
+
+    redirect_to help_request_path(@help_request), success: "削除しました"
+  end
+
   private
 
   def set_help_request
