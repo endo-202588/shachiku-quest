@@ -16,18 +16,19 @@ class ApplicationController < ActionController::Base
 
   def check_today_status
     return unless logged_in?
-    return if profile_incomplete?(current_user)
-    return if current_user.has_today_status?
 
-    redirect_to new_status_path(date: Date.current), alert: "本日のステータスを登録してください"
-  end
+    unless current_user.profile_completed?
+      return if controller_path == "settings/profiles"
 
-  def profile_incomplete?(user)
-    user.department.blank? || user.department == "未設定" ||
-      user.last_name.blank? || user.last_name == "未設定" ||
-      user.first_name.blank? || user.first_name == "未設定" ||
-      user.last_name_kana.blank? || user.last_name_kana == "みせってい" ||
-      user.first_name_kana.blank? || user.first_name_kana == "みせってい"
+      redirect_to edit_settings_profile_path, alert: "プロフィールを設定してください"
+      return
+    end
+
+    unless current_user.has_today_status?
+      return if controller_name == "statuses"
+
+      redirect_to new_status_path(date: Date.current), alert: "本日のステータスを登録してください"
+    end
   end
 
   def set_header_help_request

@@ -131,4 +131,12 @@ class User < ApplicationRecord
   def google_user?
     provider == "google_oauth2"
   end
+
+  def profile_completed?
+    department.present? &&
+      last_name.present? &&
+      first_name.present? &&
+      last_name_kana.present? &&
+      first_name_kana.present?
+  end
 end
