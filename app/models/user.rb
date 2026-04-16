@@ -133,10 +133,8 @@ class User < ApplicationRecord
   end
 
   def profile_completed?
-    department.present? &&
-      last_name.present? &&
-      first_name.present? &&
-      last_name_kana.present? &&
-      first_name_kana.present?
+    [department, last_name, first_name, last_name_kana, first_name_kana].all? do |v|
+      v.present? && v != "未設定" && v != "みせってい"
+    end
   end
 end
