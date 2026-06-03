@@ -35,7 +35,7 @@ gem "ransack", ">= 4.1"
 # Image
 gem "activestorage-cloudinary-service"
 gem "cloudinary"
-gem "image_processing", "~> 1.0"
+gem "image_processing", "~> 2.0"
 
 # Pagination
 gem "kaminari"
